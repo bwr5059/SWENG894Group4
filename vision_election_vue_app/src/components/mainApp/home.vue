@@ -1,9 +1,9 @@
 <template>
     <div class ='d-flex justify-content-center'>
     Home content goes here.  You successfully logged in!
-        <div>
+        <div class='d-flex justify-content-center'>
     
-            <p>email: {{userEmail}} id: {{userToken}}</p>
+            email: {{userEmail}} id: {{userID}} firstname: {{userFName}} lastname: {{userLName}}
             
         </div>
     </div>
@@ -32,10 +32,18 @@ export default {
         return this.activeUser ? this.activeUser.email : ''
       },
 
-         userToken: function () {
+         userID: function () {
         return this.activeUser ? this.activeUser.sub : ''
-    }
+    },
+        userFName: function () {
+        return this.activeUser ? this.activeUser.given_name : ''
+    },
+        userLName: function () {
+        return this.activeUser ? this.activeUser.family_name : ''
+    },
 
+
+//you can retrieve first name as given_name and last name as family_name
         
     },
   

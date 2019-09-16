@@ -25,7 +25,7 @@
      
     
     <router-view/>
- 
+    <footer class ='d-flex justify-content-center'> Vision-Election 2019 </footer>
   </div>
 </template>
 

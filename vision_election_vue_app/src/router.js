@@ -22,7 +22,6 @@ let router = new Router({
     {
         path: '/',
         component: landing,
-        
     },
     {
         path: '/about',
@@ -44,7 +43,6 @@ let router = new Router({
 	},  
   ]  
 });  
-  
+
 router.beforeEach(Vue.prototype.$auth.authRedirectGuard());  
-  
 export default router;

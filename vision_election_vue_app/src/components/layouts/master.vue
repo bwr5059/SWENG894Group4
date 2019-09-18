@@ -15,24 +15,71 @@
             <a class="nav-link" href="/about">About</a>
           </li>
         </ul>
-        
+        <a v-if='authenticated'>user email: {{userEmail}} </a>
         <a href="/register" class="btn btn-outline-success my-2 my-sm-0 mr-1" role="button">Register</a>
-        <a href="/login" class="btn btn-outline-success my-2 my-sm-0 mr-1" role="button">Login</a>
+        <router-link to="/home" class="btn btn-outline-success my-2 my-sm-0 mr-1" tag="button" id='home-button'> Login </router-link>
+        <button v-if='authenticated' v-on:click='logout' id='logout-button' class="btn btn-outline-success my-2 my-sm-0" href="/"> Logout </button>
+        <!-- <button v-else v-on:click='login' id='login-button' class="btn btn-outline-success my-2 my-sm-0" href="/home"> Login </button> -->
       </div>
     </nav>
-      <router-view></router-view>
+     
+    
+    <router-view/>
+    <footer class ='d-flex justify-content-center'> Vision-Election 2019 </footer>
   </div>
 </template>
 
 <script>
-import landing from '@/components/marketing/landing.vue'
+
+  
+  
 export default {
   name: 'master',
   components: {
-    landing
+  
   },
   props: {
-    msg: String
+    msg: String,
+    activeUser: Object
+  },
+  data: function () {
+    return {
+      authenticated: false
+    }
+  },
+
+  computed: {
+        userEmail: function () {
+        return this.activeUser ? this.activeUser.email : ''
+      },
+    },
+  created () {
+    this.isAuthenticated()
+    this.getEmail()
+  },
+  watch: {
+    // Everytime the route changes, check for auth status
+    '$route': 'isAuthenticated'
+  },
+  
+  methods: {
+    async isAuthenticated () {
+      this.authenticated = await this.$auth.isAuthenticated()
+    },
+    login () {
+      this.$auth.loginRedirect('/')
+    },
+    async logout () {
+      await this.$auth.logout()
+      await this.isAuthenticated()
+
+      // Navigate back to home
+      this.$router.push({ path: '/' })
+    },
+    async getEmail (){
+      this.activeUser = await this.$auth.getUser()  
+    }
   }
+  
 }
 </script>

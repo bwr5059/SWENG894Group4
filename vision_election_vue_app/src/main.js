@@ -1,25 +1,29 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
 import App from './App.vue'
-import routes from './routes'
-//import master from './components/layouts.master.vue'
+import router from './router'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import './assets/css/styles.css'
+import VueLogger from 'vuejs-logger'
 
-Vue.use(BootstrapVue)
 Vue.config.productionTip = false
-Vue.use(VueRouter)
+Vue.use(BootstrapVue)
+Vue.use(VueLogger, options)
 
-
-
-const router = new VueRouter({
-  routes,
-  mode: 'history'
-})
+const options = {
+  isEnabled: true,
+  logLevel : 'debug',
+  stringifyArgument : false,
+  showLogLevel : true,
+  showMethodName : false,
+  separator: '|',
+  showConsoleColors: true
+}
 
 new Vue({
-  router: router,
+  router,
   render: h => h(App),
 }).$mount('#app')
+
+export default router;

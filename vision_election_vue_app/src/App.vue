@@ -1,7 +1,6 @@
 <template>
   <master/>
 </template>
-
 <script>
 import master from './components/layouts/master.vue'
 

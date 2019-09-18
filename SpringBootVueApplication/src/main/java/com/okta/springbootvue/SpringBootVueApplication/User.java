@@ -28,5 +28,9 @@ public class User {
   private int age;
   
   private String ethnicity;
+  
+  private String gender;
+  
+  private boolean profileComplete = false;
       
 }

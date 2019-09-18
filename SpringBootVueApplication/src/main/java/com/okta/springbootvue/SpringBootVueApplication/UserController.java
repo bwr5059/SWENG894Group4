@@ -19,26 +19,28 @@ public class UserController {
     this.repository = repository;
   }
 
-  // Aggregate root
+  //Get all users
   @GetMapping("/users")
   List<User> all() {
     return repository.findAll();
   }
 
-  @PostMapping("/users")
+  //add one user
+  /*@PostMapping("/users")
   User newUser(@RequestBody User newUser) {
     return repository.save(newUser);
-  }
-
-  // Single item
-  /*@GetMapping("/users/{id}")
-  User one(@PathVariable Long id) {
-
-    return repository.findById(id)
-      //.orElseThrow(() -> new UserNotFoundException(id));
   }*/
 
-  @PutMapping("/users/{id}")
+  //Get one user
+ @GetMapping("/users/{id}")
+ User one(@PathVariable Long id) {
+
+   return repository.findById(id)
+     .orElseThrow(() -> new UserNotFoundException(id));
+ }
+  
+  //Add one user - Register
+  @PutMapping("/users/add/{id}")
   User replaceUser(@RequestBody User newUser, @PathVariable Long id) {
 
     return repository.findById(id)
@@ -53,7 +55,8 @@ public class UserController {
       });
   }
 
-  @DeleteMapping("/users/{id}")
+  //Remove one user
+  @DeleteMapping("/users/remove/{id}")
   void deleteUser(@PathVariable Long id) {
     repository.deleteById(id);
   }

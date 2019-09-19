@@ -17,7 +17,7 @@
         </ul>
         <a v-if='authenticated'>user email: {{userEmail}} </a>
         <a href="/register" class="btn btn-outline-success my-2 my-sm-0 mr-1" role="button">Register</a>
-        <router-link to="/home" class="btn btn-outline-success my-2 my-sm-0 mr-1" tag="button" id='home-button'> Login </router-link>
+        <router-link to="/profile" class="btn btn-outline-success my-2 my-sm-0 mr-1" tag="button" id='home-button'> Login </router-link>
         <button v-if='authenticated' v-on:click='logout' id='logout-button' class="btn btn-outline-success my-2 my-sm-0" href="/"> Logout </button>
         <!-- <button v-else v-on:click='login' id='login-button' class="btn btn-outline-success my-2 my-sm-0" href="/home"> Login </button> -->
       </div>

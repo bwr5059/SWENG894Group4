@@ -6,6 +6,7 @@ import aboutPage from './components/marketing/aboutPage.vue'
 import login from './components/auth/login.vue'
 import register from './components/auth/register.vue'
 import home from './components/mainApp/home.vue' 
+import profile from './components/profile/profile.vue'
   
 Vue.use(Auth, {  
   issuer: 'https://dev-208412.okta.com/oauth2/default',  
@@ -37,6 +38,11 @@ let router = new Router({
         component: home,
         meta: {
             requiresAuth: true}}, 
+    {
+      path: '/profile',
+      component: profile,
+      meta: {
+        requiresAuth: true}},
 	{  
 	    path: '/implicit/callback',  
 	    component: Auth.handleCallback(),  

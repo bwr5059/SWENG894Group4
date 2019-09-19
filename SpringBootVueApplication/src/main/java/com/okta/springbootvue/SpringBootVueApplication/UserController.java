@@ -40,19 +40,10 @@ public class UserController {
  }
   
   //Add one user - Register
-  @PutMapping("/users/add/{id}")
-  User replaceUser(@RequestBody User newUser, @PathVariable Long id) {
+  @PutMapping("/users/addProfile")
+  User replaceUser(@RequestBody User newUser) {
 
-    return repository.findById(id)
-      .map(user -> {
-    	  user.setFirstName(newUser.getFirstName());
-    	  //user.setRole(newUser.getRole());
-        return repository.save(user);
-      })
-      .orElseGet(() -> {
-        newUser.setId(id);
         return repository.save(newUser);
-      });
   }
 
   //Remove one user

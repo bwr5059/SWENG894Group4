@@ -25,11 +25,29 @@ public class UserController {
     return repository.findAll();
   }
 
-  //add one user
-  /*@PostMapping("/users")
-  User newUser(@RequestBody User newUser) {
-    return repository.save(newUser);
-  }*/
+  //Modify Existing User
+  @PutMapping("/users/modify/{id}")
+  User replaceUser(@RequestBody User newUser, @PathVariable Long id) {
+
+	    return repository.findById(id)
+	      .map(user -> {
+	        user.setFirstName(newUser.getFirstName());
+	        user.setLastName(newUser.getLastName());
+	        user.setType(newUser.getType());
+	        user.setAge(newUser.getAge());
+	        user.setEthnicity(newUser.getEthnicity());
+	        user.setGender(newUser.getGender());
+	        user.setAddress(newUser.getAddress());
+	        user.setCity(newUser.getCity());
+	        user.setState(newUser.getState());
+	        user.setZip(newUser.getZip());
+	        return repository.save(user);
+	      })
+	      .orElseGet(() -> {
+	        newUser.setId(id);
+	        return repository.save(newUser);
+	      });
+	  }
 
   //Get one user
  @GetMapping("/users/{id}")
@@ -39,11 +57,11 @@ public class UserController {
      .orElseThrow(() -> new UserNotFoundException(id));
  }
   
-  //Add one user - Register
+  //Add New Voter User - Register
   @PostMapping("/users/addProfile")
-  User replaceUser(@RequestBody User newUser) {
-
-        return repository.save(newUser);
+  User newUser(@RequestBody User newUser) {
+	  newUser.setType("Voter");
+      return repository.save(newUser);
   }
 
   //Remove one user

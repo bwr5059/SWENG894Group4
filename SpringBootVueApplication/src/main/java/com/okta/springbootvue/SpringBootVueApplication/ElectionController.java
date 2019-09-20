@@ -19,40 +19,35 @@ public class ElectionController {
     this.repository = repository;
   }
 
-  // Aggregate root
+  //Get all elections
   @GetMapping("/elections")
   List<Election> all() {
     return repository.findAll();
   }
 
-  @PostMapping("/elections")
+  //add one election
+  /*@PostMapping("/elections")
   Election newElection(@RequestBody Election newElection) {
     return repository.save(newElection);
-  }
-
-  // Single item
-  /*@GetMapping("/elections/{id}")
-  Election one(@PathVariable Long id) {
-
-    return repository.findById(id)
-      //.orElseThrow(() -> new ElectionNotFoundException(id));
   }*/
 
-  @PutMapping("/elections/{electionId}")
-  Election replaceElection(@RequestBody Election newElection, @PathVariable Long electionId) {
+  //Get one election
+ @GetMapping("/elections/{electionId}")
+ Election one(@PathVariable Long electionId) {
 
-    return repository.findById(electionId)
-      .map(election -> {
-    	  election.setTitle(newElection.getTitle());
-        return repository.save(election);
-      })
-      .orElseGet(() -> {
-        newElection.setElectionId(electionId);
+   return repository.findById(electionId)
+     .orElseThrow(() -> new ElectionNotFoundException(electionId));
+ }
+  
+  //Add one election
+  @PostMapping("/elections/addElection")
+  Election replaceElection(@RequestBody Election newElection) {
+
         return repository.save(newElection);
-      });
   }
 
-  @DeleteMapping("/elections/{electionId}")
+  //Remove one election
+  @DeleteMapping("/elections/remove/{electionId}")
   void deleteElection(@PathVariable Long electionId) {
     repository.deleteById(electionId);
   }

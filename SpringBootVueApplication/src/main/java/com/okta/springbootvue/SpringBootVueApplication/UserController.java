@@ -57,10 +57,15 @@ public class UserController {
      .orElseThrow(() -> new UserNotFoundException(id));
  }
   
-  //Add New Voter User - Register
-  @PostMapping("/users/addProfile")
-  User newUser(@RequestBody User newUser) {
-	  newUser.setType("Voter");
+  //Add New User - Register
+  @PostMapping("/users/addProfile/{type}")
+  User newUser(@RequestBody User newUser, @PathVariable String type) {
+	  if(type.equals("Candidate")) {
+		  newUser.setType("Candidate");
+	  }else {
+		  newUser.setType("Voter");
+	  }
+	  
       return repository.save(newUser);
   }
 

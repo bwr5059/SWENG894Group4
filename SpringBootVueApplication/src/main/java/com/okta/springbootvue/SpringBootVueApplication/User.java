@@ -23,7 +23,7 @@ public class User {
   
   //Default Voter enum type
   //Other options: Candidate, Admin
-  private String type = "Voter";
+  private String type;
   
   private int age;
   
@@ -33,7 +33,7 @@ public class User {
   
   private boolean profileComplete = false;
   
-  private String addresss;
+  private String address;
   
   private String city;
   

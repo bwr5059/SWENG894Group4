@@ -32,5 +32,13 @@ public class User {
   private String gender;
   
   private boolean profileComplete = false;
+  
+  private String addresss;
+  
+  private String city;
+  
+  private String state;
+  
+  private int zip;
       
 }

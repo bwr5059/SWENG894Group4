@@ -19,8 +19,8 @@ public class SpringBootVueApplication {
       SpringApplication.run(SpringBootVueApplication.class, args);  
     }  
 
-    //Add test data into the in-memory database
-    @Bean  
+    //Add test data into the in-memory database - USERS
+    /*@Bean  
     ApplicationRunner init(UserRepository repository) {  
         return args -> {  
             Stream.of("Brent", "Ifeoma", "Kylie", "Larry").forEach(name -> {  
@@ -30,7 +30,20 @@ public class SpringBootVueApplication {
             });  
             repository.findAll().forEach(System.out::println);  
         };  
-    }  
+    }  */
+    
+  //Add test data into the in-memory database - ELECTIONS
+   @Bean  
+    ApplicationRunner init(ElectionRepository repository) {  
+        return args -> {  
+            Stream.of("ONE", "TWO", "THREE", "FOUR").forEach(title -> {  
+                    Election election = new Election();  
+                    election.setTitle(title);  
+                    repository.save(election);  
+            });  
+            repository.findAll().forEach(System.out::println);  
+        };  
+    } 
 
     // Fix the CORS errors
     @Bean

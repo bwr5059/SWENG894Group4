@@ -40,7 +40,7 @@ public class UserController {
  }
   
   //Add one user - Register
-  @PutMapping("/users/addProfile")
+  @PostMapping("/users/addProfile")
   User replaceUser(@RequestBody User newUser) {
 
         return repository.save(newUser);

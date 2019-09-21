@@ -17,9 +17,11 @@
         </ul>
         <a v-if='authenticated'>user email: {{userEmail}} </a>
         <a href="/register" class="btn btn-outline-success my-2 my-sm-0 mr-1" role="button">Register</a>
-        <router-link to="/profile" class="btn btn-outline-success my-2 my-sm-0 mr-1" tag="button" id='home-button'> Login </router-link>
-        <button v-if='authenticated' v-on:click='logout' id='logout-button' class="btn btn-outline-success my-2 my-sm-0" href="/"> Logout </button>
-        <!-- <button v-else v-on:click='login' id='login-button' class="btn btn-outline-success my-2 my-sm-0" href="/home"> Login </button> -->
+        
+        <!-- <router-link v-if='authenticated' to="/" v-on:click='logout' class="btn btn-outline-success my-2 my-sm-0 mr-1" tag="button" id='home-button'> Logout </router-link> -->
+        <router-link v-show="!authenticated" to="/app/user/home" class="btn btn-outline-success my-2 my-sm-0 mr-1" tag="button" id='home-button'> Login </router-link>
+        <button v-if='authenticated' v-on:click='logout' id='logout-button' class="btn btn-outline-success my-2 my-sm-0"> Logout </button>
+        <!--<button v-else v-on:click='login' id='login-button' class="btn btn-outline-success my-2 my-sm-0" href="/home"> Login </button> -->
       </div>
     </nav>
      
@@ -30,7 +32,6 @@
 </template>
 
 <script>
-
   
   
 export default {
@@ -47,7 +48,6 @@ export default {
       authenticated: false
     }
   },
-
   computed: {
         userEmail: function () {
         return this.activeUser ? this.activeUser.email : ''
@@ -72,7 +72,6 @@ export default {
     async logout () {
       await this.$auth.logout()
       await this.isAuthenticated()
-
       // Navigate back to home
       this.$router.push({ path: '/' })
     },

@@ -7,6 +7,8 @@ import login from './components/auth/login.vue'
 import register from './components/auth/register.vue'
 import home from './components/mainApp/home.vue' 
 import profile from './components/profile/profile.vue'
+import homeLayout from './components/layouts/homeLayout.vue'
+import createElection from './components/election/createElection.vue'
   
 Vue.use(Auth, {  
   issuer: 'https://dev-208412.okta.com/oauth2/default',  
@@ -34,8 +36,19 @@ let router = new Router({
         path: '/register',
         component: register},
     {
-        path: '/home',
-        component: home,
+        path: '/app/:id',
+        component: homeLayout,
+        children: [{
+          path: 'home',
+          component: home
+        },
+        {
+          path: 'createElection',
+          component: createElection
+
+        },
+      
+      ],
         meta: {
             requiresAuth: true}}, 
     {
@@ -44,8 +57,8 @@ let router = new Router({
       meta: {
         requiresAuth: true}},
 	{  
-	    path: '/implicit/callback',  
-	    component: Auth.handleCallback(),  
+      path: '/implicit/callback',  
+      component: Auth.handleCallback(),  
 	},  
   ]  
 });  

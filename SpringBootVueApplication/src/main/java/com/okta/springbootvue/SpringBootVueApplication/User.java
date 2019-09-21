@@ -29,6 +29,8 @@ public class User {
   
   private String ethnicity;
   
+  private String race;
+  
   private String gender;
   
   private boolean profileComplete = false;

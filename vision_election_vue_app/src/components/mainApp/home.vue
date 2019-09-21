@@ -1,18 +1,39 @@
 <template>
-    <div class ='d-flex justify-content-center'>
+  <b-container>
+    <b-row class ='d-flex justify-content-center'>
     Home content goes here.  You successfully logged in!
-        <div class='d-flex justify-content-center'>
+  
+    </b-row>
+  
+  
+    <b-row class ='d-flex justify-content-center'>
+    email: {{userEmail}} id: {{userID}} firstname: {{userFName}} lastname: {{userLName}}
+
+  
+
     
-            email: {{userEmail}} id: {{userID}} firstname: {{userFName}} lastname: {{userLName}}
-            
-        </div>
-    </div>
+    </b-row>
+    <b-row class ='d-flex justify-content-center'>
+      <b-form-textarea
+          id="textarea"
+           
+          placeholder="Enter something..."
+          rows="3"
+          max-rows="6"
+      ></b-form-textarea>
+    </b-row>
+
+    
+  
+  </b-container>
+        
+ 
     
 </template>
 
 
 <script>
-
+import api from '@/apis/userApi'
 
 export default {
   name: 'home',
@@ -22,7 +43,10 @@ export default {
     
   },data: () => {  
       return {  
-        activeUser: null  
+        //activeUser: null ,
+        todos: [], 
+        error: null,
+        userProfileComplete: null
       }  
     },  
 
@@ -40,6 +64,10 @@ export default {
         userLName: function () {
         return this.activeUser ? this.activeUser.family_name : ''
     },
+    
+
+
+   
 
 
 //you can retrieve first name as given_name and last name as family_name
@@ -47,17 +75,37 @@ export default {
     },
   
   async created () {  
-    await this.refreshActiveUser()  
+    await this.refreshActiveUser();
+   
+     this.checkUser();
   },  
+
+  mounted: function() {
+    api.getUser(5)  
+    .then(response => {  
+      this.$log.debug("Data loaded: ", response.data)  
+      this.todos = response.data  
+      this.userProfileComplete = 1
+  })  
+    .catch(error => {  
+      this.$log.debug(error)  
+      this.error = "User Profile not complete"  
+      this.userProfileComplete = 0
+      
+  }) 
   
+  },
   watch: {  
-    '$route': 'refreshActiveUser'  
+    '$route': 'refreshActiveUser',  
+    //userProfileComplete: 'checkUser'
+    
   },  
   
   methods: {  
     async refreshActiveUser () {  
       this.activeUser = await this.$auth.getUser()  
       this.$log.debug('activeUser',this.activeUser)  
+      
     },  
   
     async handleLogout () {  
@@ -66,6 +114,18 @@ export default {
       this.$router.go('/')  
     },
 
+    checkUser() {
+      if(this.userProfileComplete==0){
+        alert("test2")
+        this.$router.push({path:'/profile'})
+      }
+      
+        
+      
+
+    },
+
+ 
 
 
   

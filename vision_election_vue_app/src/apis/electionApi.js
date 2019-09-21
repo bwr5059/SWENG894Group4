@@ -22,11 +22,10 @@ export default {
         })  
       }, 
   // (C)reate  
-  createNew: (email, fName, lName, age, race, ethnicity, gender, address, city, state, zip) => 
-  instance.post('/users/addProfile/Voter', {email: email, type: 'Voter', firstName: fName, lastName: lName, age: age, race: race, ethnicity: ethnicity
-    ,gender: gender, address: address, city: city, state: state, zip: zip, profileComplete: "True"}),  
+  createNew: () => 
+  instance.post('/elections/addElection', {}),  
   // (R)ead  
-  getUser: (id) => instance.get('/users/'+id, {  
+  getUser: (id) => instance.get('/elections', {  
     transformResponse: [function (data) {  
       return data? JSON.parse(data) : data;  
     }]  

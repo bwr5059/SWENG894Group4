@@ -36,6 +36,7 @@ public class UserController {
 	        user.setType(newUser.getType());
 	        user.setAge(newUser.getAge());
 	        user.setEthnicity(newUser.getEthnicity());
+	        user.setRace(newUser.getRace());
 	        user.setGender(newUser.getGender());
 	        user.setAddress(newUser.getAddress());
 	        user.setCity(newUser.getCity());

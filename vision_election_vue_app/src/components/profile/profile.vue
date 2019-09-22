@@ -17,10 +17,11 @@
      
         <b-form-input
           id="input-1"
-          v-model="this.activeUser.email"
+          v-model="activeUser.email"
           type="email"
           required
           readonly
+          
         ></b-form-input>
       
       
@@ -33,6 +34,7 @@
           v-model="form.type"
           :options="type"
           required
+          :disabled="!editable"
         ></b-form-select>
       </b-form-group>
       </b-col>
@@ -42,7 +44,7 @@
       <b-form-group id="input-group-2" label="First Name:" label-for="input-2">
         <b-form-input
           id="input-2"
-          v-model="this.activeUser.given_name"
+          v-model="activeUser.given_name"
           required
           placeholder="Enter first name"
           readonly
@@ -54,7 +56,7 @@
       <b-form-group id="input-group-3" label="Last Name:" label-for="input-3">
         <b-form-input
           id="input-3"
-          v-model="this.activeUser.family_name"
+          v-model="activeUser.family_name"
           required
           placeholder="Enter last name"
           readonly
@@ -68,6 +70,7 @@
           v-model="form.age"
           required
           placeholder="Enter age"
+          :disabled="!editable"
         ></b-form-input>
       </b-form-group>
       </b-col>
@@ -80,6 +83,7 @@
           v-model="form.race"
           :options="race"
           required
+          :disabled="!editable"
         ></b-form-select>
       </b-form-group>
       </b-col>
@@ -90,6 +94,7 @@
           v-model="form.ethnicity"
           :options="ethnicity"
           required
+          :disabled="!editable"
         ></b-form-select>
       </b-form-group>
       </b-col>
@@ -100,6 +105,7 @@
           v-model="form.gender"
           :options="gender"
           required
+          :disabled="!editable"
         ></b-form-select>
       </b-form-group>
       </b-col>
@@ -110,6 +116,7 @@
           v-model="form.address"
           required
           placeholder="Enter street address"
+          :disabled="!editable"
         ></b-form-input>
       </b-form-group>
       <b-form-group id="input-group-9" label="State:" label-for="input-9">
@@ -118,6 +125,7 @@
           v-model="form.state"
           required
           placeholder="Enter state"
+          :disabled="!editable"
         ></b-form-input>
       </b-form-group>
       <b-form-group id="input-group-10" label="Zip Code:" label-for="input-10">
@@ -126,11 +134,13 @@
           v-model="form.zip"
           required
           placeholder="Enter zip code"
+          :disabled="!editable"
         ></b-form-input>
       </b-form-group>
-
-      <b-button v-on:click="addUser">Submit</b-button>
-      <b-button type="reset" variant="danger">Reset</b-button>
+      <b-button v-show="!editable" v-on:click="edit">Edit</b-button>
+      <b-button v-show="editable" class="mr-1" v-on:click="cancel">Cancel</b-button>
+      <b-button v-show="editable" v-on:click="addUser">Submit</b-button>
+      
     </b-form>
 
   </div>
@@ -174,7 +184,9 @@ export default {
         race: [{text: 'Select one', value: null}, 'American Indian or Alaska Native', 'Asian', 'Black or African American', 'Native Hawaiin or Other Pacific Islander', 'White'],
         ethnicity: [{text: 'Select One', value: null}, 'Hispanic or Latino or Spanish Origin', 'Not Hispanic or Latino or Spanish Origin'],
         type: [{text: 'Registration Type', value: null}, 'Voter', 'Candidate'],
-        show: true
+        show: true,
+        editable: false,
+        userProfileComplete: ''
       }  
     },  
 
@@ -182,7 +194,12 @@ export default {
     
 
     mounted: function(){
-      
+    
+    api.getUser(5)  
+    .then(response => {  
+      this.$log.debug("Data loaded: ", response.data)  
+      this.userProfileComplete = 1
+  })  
     },
 
      async created () {  
@@ -207,6 +224,18 @@ export default {
       await this.$auth.logout()  
       await this.refreshActiveUser()  
       this.$router.go('/')  
+    },
+
+    edit: function(){
+    
+    this.editable=true
+
+    },
+
+    cancel: function(){
+    
+    this.editable=false
+
     },
 
     addUser: function () {  

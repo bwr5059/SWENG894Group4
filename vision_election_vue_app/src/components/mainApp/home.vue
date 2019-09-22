@@ -39,14 +39,16 @@ export default {
   name: 'home',
   props: {
     msg: String,
-    activeUser: Object
+    activeUser: Object,
+    
     
   },data: () => {  
       return {  
         //activeUser: null ,
         todos: [], 
         error: null,
-        userProfileComplete: null
+        userProfileComplete: null,
+        authorized: true
       }  
     },  
 

@@ -9,6 +9,10 @@ import home from './components/mainApp/home.vue'
 import profile from './components/profile/profile.vue'
 import homeLayout from './components/layouts/homeLayout.vue'
 import createElection from './components/election/createElection.vue'
+import viewElection from './components/election/viewElection.vue'
+import electionDetails from './components/election/electionDetails.vue'
+import help from './components/marketing/help.vue'
+import elections from './components/election/elections.vue'
   
 Vue.use(Auth, {  
   issuer: 'https://dev-208412.okta.com/oauth2/default',  
@@ -33,8 +37,8 @@ let router = new Router({
         path: '/login',
         component: login},
     {
-        path: '/register',
-        component: register},
+        path: '/help',
+        component: help},
     {
         path: '/app/:id',
         component: homeLayout,
@@ -47,6 +51,18 @@ let router = new Router({
           component: createElection
 
         },
+        {
+          path: 'election/:eID',
+          component: viewElection,
+          children: [{
+            path:'details',
+            component: electionDetails
+          }],
+        },
+        {
+          path: 'elections',
+          component: elections
+        }
       
       ],
         meta: {

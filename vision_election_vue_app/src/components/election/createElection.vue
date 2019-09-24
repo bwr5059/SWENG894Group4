@@ -83,7 +83,8 @@ export default {
     }).catch((error) => {  
       this.$log.debug(error);  
       this.error = "Failed to add todo"  
-	});  
+  }); 
+  
       },
 
       updateElection: function(){
@@ -94,6 +95,7 @@ export default {
       this.$log.debug(error);  
       this.error = "Failed to add todo"  
       });
+      this.$router.push({ path: '/app/user/home' }) 
       },
 
       deleteElection: function(){

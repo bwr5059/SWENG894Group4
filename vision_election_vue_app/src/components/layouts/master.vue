@@ -22,7 +22,7 @@
         
         <!-- <router-link v-if='authenticated' to="/" v-on:click='logout' class="btn btn-outline-success my-2 my-sm-0 mr-1" tag="button" id='home-button'> Logout </router-link> -->
         <router-link v-show="!authenticated" to="/app/user/home" class="btn btn-info my-2 my-sm-0 mr-1" tag="button" id='home-button'> Login </router-link>
-        <button v-if='authenticated' v-on:click='logout' id='logout-button' class="btn btn-success my-2 my-sm-0"> Logout </button>
+        <button v-if='authenticated' v-on:click='logout' id='logout-button' class="btn btn-info my-2 my-sm-0"> Logout </button>
         <!--<button v-else v-on:click='login' id='login-button' class="btn btn-outline-success my-2 my-sm-0" href="/home"> Login </button> -->
         </b-navbar-nav>
       </b-collapse>

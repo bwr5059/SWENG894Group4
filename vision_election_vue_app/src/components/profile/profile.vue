@@ -119,6 +119,15 @@
           :disabled="!editable"
         ></b-form-input>
       </b-form-group>
+      <b-form-group id="input-group-12" label="City:" label-for="input-12">
+        <b-form-input
+          id="input-12"
+          v-model="form.city"
+          required
+          placeholder="Enter city"
+          :disabled="!editable"
+        ></b-form-input>
+      </b-form-group>
       <b-form-group id="input-group-9" label="State:" label-for="input-9">
         <b-form-input
           id="input-9"
@@ -186,7 +195,8 @@ export default {
         type: [{text: 'Registration Type', value: null}, 'Voter', 'Candidate'],
         show: true,
         editable: false,
-        userProfileComplete: ''
+        userObj: '',
+        userProfileComplete: 0
       }  
     },  
 
@@ -195,11 +205,29 @@ export default {
 
     mounted: function(){
     
-    api.getUser(5)  
+    api.getUser(17)  
     .then(response => {  
-      this.$log.debug("Data loaded: ", response.data)  
-      this.userProfileComplete = 1
-  })  
+      this.$log.debug("Data loaded: ", response.data)
+      this.userObj = response
+      this.form.email = this.userObj.data.email
+      this.form.type = this.userObj.data.type
+      this.form.fname = this.userObj.data.firstName
+      this.form.lname = this.userObj.data.lastName
+      this.form.age = this.userObj.data.age
+      this.form.race = this.userObj.data.race
+      this.form.ethnicity = this.userObj.data.ethnicity
+      this.form.gender = this.userObj.data.gender
+      this.form.address = this.userObj.data.address
+      this.form.city = this.userObj.data.city
+      this.form.state = this.userObj.data.state
+      this.form.zip = this.userObj.data.zip 
+      if(this.userObj!=""){
+        this.userProfileComplete = 1
+      }else{
+        this.userProfileComplete = 0
+      } 
+  })
+      
     },
 
      async created () {  
@@ -240,13 +268,25 @@ export default {
 
     addUser: function () {  
         window.alert("Subbmiting to API")
-  
-    api.createNew(this.form.email, this.form.fname, this.form.lname, this.form.age, this.form.race, this.form.ethnicity, this.form.gender, this.form.address, this.form.city, this.form.state, this.form.zip).then( (response) => {  
-      this.$log.debug("New item created:", response);  
+    if(this.userProfileComplete==0){
+    api.createNew(this.form.email, this.form.type, this.form.fname, this.form.lname, this.form.age, this.form.race, this.form.ethnicity, this.form.gender, this.form.address, this.form.city, this.form.state, this.form.zip).then( (response) => {  
+      this.$log.debug("New User created:", response); 
+      alert("Profile Updated") 
+      this.$router.push({ path: '/app/user/home' })
     }).catch((error) => {  
       this.$log.debug(error);  
       this.error = "Failed to add todo"  
-	});  
+	});  } else{
+    api.modifyUser(this.userObj.data.id, this.form.email, this.form.type, this.form.fname, this.form.lname, this.form.age, this.form.race, this.form.ethnicity, this.form.gender, this.form.address, this.form.city, this.form.state, this.form.zip).then( (response) => {  
+      this.$log.debug("User Updated:", response); 
+      alert("Profile Updated")
+      this.$router.push({ path: '/app/user/home' })
+    }).catch((error) => {  
+      this.$log.debug(error);  
+      this.error = "Failed to add todo"  
+	});
+      
+  }
   
    
   },  

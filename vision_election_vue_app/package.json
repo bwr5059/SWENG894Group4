@@ -24,10 +24,19 @@
     "@vue/cli-plugin-babel": "^3.11.0",
     "@vue/cli-plugin-eslint": "^3.11.0",
     "@vue/cli-service": "^3.11.0",
+    "@vue/test-utils": "^1.0.0-beta.29",
     "babel-eslint": "^10.0.1",
+    "babel-plugin-istanbul": "^5.2.0",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
-    "vue-template-compiler": "^2.6.10"
+    "expect": "^24.9.0",
+    "jsdom": "^15.1.1",
+    "jsdom-global": "^3.0.2",
+    "mocha": "^6.2.0",
+    "mocha-webpack": "^1.1.0",
+    "nyc": "^14.1.1",
+    "vue-template-compiler": "^2.6.10",
+    "webpack-node-externals": "^1.7.2"
   },
   "eslintConfig": {
     "root": true,

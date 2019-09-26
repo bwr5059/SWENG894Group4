@@ -4,7 +4,6 @@ import Router from 'vue-router'
 import landing from './components/marketing/landing.vue'
 import aboutPage from './components/marketing/aboutPage.vue'
 import login from './components/auth/login.vue'
-import register from './components/auth/register.vue'
 import home from './components/mainApp/home.vue' 
 import profile from './components/profile/profile.vue'
 import homeLayout from './components/layouts/homeLayout.vue'
@@ -13,6 +12,7 @@ import viewElection from './components/election/viewElection.vue'
 import electionDetails from './components/election/electionDetails.vue'
 import help from './components/marketing/help.vue'
 import elections from './components/election/elections.vue'
+import applicationHelp from './components/help/applicationHelp.vue'
   
 Vue.use(Auth, {  
   issuer: 'https://dev-208412.okta.com/oauth2/default',  
@@ -39,6 +39,12 @@ let router = new Router({
     {
         path: '/help',
         component: help},
+
+    {
+        path: '/help/applicationHelp',
+        component: applicationHelp
+    },
+
     {
         path: '/app/:id',
         component: homeLayout,

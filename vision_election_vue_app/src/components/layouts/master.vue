@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <b-navbar class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <b-navbar-brand href="/">VisionElection</b-navbar-brand>
+      <router-link to="/" class="navbar-brand" id='brand-button'> Vision Election </router-link>
       <b-navbar-toggle class="navbar-toggler" target="" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </b-navbar-toggle>
@@ -9,16 +9,19 @@
       <b-collapse class="collapse navbar-collapse" id="navbarSupportedContent">
         <b-navbar-nav>
           <li class="nav-item active">
-            <a class="nav-link" v-if='authenticated' href="/app/user/home">Home</a>
-            <a class="nav-link" v-else href="/">Home</a>
+            <!-- <a class="nav-link" v-if='authenticated' href="/app/user/home">Home</a>
+            <a class="nav-link" v-else href="/">Home</a> -->
+            <router-link v-show="authenticated" to="/app/user/home" class="navbar-text" id='home-button'> Home </router-link>
+            <router-link v-show="!authenticated" to="/" class="navbar-text" id='home-button'> Home </router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/about">About</a>
+            <router-link to="/about" class="navbar-text ml-3" id='about-button'> About </router-link>
           </li>
         </b-navbar-nav>
         <b-navbar-nav class="ml-auto">
-        <b-nav-item v-if='authenticated' href="/profile">{{userEmail}} </b-nav-item>
-        <b-nav-item href="/help">Help</b-nav-item>
+        <router-link v-if='authenticated' to="/profile" class="navbar-text mr-1" id='profile-button'> {{userEmail}} </router-link>
+        <!-- <b-nav-item v-if='authenticated' href="/profile">{{userEmail}} </b-nav-item> -->
+        <router-link to="/help" class="navbar-text mr-1" id='home-button'> Help </router-link>
         
         <!-- <router-link v-if='authenticated' to="/" v-on:click='logout' class="btn btn-outline-success my-2 my-sm-0 mr-1" tag="button" id='home-button'> Logout </router-link> -->
         <router-link v-show="!authenticated" to="/app/user/home" class="btn btn-info my-2 my-sm-0 mr-1" tag="button" id='home-button'> Login </router-link>

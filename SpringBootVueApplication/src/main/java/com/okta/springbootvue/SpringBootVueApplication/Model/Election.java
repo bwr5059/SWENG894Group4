@@ -12,23 +12,11 @@ import javax.persistence.Entity;
 public class Election {  
       
   @Id @GeneratedValue  
-  private Long electionId;  
+  private int electionID;  
   
   private String title;
   
-  private Boolean closed = false;
-  
-  //Number of allowed candidates to be selected per voter
-  private int numVotes = 1;
-  
-  //Total number of candidates for election
-  private int numCandidates = 1;
-  
-  //Time voting closes
-  private String closeTime;
-  
-  //Date voting closes
-  private String closeDate;
+  private int closed = 0;
   
   private int admin1;
   private int admin2;
@@ -36,5 +24,23 @@ public class Election {
   private int admin4;
   private int admin5;
   private int admin6;
+  
+  private String choice1;
+  private String choice2;
+  private String choice3;
+  private String choice4;
+  private String choice5;
+  
+  private String close_date;
+  
+  private String close_time;
+  
+  private int num_candidates;
+  
+  private int num_votes;
+  
+  private String start_date;
+  
+  private String start_time;
       
 }

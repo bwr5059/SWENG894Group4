@@ -9,7 +9,7 @@ public interface UserService {
 	//Retrieves all Rows from User Table
 	List<User> findAllUsers(); 
 	
-	User findById(long id);
+	User findById(String id);
 	
 	User findByEmail(String email);
 	
@@ -17,7 +17,7 @@ public interface UserService {
 	
 	void updateUser(User user);
 	
-	void deleteUserById(long id);
+	void deleteUserById(String id);
 	
 	void deleteAllUsers();
 	

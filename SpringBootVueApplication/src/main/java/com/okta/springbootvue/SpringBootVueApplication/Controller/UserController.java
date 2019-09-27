@@ -35,10 +35,6 @@ public class UserController {
   @Autowired
   UserService userService;
 
-  /*UserController(UserRepository repository) {
-    this.repository = repository;
-  }*/
-
   //Return all Existing Users
   @GetMapping("/user/")
   public ResponseEntity<List<User>> listAllUsers() {
@@ -67,35 +63,51 @@ public class UserController {
       userService.addUser(user, type);
       return user;
   }
-
+  
   //Modify Existing User
-  /*@PutMapping("/users/modify/{id}")
-  User replaceUser(@RequestBody User newUser, @PathVariable String id) {
-
-	    return repository.findById(id)
-	      .map(user -> {
-	        user.setFirstName(newUser.getFirstName());
-	        user.setLastName(newUser.getLastName());
-	        user.setType(newUser.getType());
-	        user.setAge(newUser.getAge());
-	        user.setEthnicity(newUser.getEthnicity());
-	        user.setRace(newUser.getRace());
-	        user.setGender(newUser.getGender());
-	        user.setAddress(newUser.getAddress());
-	        user.setCity(newUser.getCity());
-	        user.setState(newUser.getState());
-	        user.setZip(newUser.getZip());
-	        return repository.save(user);
-	      })
-	      .orElseGet(() -> {
-	        newUser.setId(id);
-	        return repository.save(newUser);
-	      });
+  @PutMapping("/user/modifyProfile/{id}")
+  public ResponseEntity<User> modifyUser(@RequestBody User user, @PathVariable String id) {
+	  
+	  User currentUser = userService.findById(id);
+	  
+	  if (currentUser==null) {
+          System.out.println("User with id " + id + " not found");
+          return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+      }  
+	  
+	  currentUser.setId(user.getId());
+	  currentUser.setEmail(user.getEmail());
+	  currentUser.setType(user.getType());
+	  currentUser.setAge(user.getAge());
+	  currentUser.setEthnicity(user.getEthnicity());
+	  currentUser.setGender(user.getGender());
+	  currentUser.setAddress(user.getAddress());
+	  currentUser.setCity(user.getCity());
+	  currentUser.setState(user.getState());
+	  currentUser.setZip(user.getZip());
+	  currentUser.setFirst_name(user.getFirst_name());
+	  currentUser.setLast_name(user.getLast_name());
+	  currentUser.setProfile_complete(user.getProfile_complete());
+	  currentUser.setUser_name(user.getUser_name());
+	  currentUser.setRace(user.getRace());
+       
+      userService.updateUser(currentUser);
+      return new ResponseEntity<User>(currentUser, HttpStatus.OK);
+	    
+  }
+  
+  //Remove Existing User
+  @DeleteMapping("/user/removeProfile/{id}")
+  public ResponseEntity<User> deleteUser(@PathVariable("id") String id) {
+	  User user = userService.findById(id);
+	  if (user == null) {
+	      System.out.println("Unable to delete. User with id " + id + " not found");
+	      return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
 	  }
-
-  //Remove one user
-  @DeleteMapping("/users/remove/{id}")
-  void deleteUser(@PathVariable String id) {
-    repository.deleteById(id);
-  }*/
+	 
+	  userService.deleteUserById(id);
+	  return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
+  }
+    
+  
 }

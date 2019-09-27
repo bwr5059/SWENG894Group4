@@ -38,6 +38,7 @@ public class UserServiceImpl implements UserService{
 		return users;
 	}
 	
+	//Find single user by id
 	public User findById(String id) {
 		users = findAllUsers();
 		for(User user : users){
@@ -48,6 +49,7 @@ public class UserServiceImpl implements UserService{
 		return null;
 	}
 	
+	//Find single user by email
 	public User findByEmail(String email) {
 		users = findAllUsers();
 		for(User user : users){
@@ -58,6 +60,7 @@ public class UserServiceImpl implements UserService{
 		return null;
 	}
 	
+	//Add single user to db
 	public void addUser(User user, String type) {
 		users = findAllUsers();
 		if(type.equals("Candidate")) {
@@ -67,23 +70,30 @@ public class UserServiceImpl implements UserService{
 		}
 		user.setProfile_complete(0);
 		
-		users.add(user);
 		connDao.insertUser(conn, user, users);
+		users.add(user);
 	}
 
+	//Update existing user in db
 	public void updateUser(User user) {
+		connDao.updateUser(conn, user, users);
+		
+		/*users = findAllUsers();
 		int index = users.indexOf(user);
-		users.set(index, user);
+		users.set(index, user);*/
 	}
 
+	//Delete single user in db
 	public void deleteUserById(String id) {
 		
-		for (Iterator<User> iterator = users.iterator(); iterator.hasNext(); ) {
+		/*for (Iterator<User> iterator = users.iterator(); iterator.hasNext(); ) {
 		    User user = iterator.next();
 		    if (user.getId().equals(id)) {
 		        iterator.remove();
 		    }
-		}
+		}*/
+		connDao.deleteUser(conn, id, users);
+		
 	}
 
 	public boolean isUserExist(User user) {

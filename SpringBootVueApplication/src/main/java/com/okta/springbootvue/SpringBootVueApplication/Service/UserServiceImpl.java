@@ -38,10 +38,10 @@ public class UserServiceImpl implements UserService{
 		return users;
 	}
 	
-	public User findById(long id) {
+	public User findById(String id) {
 		users = findAllUsers();
 		for(User user : users){
-			if(user.getId() == id){
+			if(user.getId().equals(id)){
 				return user;
 			}
 		}
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService{
 		 }else {
 		  user.setType("Voter");
 		}
-		user.setId(counter.incrementAndGet());
+		user.setProfile_complete(0);
 		
 		users.add(user);
 		connDao.insertUser(conn, user, users);
@@ -76,11 +76,11 @@ public class UserServiceImpl implements UserService{
 		users.set(index, user);
 	}
 
-	public void deleteUserById(long id) {
+	public void deleteUserById(String id) {
 		
 		for (Iterator<User> iterator = users.iterator(); iterator.hasNext(); ) {
 		    User user = iterator.next();
-		    if (user.getId() == id) {
+		    if (user.getId().equals(id)) {
 		        iterator.remove();
 		    }
 		}

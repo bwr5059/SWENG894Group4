@@ -31,13 +31,13 @@ import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.Use
 @RestController
 public class UserController {
 
-  private final UserRepository repository;
+  //private final UserRepository repository;
   @Autowired
   UserService userService;
 
-  UserController(UserRepository repository) {
+  /*UserController(UserRepository repository) {
     this.repository = repository;
-  }
+  }*/
 
   //Return all Existing Users
   @GetMapping("/user/")
@@ -51,7 +51,7 @@ public class UserController {
   
   //Return Single User by ID
   @GetMapping("/user/{id}")
-  public ResponseEntity<User> getUser(@PathVariable("id") long id) {
+  public ResponseEntity<User> getUser(@PathVariable("id") String id) {
       User user = userService.findById(id);
       if (user == null) {
           System.out.println("User with id " + id + " not found");
@@ -69,8 +69,8 @@ public class UserController {
   }
 
   //Modify Existing User
-  @PutMapping("/users/modify/{id}")
-  User replaceUser(@RequestBody User newUser, @PathVariable Long id) {
+  /*@PutMapping("/users/modify/{id}")
+  User replaceUser(@RequestBody User newUser, @PathVariable String id) {
 
 	    return repository.findById(id)
 	      .map(user -> {
@@ -95,7 +95,7 @@ public class UserController {
 
   //Remove one user
   @DeleteMapping("/users/remove/{id}")
-  void deleteUser(@PathVariable Long id) {
+  void deleteUser(@PathVariable String id) {
     repository.deleteById(id);
-  }
+  }*/
 }

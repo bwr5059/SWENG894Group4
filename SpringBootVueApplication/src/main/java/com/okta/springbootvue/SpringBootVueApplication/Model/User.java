@@ -11,15 +11,17 @@ import javax.persistence.Entity;
 @NoArgsConstructor  
 public class User {  
       
-  @Id @GeneratedValue  
-  private Long id;  
+  @Id 
+  private String id;  
   
   private String email;
+  
+  private String user_name;
 
   @NonNull
-  private String firstName;  
+  private String first_name;  
   
-  private String lastName;
+  private String last_name;
   
   //Default Voter enum type
   //Other options: Candidate, Admin
@@ -28,12 +30,10 @@ public class User {
   private int age;
   
   private String ethnicity;
-  
-  private String race;
-  
+    
   private String gender;
   
-  private int profileComplete = 0;
+  private int profile_complete = 0;
   
   private String address;
   
@@ -41,6 +41,6 @@ public class User {
   
   private String state;
   
-  private int zip;
+  private String zip;
       
 }

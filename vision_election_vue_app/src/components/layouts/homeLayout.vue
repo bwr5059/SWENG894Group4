@@ -3,7 +3,8 @@
         <b-navbar type="light">
             <b-navbar-nav>
                 <router-link to="/app/user/home" class="navbar-brand">Election</router-link>
-                <router-link v-show="!$route.authorized" to="/app/user/createElection" class="btn btn-secondary my-2 my-sm-0 mr-1" tag="button" id='home-button'> New </router-link>
+                <router-link v-show="authorized" to="/app/user/createElection" class="btn btn-secondary my-2 my-sm-0 mr-1" tag="button" id='home-button'> New </router-link>
+                <router-link v-show="authorized" to="/app/user/addAdmin" class="btn btn-secondary my-2 my-sm-0 mr-1" tag="button" id='home-button'> Election Admin </router-link>
                 <router-link to="/app/home/elections" class="btn btn-secondary my-2 my-sm-0 mr-1">Search all</router-link>
             </b-navbar-nav>
             <b-navbar-nav class="ml-auto">
@@ -18,6 +19,8 @@
 </template>
 
 <script>
+
+import api from '@/apis/userApi'
 export default {
   name: 'homeLayout',
   props: {
@@ -28,12 +31,37 @@ export default {
 
    data: () => {  
       return {
-    authorized: true,
+    authorized: false,
     form: {
           id: '',
         },
+    userObj: null,
+    profileComplete: null
+    
       }
 },
+mounted: function() {
+    api.getUser(5)  
+    .then(response => {  
+      this.$log.debug("Data loaded: ", response.data)  
+      this.userObj = response.data  
+      this.profileComplete = 1
+     if(this.userObj.type == "Admin"){
+        this.authorized = true
+        
+     }
+  })  
+    .catch(error => {  
+      this.$log.debug(error)  
+      this.error = "User Profile not complete"  
+      this.$log.debug("User not found")
+      this.authorized = false
+      this.profileComplete = 0
+      
+  }) 
+  
+  },
+
     methods: {
     searchElection: function(){
         alert("test")

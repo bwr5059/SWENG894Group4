@@ -32,6 +32,12 @@ export default {
       return data? JSON.parse(data) : data;  
     }]  
   }),  
+
+  getUsers: () => instance.get('/users', {  
+    transformResponse: [function (data) {  
+      return data? JSON.parse(data) : data;  
+    }]  
+  }), 
   // (U)pdate  
   modifyUser: (ID, email, type, fName, lName, age, race, ethnicity, gender, address, city, state, zip) => 
   instance.put('/users/modify/'+ID, {email: email, type: type, firstName: fName, lastName: lName, age: age, race: race, ethnicity: ethnicity

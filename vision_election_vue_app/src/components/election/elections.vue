@@ -12,7 +12,6 @@
         </template>
       </template> -->
     </b-table>
-    {{selected}}
   </div>
 </template>
 

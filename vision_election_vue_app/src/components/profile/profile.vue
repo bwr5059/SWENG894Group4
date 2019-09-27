@@ -12,12 +12,12 @@
         id="input-group-1"
         label="Email address:"
         label-for="input-1"
-        description="We'll never share your email with anyone else."
+       
       >
      
         <b-form-input
           id="input-1"
-          v-model="activeUser.email"
+          v-model="this.$parent.activeUser.email"
           type="email"
           required
           readonly
@@ -44,7 +44,7 @@
       <b-form-group id="input-group-2" label="First Name:" label-for="input-2">
         <b-form-input
           id="input-2"
-          v-model="activeUser.given_name"
+          v-model="this.$parent.activeUser.given_name"
           required
           placeholder="Enter first name"
           readonly
@@ -56,7 +56,7 @@
       <b-form-group id="input-group-3" label="Last Name:" label-for="input-3">
         <b-form-input
           id="input-3"
-          v-model="activeUser.family_name"
+          v-model="this.$parent.activeUser.family_name"
           required
           placeholder="Enter last name"
           readonly
@@ -149,18 +149,10 @@
       <b-button v-show="!editable" v-on:click="edit">Edit</b-button>
       <b-button v-show="editable" class="mr-1" v-on:click="cancel">Cancel</b-button>
       <b-button v-show="editable" v-on:click="addUser">Submit</b-button>
-      
     </b-form>
-
   </div>
-
-          </div>
-   
-
-       
-
-  
-    </div>
+  </div>
+</div>
 </template>
 
 <script>
@@ -170,11 +162,11 @@ export default {
   name: 'profile',
   props: {
     msg: String,
-    activeUser: Object
+    //activeUser: Object
   },
   data: () => {  
       return {  
-        //activeUser: null,
+        activeUser: null,
         form: {
           email: '',
           fname: '',
@@ -192,7 +184,7 @@ export default {
         gender: [{ text: 'Select One', value: null }, 'Male', 'Female', 'Not Disclosed'],
         race: [{text: 'Select one', value: null}, 'American Indian or Alaska Native', 'Asian', 'Black or African American', 'Native Hawaiin or Other Pacific Islander', 'White'],
         ethnicity: [{text: 'Select One', value: null}, 'Hispanic or Latino or Spanish Origin', 'Not Hispanic or Latino or Spanish Origin'],
-        type: [{text: 'Registration Type', value: null}, 'Voter', 'Candidate'],
+        type: [{text: 'Registration Type', value: null}, 'Voter', 'Candidate', "Admin"],
         show: true,
         editable: false,
         userObj: '',
@@ -204,12 +196,12 @@ export default {
     
 
     mounted: function(){
-    
+    this.activeUser = this.$parent.activeUser,
     api.getUser(5)  
     .then(response => {  
       this.$log.debug("Data loaded: ", response.data)
       this.userObj = response
-      this.form.email = this.userObj.data.email
+      this.form.email = this.$parent.activeUser.email
       this.form.type = this.userObj.data.type
       this.form.fname = this.userObj.data.firstName
       this.form.lname = this.userObj.data.lastName
@@ -225,6 +217,7 @@ export default {
         this.userProfileComplete = 1
       }else{
         this.userProfileComplete = 0
+
       } 
   })
       
@@ -232,9 +225,9 @@ export default {
 
      async created () {  
     await this.refreshActiveUser()  
-    this.form.email = this.activeUser.email,
-    this.form.fname = this.activeUser.given_name,
-    this.form.lname = this.activeUser.family_name
+    // this.form.email = this.activeUser.email,
+    // this.form.fname = this.activeUser.given_name,
+    // this.form.lname = this.activeUser.family_name
   },  
   
   watch: {  

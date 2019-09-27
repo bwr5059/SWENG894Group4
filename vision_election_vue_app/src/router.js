@@ -13,6 +13,7 @@ import electionDetails from './components/election/electionDetails.vue'
 import help from './components/marketing/help.vue'
 import elections from './components/election/elections.vue'
 import applicationHelp from './components/help/applicationHelp.vue'
+import addElectionAdmin from './components/election/addElectionAdmin.vue'
   
 Vue.use(Auth, {  
   issuer: 'https://dev-208412.okta.com/oauth2/default',  
@@ -68,6 +69,10 @@ let router = new Router({
         {
           path: 'elections',
           component: elections
+        },
+        {
+          path: 'addAdmin',
+          component: addElectionAdmin
         }
       
       ],

@@ -16,13 +16,6 @@ public class User {
   
   private String email;
   
-  private String user_name;
-
-  @NonNull
-  private String first_name;  
-  
-  private String last_name;
-  
   //Default Voter enum type
   //Other options: Candidate, Admin
   private String type;
@@ -30,10 +23,8 @@ public class User {
   private int age;
   
   private String ethnicity;
-    
-  private String gender;
   
-  private int profile_complete = 0;
+  private String gender;
   
   private String address;
   
@@ -42,5 +33,15 @@ public class User {
   private String state;
   
   private String zip;
-      
+  
+  private String first_name;  
+  
+  private String last_name;
+  
+  private int profile_complete = 0;
+  
+  private String user_name;
+
+  private String race;
+    
 }

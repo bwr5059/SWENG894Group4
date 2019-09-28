@@ -128,6 +128,26 @@ public class ConnectionDao {
 		
 	}
 	
+	public void updateUserType(Connection conn, String id, String type){
+		if(conn == null) {
+			conn = RetriveConnection();
+		}
+
+		try {
+		String sql = "UPDATE user SET type=? WHERE id=?";
+		PreparedStatement stmt=conn.prepareStatement(sql);
+		
+		stmt.setString(1,type);
+		stmt.setString(2,id);
+		stmt.executeUpdate();  
+		
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		//con.close();  
+		
+	}
+	
 	public List<User> deleteUser(Connection conn, String Id, List<User> userList){
 		if(conn == null) {
 			conn = RetriveConnection();

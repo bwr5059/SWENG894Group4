@@ -17,6 +17,8 @@ public interface UserService {
 	
 	void updateUser(User user);
 	
+	void updateUserType(String id, String type);
+	
 	void deleteUserById(String id);
 	
 	void deleteAllUsers();

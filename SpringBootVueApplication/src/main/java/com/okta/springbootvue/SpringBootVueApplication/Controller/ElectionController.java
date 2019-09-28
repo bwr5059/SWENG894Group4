@@ -131,4 +131,19 @@ public class ElectionController {
       return new ResponseEntity<Election>(HttpStatus.NO_CONTENT);
   }
   
+  //Associate a Candidate
+  @PostMapping("/election/associateCandidate/{electionID}/{id}")
+  public ResponseEntity<Election> getElectionType(@PathVariable("electionID") int electionID, @PathVariable("id") String id){
+	  Election election = electionService.findById(electionID);
+	  User user = userService.findById(id);
+	  
+	  if (election == null || user == null) {
+          System.out.println("Election or User not found.");
+          return new ResponseEntity<Election>(HttpStatus.NOT_FOUND);
+      }
+
+      electionService.associateCandidate(electionID, id);
+      return new ResponseEntity<Election>(HttpStatus.NO_CONTENT);
+  }
+  
 }

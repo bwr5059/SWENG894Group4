@@ -4,6 +4,8 @@ import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
 import org.springframework.stereotype.Component;
 
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
+
 /**
  * IDs are not returned by RestRepository by default.
  * This exposes the ID of created and listed resources.

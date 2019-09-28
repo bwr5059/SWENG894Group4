@@ -69,8 +69,8 @@ public class ElectionServiceImpl implements ElectionService{
 		connDao.insertVoteAuth(conn, electionID, id);
 	}
 	
-	public void associateCandidate(String id, String electionID) {
-		
+	public void associateCandidate(int electionID, String id) {
+		connDao.insertElectionCandidate(conn, electionID, id);
 	}
 	
 	

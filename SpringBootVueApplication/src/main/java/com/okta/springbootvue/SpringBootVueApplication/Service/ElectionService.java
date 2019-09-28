@@ -18,6 +18,6 @@ public interface ElectionService {
 		
 		void associateVoter(int electionID, String id);
 		
-		void associateCandidate(String id, String electionID);
+		void associateCandidate(int electionID, String id);
 		
 }

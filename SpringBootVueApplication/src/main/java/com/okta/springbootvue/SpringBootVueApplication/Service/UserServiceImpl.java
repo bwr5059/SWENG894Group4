@@ -82,6 +82,15 @@ public class UserServiceImpl implements UserService{
 		int index = users.indexOf(user);
 		users.set(index, user);*/
 	}
+	
+	//Update existing user type in db
+		public void updateUserType(String id, String type) {
+			connDao.updateUserType(conn, id, type);
+			
+			/*users = findAllUsers();
+			int index = users.indexOf(user);
+			users.set(index, user);*/
+		}
 
 	//Delete single user in db
 	public void deleteUserById(String id) {

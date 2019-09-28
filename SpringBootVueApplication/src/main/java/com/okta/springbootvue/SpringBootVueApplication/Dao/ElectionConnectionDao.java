@@ -185,5 +185,25 @@ public class ElectionConnectionDao {
 		//con.close();  
 		
 	}
+	
+	public void insertElectionCandidate(Connection conn, int electionID, String id){
+		if(conn == null) {
+			conn = RetriveConnection();
+		}
+
+		try {
+		String sql = "INSERT INTO electionCandidate (electionID, canID) VALUES (?,?)";
+		PreparedStatement stmt=conn.prepareStatement(sql);
+		
+		stmt.setInt(1,electionID);
+		stmt.setString(2,id);
+		stmt.executeUpdate();  
+		
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		//con.close();  
+		
+	}
 }
 

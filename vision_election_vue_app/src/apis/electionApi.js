@@ -5,7 +5,7 @@ const SERVER_URL = 'http://localhost:9000';
   
 const instance = axios.create({  
   baseURL: SERVER_URL,  
-  timeout: 1000  
+  timeout: 5000  
 });  
   
 export default {  
@@ -23,24 +23,24 @@ export default {
       }, 
   // (C)reate  
   createNew: () => 
-  instance.post('/elections/addElection', {transformResponse: [function (data) {  
+  instance.post('/election/addElection', {transformResponse: [function (data) {  
     return data? JSON.parse(data) : data;  
   }]  
 }),  
-  // (R)ead  ("/elections/{electionId}"
-  getElection: (eID) => instance.get('/elections/'+eID, {
+  // (R)ead  ("/election/{electionId}"
+  getElection: (eID) => instance.get('/election/'+eID, {
     transformResponse: [function (data) {  
       return data? JSON.parse(data) : data;  
     }]  
   }),  
   // (U)pdate  
-  updateElection: (electionTitle, electionDescription, id)=> instance.put('/elections/modify/'+id, {title: electionTitle,  
+  updateElection: (electionTitle, electionDescription, id)=> instance.put('/election/modifyElection/'+id, {title: electionTitle,  
     transformResponse: [function (data) {  
       return data? JSON.parse(data) : data;  
     }]  
   }),
-
-  getElections: ()=> instance.get("/elections", { 
+  //get all elections "/election"
+  getElections: ()=> instance.get("/election", { 
     transformResponse: [function (data) {  
       return data? JSON.parse(data) : data;  
     }]  

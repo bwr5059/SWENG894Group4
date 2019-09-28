@@ -36,12 +36,55 @@ export default {
           id: '',
         },
     userObj: null,
-    profileComplete: null
-    
+    profileComplete: null,
+    activeUser: null
       }
 },
+created: function(){
+  this.$log.debug("home layout created")
+ // this.refreshActiveUser()
+  
+},
+
+ watch: {  
+    '$parent.activeUser': 'refreshActiveUser',  
+
+    
+  },  
 mounted: function() {
-    api.getUser(5)  
+  this.$log.debug("home layout mounted")
+
+  //   api.getUser(this.activeUser.sub)  
+  //   .then(response => {  
+  //     this.$log.debug("Data loaded: ", response.data)  
+  //     this.userObj = response.data  
+  //     this.profileComplete = 1
+  //    if(this.userObj.type == "Admin"){
+  //       this.authorized = true
+        
+  //    }
+  // })  
+  //   .catch(error => {  
+  //     this.$log.debug(error)  
+  //     this.error = "User Profile not complete"  
+  //     this.$log.debug("User not found")
+  //     this.authorized = false
+  //     this.profileComplete = 0
+      
+  // }) 
+  
+  },
+
+    methods: {
+    searchElection: function(){
+        alert("test")
+        this.$router.push({path: `/app/home/election/${this.form.id}/details`})
+    },
+     refreshActiveUser: function()
+    {
+      this.activeUser =  this.$parent.activeUser
+      this.$log.debug("home layout: ", this.activeUser) 
+      api.getUser(this.activeUser.sub)  
     .then(response => {  
       this.$log.debug("Data loaded: ", response.data)  
       this.userObj = response.data  
@@ -59,14 +102,9 @@ mounted: function() {
       this.profileComplete = 0
       
   }) 
+    },
+    }
+      
   
-  },
-
-    methods: {
-    searchElection: function(){
-        alert("test")
-        this.$router.push({path: `/app/home/election/${this.form.id}/details`})
-    }
-    }
 }
 </script>

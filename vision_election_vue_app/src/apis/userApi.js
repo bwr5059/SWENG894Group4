@@ -5,7 +5,7 @@ const SERVER_URL = 'http://localhost:9000';
   
 const instance = axios.create({  
   baseURL: SERVER_URL,  
-  timeout: 1000  
+  timeout: 5000  
 });  
   
 export default {  
@@ -22,26 +22,33 @@ export default {
         })  
       }, 
   // (C)reate  
-  createNew: (email, type, fName, lName, age, race, ethnicity, gender, address, city, state, zip) => 
-  instance.post('/users/addProfile/Voter', {email: email, type: type, firstName: fName, lastName: lName, age: age, race: race, ethnicity: ethnicity
-    ,gender: gender, address: address, city: city, state: state, zip: zip, profileComplete: "True", transformResponse: [function (data) {  
+  createNew: (id, email, type, fName, lName, age, race, ethnicity, gender, address, city, state, zip, userName) => 
+  instance.post('/user/addProfile/'+type, {Id: id, Email: email, First_name: fName, Last_name: lName, Age: age, Race: race, Ethnicity: ethnicity
+    ,Gender: gender, Address: address, City: city, State: state, Zip: zip, Profile_complete: "True", User_name: userName, transformResponse: [function (data) {  
       return data? JSON.parse(data) : data;  }]}),  
   // (R)ead  
-  getUser: (id) => instance.get('/users/'+id, {  
+  getUser: (id) => instance.get('/user/'+id, {  
     transformResponse: [function (data) {  
       return data? JSON.parse(data) : data;  
     }]  
   }),  
 
-  getUsers: () => instance.get('/users', {  
+  getUsers: () => instance.get('/user', {  
     transformResponse: [function (data) {  
       return data? JSON.parse(data) : data;  
     }]  
   }), 
   // (U)pdate  
   modifyUser: (ID, email, type, fName, lName, age, race, ethnicity, gender, address, city, state, zip) => 
-  instance.put('/users/modify/'+ID, {email: email, type: type, firstName: fName, lastName: lName, age: age, race: race, ethnicity: ethnicity
+  instance.put('/user/modifyProfile/'+ID, {email: email, type: type, firstName: fName, lastName: lName, age: age, race: race, ethnicity: ethnicity
     ,gender: gender, address: address, city: city, state: state, zip: zip, profileComplete: "True"}), 
+
+    addAdmin: (ID, type,) => 
+    instance.put('/user/addAdmin/'+ID+'/'+type, {type: type,   
+      transformResponse: [function (data) {  
+        return data? JSON.parse(data) : data;  
+      }]  
+    }), 
  
  // updateForId: (id, text, completed) => instance.put('todos/'+id, {title: text, completed: completed}),  
   // (D)elete  

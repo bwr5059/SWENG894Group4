@@ -11,6 +11,7 @@ import createElection from './components/election/createElection.vue'
 import viewElection from './components/election/viewElection.vue'
 import electionDetails from './components/election/electionDetails.vue'
 import help from './components/marketing/help.vue'
+import accountHelp from './components/help/accountHelp.vue'
 import elections from './components/election/elections.vue'
 import applicationHelp from './components/help/applicationHelp.vue'
 import addElectionAdmin from './components/election/addElectionAdmin.vue'
@@ -45,6 +46,10 @@ let router = new Router({
         path: '/help/applicationHelp',
         component: applicationHelp
     },
+    {
+      path: '/help/account',
+      component: accountHelp
+  },
 
     {
         path: '/app/:id',

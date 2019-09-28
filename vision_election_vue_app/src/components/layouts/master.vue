@@ -61,23 +61,29 @@ export default {
       },
     },
   created () {
-    this.isAuthenticated()
+    this.$log.debug("Master created")
+    this.isAuthenticated("created")
     
   },
+  
 
   mounted () {
-    this.getEmail()
+    this.$log.debug("Master mounted")
+    //this.getEmail()
     
   },
   watch: {
     // Everytime the route changes, check for auth status
     '$route': 'isAuthenticated',
-    'authenticated': 'getEmail'
+    //'authenticated': 'getEmail'
   },
   
   methods: {
-    async isAuthenticated () {
+    async isAuthenticated (input) {
+      this.$log.debug("authenticating from: "+input)
       this.authenticated = await this.$auth.isAuthenticated()
+       this.activeUser = await this.$auth.getUser()  
+      // this.$log.debug("Got user in master: "+this.activeUser)
       
     },
     login () {
@@ -90,7 +96,9 @@ export default {
       this.$router.push({ path: '/' })
     },
     async getEmail (){
-      this.activeUser = await this.$auth.getUser()  
+      this.$log.debug("Getting user after authenticated")
+      // this.activeUser = await this.$auth.getUser()  
+      // this.$log.debug("Got user in master: "+this.activeUser)
     }
   }
   

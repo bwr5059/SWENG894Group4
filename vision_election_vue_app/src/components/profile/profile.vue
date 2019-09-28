@@ -197,7 +197,7 @@ export default {
 
     mounted: function(){
     this.activeUser = this.$parent.activeUser,
-    api.getUser(5)  
+    api.getUser(this.activeUser.sub)  
     .then(response => {  
       this.$log.debug("Data loaded: ", response.data)
       this.userObj = response
@@ -262,7 +262,7 @@ export default {
     addUser: function () {  
         window.alert("Subbmiting to API")
     if(this.userProfileComplete==0){
-    api.createNew(this.form.email, this.form.type, this.form.fname, this.form.lname, this.form.age, this.form.race, this.form.ethnicity, this.form.gender, this.form.address, this.form.city, this.form.state, this.form.zip).then( (response) => {  
+    api.createNew(this.activeUser.sub, this.activeUser.email, this.form.type, this.activeUser.given_name, this.activeUser.family_name, this.form.age, this.form.race, this.form.ethnicity, this.form.gender, this.form.address, this.form.city, this.form.state, this.form.zip, this.activeUser.email).then( (response) => {  
       this.$log.debug("New User created:", response); 
       alert("Profile Updated") 
       this.$router.push({ path: '/app/user/home' })

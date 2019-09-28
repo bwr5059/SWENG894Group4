@@ -7,7 +7,7 @@
   
   
     <b-row class ='d-flex justify-content-center'>
-    email: {{userEmail}} id: {{userID}} firstname: {{userFName}} lastname: {{userLName}}
+    <!-- email: {{userEmail}} id: {{userID}} firstname: {{userFName}} lastname: {{userLName}} -->
 
   
 
@@ -39,7 +39,7 @@ export default {
   name: 'home',
   props: {
     msg: String,
-    activeUser: Object,
+   // activeUser: Object,
     
     
   },data: () => {  
@@ -48,24 +48,29 @@ export default {
         todos: [], 
         error: null,
         userProfileComplete: null,
-        authorized: true
+        authorized: true,
+        userObj: null,
+        activeUser: null
       }  
     },  
 
-    computed: {
-        userEmail: function () {
-        return this.activeUser ? this.activeUser.email : ''
-      },
+    // computed: {
 
-         userID: function () {
-        return this.activeUser ? this.activeUser.sub : ''
-    },
-        userFName: function () {
-        return this.activeUser ? this.activeUser.given_name : ''
-    },
-        userLName: function () {
-        return this.activeUser ? this.activeUser.family_name : ''
-    },
+      
+    //     userEmail: function () {
+    //     return this.activeUser ? this.activeUser.email : ''
+    //   },
+
+    //      userID: function () {
+    //     return this.activeUser ? this.activeUser.sub : ''
+    // },
+    //     userFName: function () {
+    //     return this.activeUser ? this.activeUser.given_name : ''
+    // },
+    //     userLName: function () {
+    //     return this.activeUser ? this.activeUser.family_name : ''
+    // },
+
     
 
 
@@ -74,15 +79,24 @@ export default {
 
 //you can retrieve first name as given_name and last name as family_name
         
-    },
+  //  },
+
   
-  async created () {  
-    await this.refreshActiveUser();
+ created: function () {  
+    
+   this.$log.debug("home created")
+  
    
-     this.checkUser();
   },  
 
   mounted: function() {
+    this.$log.debug("home mounted")
+  
+     //this.refreshActiveUser();
+     //this.$log.debug(this.activeUser.sub)
+    //  this.checkUser();
+     // this.checkUser();
+
   //   api.getUser(5)  
   //   .then(response => {  
   //     this.$log.debug("Data loaded: ", response.data)  
@@ -99,26 +113,49 @@ export default {
   
   },
   watch: {  
-    '$route': 'refreshActiveUser',  
-    //userProfileComplete: 'checkUser'
+    // '$parent.activeUser': 'refreshActiveUser',  
+    // userProfileComplete: 'checkUser'
+    '$parent.profileComplete': 'checkUser'
     
   },  
   
   methods: {  
-    async refreshActiveUser () {  
-      this.activeUser = await this.$auth.getUser()  
-      this.$log.debug('activeUser',this.activeUser)  
+    // async refreshActiveUser () {  
+    //   this.activeUser = await this.$auth.getUser()  
+    //   this.$log.debug('activeUser home',this.activeUser)  
       
-    },  
+    // },  
+
+    refreshActiveUser: function()
+    {
+      this.activeUser =  this.$parent.activeUser
+      this.$log.debug(this.activeUser)
+
+      api.getUser(this.activeUser.sub)  
+    .then(response => {  
+      this.$log.debug("Data loaded: ", response.data)  
+      this.todos = response.data  
+      this.userProfileComplete = 1
+  })  
+    .catch(error => {  
+      this.$log.debug(error)  
+      this.error = "User Profile not complete"  
+      this.userProfileComplete = 0
+      
+  })
+    
   
-    async handleLogout () {  
-      await this.$auth.logout()  
-      await this.refreshActiveUser()  
-      this.$router.go('/')  
     },
+  
+    // async handleLogout () {  
+    //   await this.$auth.logout()  
+    //   await this.refreshActiveUser()  
+    //   this.$router.go('/')  
+    // },
 
     checkUser() {
-      if(this.$parent.profileComplete==0){
+      
+      if(this.$parent.profileComplete==0||this.$parent.profileComplete==null){
         alert("test2")
         this.$router.push({path:'/profile'})
       }

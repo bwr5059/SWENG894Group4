@@ -104,7 +104,7 @@ public class ElectionController {
   }
   
   //Remove Existing Election
-  @DeleteMapping("/user/removeElection/{electionID}")
+  @DeleteMapping("/election/removeElection/{electionID}")
   public ResponseEntity<Election> deleteUser(@PathVariable("electionID") int electionID) {
 	  Election election = electionService.findById(electionID);
 	  if (election == null) {

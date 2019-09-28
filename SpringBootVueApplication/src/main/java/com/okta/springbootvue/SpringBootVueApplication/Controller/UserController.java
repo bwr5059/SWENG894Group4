@@ -96,6 +96,22 @@ public class UserController {
 	    
   }
   
+  //Modify Existing User Type
+  @PutMapping("/user/addAdmin/{id}/{type}")
+  public ResponseEntity<User> modifyUser(@PathVariable String id, @PathVariable String type) {
+	  
+	  User currentUser = userService.findById(id);
+	  
+	  if (currentUser==null) {
+          System.out.println("User with id " + id + " not found");
+          return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+      }  
+       
+      userService.updateUserType(id, type);
+      return new ResponseEntity<User>(currentUser, HttpStatus.OK);
+	    
+  }
+  
   //Remove Existing User
   @DeleteMapping("/user/removeProfile/{id}")
   public ResponseEntity<User> deleteUser(@PathVariable("id") String id) {

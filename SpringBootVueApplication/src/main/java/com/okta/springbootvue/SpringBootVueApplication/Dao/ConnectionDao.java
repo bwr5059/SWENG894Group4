@@ -48,12 +48,12 @@ public class ConnectionDao {
 			user.setRace(rs.getString(15));
 			userList.add(user);
 		}
+		con.close(); 
 		System.out.println("list is: "+userList.size());
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 		return userList;
-		//con.close();  
 		
 	}
 	
@@ -83,12 +83,12 @@ public class ConnectionDao {
 		stmt.setString(14,user.getUser_name());
 		stmt.setString(15,user.getRace());
 		stmt.executeUpdate();  
+		con.close(); 
 		
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 		return userList;
-		//con.close();  
 		
 	}
 	
@@ -119,12 +119,12 @@ public class ConnectionDao {
 		stmt.setString(15,user.getRace());
 		stmt.setString(16,user.getId());
 		stmt.executeUpdate();  
+		con.close();
 		
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 		return userList;
-		//con.close();  
 		
 	}
 	
@@ -139,12 +139,13 @@ public class ConnectionDao {
 		
 		stmt.setString(1,type);
 		stmt.setString(2,id);
-		stmt.executeUpdate();  
+		stmt.executeUpdate(); 
+		
+		con.close();  
 		
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		//con.close();  
 		
 	}
 	
@@ -158,13 +159,14 @@ public class ConnectionDao {
 		PreparedStatement stmt=conn.prepareStatement(sql);
 		
 		stmt.setString(1,Id);
-		stmt.executeUpdate();  
+		stmt.executeUpdate(); 
+		con.close(); 
 		
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
+		
 		return userList;
-		//con.close();  
 		
 	}
 

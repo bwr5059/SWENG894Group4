@@ -8,10 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.PreparedStatement;
 
-import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 
-public class ElectionConnectionDao {
+public class ConnectionDao {
 	Connection con = null;
 	public Connection RetriveConnection() {
 	try {
@@ -22,188 +21,153 @@ public class ElectionConnectionDao {
 	return con;  
 	}
 	
-	public List<Election> getElectionList(Connection conn){
+	public List<User> getUserList(Connection conn){
 		if(conn == null) {
 			conn = RetriveConnection();
 		}
-		List<Election> electionList = new ArrayList<>();
+		List<User> userList = new ArrayList<>();
 		try {
 		Statement stmt=conn.createStatement();  
-		ResultSet rs=stmt.executeQuery("select * from election");  
+		ResultSet rs=stmt.executeQuery("select * from user");  
 		while(rs.next())  {
-			Election election = new Election();
-			election.setElectionID(rs.getInt(1));
-			election.setTitle(rs.getString(2));
-			election.setClosed(rs.getInt(3));
-			election.setAdmin1(rs.getInt(4));
-			election.setAdmin2(rs.getInt(5));
-			election.setAdmin3(rs.getInt(6));
-			election.setAdmin4(rs.getInt(7));
-			election.setAdmin5(rs.getInt(8));
-			election.setAdmin6(rs.getInt(9));
-			election.setChoice1(rs.getString(10));
-			election.setChoice2(rs.getString(11));
-			election.setChoice3(rs.getString(12));
-			election.setChoice4(rs.getString(13));
-			election.setChoice5(rs.getString(14));
-			election.setClose_date(rs.getString(15));
-			election.setClose_time(rs.getString(16));
-			election.setNum_candidates(rs.getInt(17));
-			election.setNum_votes(rs.getInt(18));
-			election.setStart_date(rs.getString(19));
-			election.setStart_time(rs.getString(20));
-			
-			
-			electionList.add(election);
+			User user = new User();
+			user.setId(rs.getString(1));
+			user.setEmail(rs.getString(2));
+			user.setType(rs.getString(3));
+			user.setAge(rs.getInt(4));
+			user.setEthnicity(rs.getString(5));
+			user.setGender(rs.getString(6));
+			user.setAddress(rs.getString(7));
+			user.setCity(rs.getString(8));
+			user.setState(rs.getString(9));
+			user.setZip(rs.getString(10));
+			user.setFirst_name(rs.getString(11));
+			user.setLast_name(rs.getString(12));
+			user.setProfile_complete(rs.getInt(13));
+			user.setUser_name(rs.getString(14));
+			user.setRace(rs.getString(15));
+			userList.add(user);
 		}
 		conn.close(); 
-		System.out.println("list is: "+electionList.size());
+		System.out.println("list is: "+userList.size());
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		return electionList;
-
+		return userList;
+		
 	}
 	
-	public List<Election> insertElection(Connection conn, Election election, List<Election> electionList){
+	public List<User> insertUser(Connection conn, User user, List<User> userList){
 		if(conn == null) {
 			conn = RetriveConnection();
 		}
 
 		try {
-		String sql = "INSERT INTO election (electionID, title, closed, admin1, admin2, admin3, admin4, admin5, admin6, choice1, choice2, " +
-				"choice3, choice4, choice5, close_date, close_time, num_candidates, num_votes, start_date, start_time) " + 
-				"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO user (id, email, type, age, ethnicity, gender, address, city, state, zip, first_name, " +
+				"last_name, profile_complete, user_name, race) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		PreparedStatement stmt=conn.prepareStatement(sql);
 		
-		stmt.setInt(1,election.getElectionID());
-		stmt.setString(2,election.getTitle());
-		stmt.setInt(3,election.getClosed());
-		stmt.setInt(4,election.getAdmin1());
-		stmt.setInt(5,election.getAdmin2());
-		stmt.setInt(6,election.getAdmin3());
-		stmt.setInt(7,election.getAdmin4());
-		stmt.setInt(8,election.getAdmin5());
-		stmt.setInt(9,election.getAdmin6());
-		stmt.setString(10,election.getChoice1());
-		stmt.setString(11,election.getChoice2());
-		stmt.setString(12,election.getChoice3());
-		stmt.setString(13,election.getChoice4());
-		stmt.setString(14,election.getChoice5());
-		stmt.setString(15,election.getClose_date());
-		stmt.setString(16,election.getClose_time());
-		stmt.setInt(17,election.getNum_candidates());
-		stmt.setInt(18,election.getNum_votes());
-		stmt.setString(19,election.getStart_date());
-		stmt.setString(20,election.getStart_time());
+		stmt.setString(1,user.getId());
+		stmt.setString(2,user.getEmail());
+		stmt.setString(3,user.getType());
+		stmt.setInt(4,user.getAge());
+		stmt.setString(5,user.getEthnicity());
+		stmt.setString(6,user.getGender());
+		stmt.setString(7,user.getAddress());
+		stmt.setString(8,user.getCity());
+		stmt.setString(9,user.getState());
+		stmt.setString(10,user.getZip());
+		stmt.setString(11,user.getFirst_name());
+		stmt.setString(12,user.getLast_name());
+		stmt.setInt(13,user.getProfile_complete());
+		stmt.setString(14,user.getUser_name());
+		stmt.setString(15,user.getRace());
+		stmt.executeUpdate();  
+		conn.close(); 
+		
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return userList;
+		
+	}
+	
+	public List<User> updateUser(Connection conn, User user, List<User> userList){
+		if(conn == null) {
+			conn = RetriveConnection();
+		}
+
+		try {
+		String sql = "UPDATE user SET id=?, email=?, type=?, age=?, ethnicity=?, gender=?, address=?, city=?, state=?, zip=?, first_name=?, " +
+				"last_name=?, profile_complete=?, user_name=?, race=? WHERE id=?";
+		PreparedStatement stmt=conn.prepareStatement(sql);
+		
+		stmt.setString(1,user.getId());
+		stmt.setString(2,user.getEmail());
+		stmt.setString(3,user.getType());
+		stmt.setInt(4,user.getAge());
+		stmt.setString(5,user.getEthnicity());
+		stmt.setString(6,user.getGender());
+		stmt.setString(7,user.getAddress());
+		stmt.setString(8,user.getCity());
+		stmt.setString(9,user.getState());
+		stmt.setString(10,user.getZip());
+		stmt.setString(11,user.getFirst_name());
+		stmt.setString(12,user.getLast_name());
+		stmt.setInt(13,user.getProfile_complete());
+		stmt.setString(14,user.getUser_name());
+		stmt.setString(15,user.getRace());
+		stmt.setString(16,user.getId());
 		stmt.executeUpdate();  
 		conn.close();
 		
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		return electionList;
+		return userList;
 		
 	}
 	
-	public List<Election> updateElection(Connection conn, Election election, List<Election> electionList){
+	public void updateUserType(Connection conn, String id, String type){
 		if(conn == null) {
 			conn = RetriveConnection();
 		}
 
 		try {
-		String sql = "UPDATE election SET electionID=?, title=?, closed=?, admin1=?, admin2=?, admin3=?, admin4=?, admin5=?, admin5=?, choice1=?, choice2=?, " +
-				"choice1=?, choice4=?, choice5=?, close_date=?, close_time=?, num_candidates=?, num_votes=?, start_date=?, start_time=? WHERE electionID=?";
+		String sql = "UPDATE user SET type=? WHERE id=?";
 		PreparedStatement stmt=conn.prepareStatement(sql);
 		
-		stmt.setInt(1,election.getElectionID());
-		stmt.setString(2,election.getTitle());
-		stmt.setInt(3,election.getClosed());
-		stmt.setInt(4,election.getAdmin1());
-		stmt.setInt(5,election.getAdmin2());
-		stmt.setInt(6,election.getAdmin3());
-		stmt.setInt(7,election.getAdmin4());
-		stmt.setInt(8,election.getAdmin5());
-		stmt.setInt(9,election.getAdmin6());
-		stmt.setString(10,election.getChoice1());
-		stmt.setString(11,election.getChoice2());
-		stmt.setString(12,election.getChoice3());
-		stmt.setString(13,election.getChoice4());
-		stmt.setString(14,election.getChoice5());
-		stmt.setString(15,election.getClose_date());
-		stmt.setString(16,election.getClose_time());
-		stmt.setInt(17,election.getNum_candidates());
-		stmt.setInt(18,election.getNum_votes());
-		stmt.setString(19,election.getStart_date());
-		stmt.setString(20,election.getStart_time());
-		stmt.setInt(21,election.getElectionID());
+		stmt.setString(1,type);
+		stmt.setString(2,id);
+		stmt.executeUpdate(); 
+		
+		conn.close();  
+		
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public List<User> deleteUser(Connection conn, String Id, List<User> userList){
+		if(conn == null) {
+			conn = RetriveConnection();
+		}
+
+		try {
+		String sql = "DELETE FROM user WHERE id=?";
+		PreparedStatement stmt=conn.prepareStatement(sql);
+		
+		stmt.setString(1,Id);
 		stmt.executeUpdate(); 
 		conn.close(); 
 		
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		return electionList;
+		
+		return userList;
+		
 	}
-	
-	public List<Election> deleteElection(Connection conn, int electionID, List<Election> electionList){
-		if(conn == null) {
-			conn = RetriveConnection();
-		}
 
-		try {
-		String sql = "DELETE FROM election WHERE electionID=?";
-		PreparedStatement stmt=conn.prepareStatement(sql);
-		
-		stmt.setInt(1,electionID);
-		stmt.executeUpdate();  
-		con.close(); 
-		
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		return electionList;
-		
-	}
-	
-	public void insertVoteAuth(Connection conn, int electionID, String id){
-		if(conn == null) {
-			conn = RetriveConnection();
-		}
-
-		try {
-		String sql = "INSERT INTO voteAuthorization (electionID, userID) VALUES (?,?)";
-		PreparedStatement stmt=conn.prepareStatement(sql);
-		
-		stmt.setInt(1,electionID);
-		stmt.setString(2,id);
-		stmt.executeUpdate();  
-		conn.close(); 
-		
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-	}
-	
-	public void insertElectionCandidate(Connection conn, int electionID, String id){
-		if(conn == null) {
-			conn = RetriveConnection();
-		}
-
-		try {
-		String sql = "INSERT INTO electionCandidate (electionID, canID) VALUES (?,?)";
-		PreparedStatement stmt=conn.prepareStatement(sql);
-		
-		stmt.setInt(1,electionID);
-		stmt.setString(2,id);
-		stmt.executeUpdate();
-		conn.close(); 
-		
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-	}
 }
-

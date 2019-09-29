@@ -56,7 +56,7 @@ public class ElectionConnectionDao {
 			
 			electionList.add(election);
 		}
-		con.close(); 
+		conn.close(); 
 		System.out.println("list is: "+electionList.size());
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -97,7 +97,7 @@ public class ElectionConnectionDao {
 		stmt.setString(19,election.getStart_date());
 		stmt.setString(20,election.getStart_time());
 		stmt.executeUpdate();  
-		con.close();
+		conn.close();
 		
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -138,7 +138,7 @@ public class ElectionConnectionDao {
 		stmt.setString(20,election.getStart_time());
 		stmt.setInt(21,election.getElectionID());
 		stmt.executeUpdate(); 
-		con.close(); 
+		conn.close(); 
 		
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -178,7 +178,7 @@ public class ElectionConnectionDao {
 		stmt.setInt(1,electionID);
 		stmt.setString(2,id);
 		stmt.executeUpdate();  
-		con.close(); 
+		conn.close(); 
 		
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -198,7 +198,7 @@ public class ElectionConnectionDao {
 		stmt.setInt(1,electionID);
 		stmt.setString(2,id);
 		stmt.executeUpdate();
-		con.close(); 
+		conn.close(); 
 		
 		}catch(Exception e) {
 			e.printStackTrace();

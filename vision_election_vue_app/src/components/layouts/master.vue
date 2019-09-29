@@ -1,37 +1,33 @@
 <template>
   <div id="app">
-    <b-navbar class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <b-navbar-brand href="/">VisionElection</b-navbar-brand>
-      <b-navbar-toggle class="navbar-toggler" target="" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="/">VisionElection</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
-      </b-navbar-toggle>
+      </button>
 
-      <b-collapse class="collapse navbar-collapse" id="navbarSupportedContent">
-        <b-navbar-nav>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link" v-if='authenticated' href="/app/user/home">Home</a>
-            <a class="nav-link" v-else href="/">Home</a>
+            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/about">About</a>
           </li>
-        </b-navbar-nav>
-        <b-navbar-nav class="ml-auto">
-        <b-nav-item v-if='authenticated' href="/profile">{{userEmail}} </b-nav-item>
-        <b-nav-item href="/help">Help</b-nav-item>
+        </ul>
+        <a v-if='authenticated'>user email: {{userEmail}} </a>
+        <a href="/register" class="btn btn-outline-success my-2 my-sm-0 mr-1" role="button">Register</a>
         
         <!-- <router-link v-if='authenticated' to="/" v-on:click='logout' class="btn btn-outline-success my-2 my-sm-0 mr-1" tag="button" id='home-button'> Logout </router-link> -->
-        <router-link v-show="!authenticated" to="/app/user/home" class="btn btn-info my-2 my-sm-0 mr-1" tag="button" id='home-button'> Login </router-link>
-        <button v-if='authenticated' v-on:click='logout' id='logout-button' class="btn btn-info my-2 my-sm-0"> Logout </button>
+        <router-link v-show="!authenticated" to="/app/user/home" class="btn btn-outline-success my-2 my-sm-0 mr-1" tag="button" id='home-button'> Login </router-link>
+        <button v-if='authenticated' v-on:click='logout' id='logout-button' class="btn btn-outline-success my-2 my-sm-0"> Logout </button>
         <!--<button v-else v-on:click='login' id='login-button' class="btn btn-outline-success my-2 my-sm-0" href="/home"> Login </button> -->
-        </b-navbar-nav>
-      </b-collapse>
-    </b-navbar>
-     <b-container>
+      </div>
+    </nav>
+     
     
     <router-view/>
     <footer class ='d-flex justify-content-center'> Vision-Election 2019 </footer>
-     </b-container>
   </div>
 </template>
 
@@ -59,23 +55,16 @@ export default {
     },
   created () {
     this.isAuthenticated()
-    
-  },
-
-  mounted () {
     this.getEmail()
-    
   },
   watch: {
     // Everytime the route changes, check for auth status
-    '$route': 'isAuthenticated',
-    'authenticated': 'getEmail'
+    '$route': 'isAuthenticated'
   },
   
   methods: {
     async isAuthenticated () {
       this.authenticated = await this.$auth.isAuthenticated()
-      
     },
     login () {
       this.$auth.loginRedirect('/')

@@ -5,15 +5,6 @@
     </b-row>
     
     <b-form>
-      <b-form-group id="input-group-1" label="Election ID:" label-for="input-1">
-        <b-form-input
-          id="input-1"
-          
-          required
-          v-model="this.electionObj.data.electionId"
-          readonly
-        ></b-form-input>
-      </b-form-group>
       
       <b-form-group id="input-group-2" label="Election Title:" label-for="input-2">
         <b-form-input
@@ -21,7 +12,7 @@
           
           required
           placeholder="Enter title"
-          v-model='electionTitle'
+          readonly
         ></b-form-input>
       </b-form-group>
     
@@ -31,13 +22,12 @@
           
           required
           placeholder="Enter Description"
-          v-model='electionDescription'
+          readonly
         ></b-form-input>
       </b-form-group>
     
   
-      <b-button v-on:click="updateElection" class="mr-1">Create</b-button>
-      <b-button v-on:click="deleteElection">Cancel</b-button>
+      <b-button v-on:click="createElection">Create</b-button>
 
     </b-form>
     </b-container>
@@ -52,16 +42,6 @@ export default {
   props: {
     msg: String,
     activeUser: null,
-    
-  },
-   data: () => {  
-      return {
-    electionObj: null,
-    electionTitle: '',
-    electionDescription: '',
-    error: '',
-    authorized: false
-      }
   },
 
   mounted: function(){
@@ -75,35 +55,14 @@ export default {
 
   methods: {
       createElection: function(){
-      
+           window.alert("Subbmiting to API")
   
-    api.createNew(this.electionTitle, this.electionDescription, ).then( (response) => {  
+    api.createNew().then( (response) => {  
       this.$log.debug("New item created:", response);  
-      this.electionObj = response
     }).catch((error) => {  
       this.$log.debug(error);  
       this.error = "Failed to add todo"  
-  }); 
-  
-      },
-
-      updateElection: function(){
-        api.updateElection(this.electionTitle, this.electionDescription, this.electionObj.data.electionId).then( (response) => {  
-      this.$log.debug("New item created:", response);  
-      this.electionObj = response
-    }).catch((error) => {  
-      this.$log.debug(error);  
-      this.error = "Failed to add todo"  
-      });
-      this.$router.push({ path: '/app/user/home' }) 
-      },
-
-      deleteElection: function(){
-        api.removeElection(this.electionObj.data.electionId).then((response)=> {
-          this.$log.debug("Election deleted:", response);
-          
-        })
-        this.$router.push({ path: '/app/user/home' })
+	});  
       }
   }
 }

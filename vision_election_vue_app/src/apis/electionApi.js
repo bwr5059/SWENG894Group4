@@ -23,34 +23,15 @@ export default {
       }, 
   // (C)reate  
   createNew: () => 
-  instance.post('/elections/addElection', {transformResponse: [function (data) {  
-    return data? JSON.parse(data) : data;  
-  }]  
-}),  
-  // (R)ead  ("/elections/{electionId}"
-  getElection: (eID) => instance.get('/elections/'+eID, {
+  instance.post('/elections/addElection', {}),  
+  // (R)ead  
+  getUser: (id) => instance.get('/elections', {  
     transformResponse: [function (data) {  
       return data? JSON.parse(data) : data;  
     }]  
   }),  
   // (U)pdate  
-  updateElection: (electionTitle, electionDescription, id)=> instance.put('/elections/modify/'+id, {title: electionTitle,  
-    transformResponse: [function (data) {  
-      return data? JSON.parse(data) : data;  
-    }]  
-  }),
-
-  getElections: ()=> instance.get("/elections", { 
-    transformResponse: [function (data) {  
-      return data? JSON.parse(data) : data;  
-    }]  
-  }),
-
-
  // updateForId: (id, text, completed) => instance.put('todos/'+id, {title: text, completed: completed}),  
   // (D)elete  
-  removeElection: (id) => instance.delete("/elections/remove/"+id, {transformResponse: [function (data) {  
-    return data? JSON.parse(data) : data; 
-  }]
-})
+  //removeForId: (id) => instance.delete('todos/'+id)  
 }

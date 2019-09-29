@@ -17,11 +17,10 @@
      
         <b-form-input
           id="input-1"
-          v-model="activeUser.email"
+          v-model="this.activeUser.email"
           type="email"
           required
           readonly
-          
         ></b-form-input>
       
       
@@ -34,7 +33,6 @@
           v-model="form.type"
           :options="type"
           required
-          :disabled="!editable"
         ></b-form-select>
       </b-form-group>
       </b-col>
@@ -44,7 +42,7 @@
       <b-form-group id="input-group-2" label="First Name:" label-for="input-2">
         <b-form-input
           id="input-2"
-          v-model="activeUser.given_name"
+          v-model="this.activeUser.given_name"
           required
           placeholder="Enter first name"
           readonly
@@ -56,7 +54,7 @@
       <b-form-group id="input-group-3" label="Last Name:" label-for="input-3">
         <b-form-input
           id="input-3"
-          v-model="activeUser.family_name"
+          v-model="this.activeUser.family_name"
           required
           placeholder="Enter last name"
           readonly
@@ -70,7 +68,6 @@
           v-model="form.age"
           required
           placeholder="Enter age"
-          :disabled="!editable"
         ></b-form-input>
       </b-form-group>
       </b-col>
@@ -83,7 +80,6 @@
           v-model="form.race"
           :options="race"
           required
-          :disabled="!editable"
         ></b-form-select>
       </b-form-group>
       </b-col>
@@ -94,7 +90,6 @@
           v-model="form.ethnicity"
           :options="ethnicity"
           required
-          :disabled="!editable"
         ></b-form-select>
       </b-form-group>
       </b-col>
@@ -105,7 +100,6 @@
           v-model="form.gender"
           :options="gender"
           required
-          :disabled="!editable"
         ></b-form-select>
       </b-form-group>
       </b-col>
@@ -116,16 +110,6 @@
           v-model="form.address"
           required
           placeholder="Enter street address"
-          :disabled="!editable"
-        ></b-form-input>
-      </b-form-group>
-      <b-form-group id="input-group-12" label="City:" label-for="input-12">
-        <b-form-input
-          id="input-12"
-          v-model="form.city"
-          required
-          placeholder="Enter city"
-          :disabled="!editable"
         ></b-form-input>
       </b-form-group>
       <b-form-group id="input-group-9" label="State:" label-for="input-9">
@@ -134,7 +118,6 @@
           v-model="form.state"
           required
           placeholder="Enter state"
-          :disabled="!editable"
         ></b-form-input>
       </b-form-group>
       <b-form-group id="input-group-10" label="Zip Code:" label-for="input-10">
@@ -143,13 +126,11 @@
           v-model="form.zip"
           required
           placeholder="Enter zip code"
-          :disabled="!editable"
         ></b-form-input>
       </b-form-group>
-      <b-button v-show="!editable" v-on:click="edit">Edit</b-button>
-      <b-button v-show="editable" class="mr-1" v-on:click="cancel">Cancel</b-button>
-      <b-button v-show="editable" v-on:click="addUser">Submit</b-button>
-      
+
+      <b-button v-on:click="addUser">Submit</b-button>
+      <b-button type="reset" variant="danger">Reset</b-button>
     </b-form>
 
   </div>
@@ -193,10 +174,7 @@ export default {
         race: [{text: 'Select one', value: null}, 'American Indian or Alaska Native', 'Asian', 'Black or African American', 'Native Hawaiin or Other Pacific Islander', 'White'],
         ethnicity: [{text: 'Select One', value: null}, 'Hispanic or Latino or Spanish Origin', 'Not Hispanic or Latino or Spanish Origin'],
         type: [{text: 'Registration Type', value: null}, 'Voter', 'Candidate'],
-        show: true,
-        editable: false,
-        userObj: '',
-        userProfileComplete: 0
+        show: true
       }  
     },  
 
@@ -204,29 +182,6 @@ export default {
     
 
     mounted: function(){
-    
-    api.getUser(17)  
-    .then(response => {  
-      this.$log.debug("Data loaded: ", response.data)
-      this.userObj = response
-      this.form.email = this.userObj.data.email
-      this.form.type = this.userObj.data.type
-      this.form.fname = this.userObj.data.firstName
-      this.form.lname = this.userObj.data.lastName
-      this.form.age = this.userObj.data.age
-      this.form.race = this.userObj.data.race
-      this.form.ethnicity = this.userObj.data.ethnicity
-      this.form.gender = this.userObj.data.gender
-      this.form.address = this.userObj.data.address
-      this.form.city = this.userObj.data.city
-      this.form.state = this.userObj.data.state
-      this.form.zip = this.userObj.data.zip 
-      if(this.userObj!=""){
-        this.userProfileComplete = 1
-      }else{
-        this.userProfileComplete = 0
-      } 
-  })
       
     },
 
@@ -254,39 +209,15 @@ export default {
       this.$router.go('/')  
     },
 
-    edit: function(){
-    
-    this.editable=true
-
-    },
-
-    cancel: function(){
-    
-    this.editable=false
-
-    },
-
     addUser: function () {  
         window.alert("Subbmiting to API")
-    if(this.userProfileComplete==0){
-    api.createNew(this.form.email, this.form.type, this.form.fname, this.form.lname, this.form.age, this.form.race, this.form.ethnicity, this.form.gender, this.form.address, this.form.city, this.form.state, this.form.zip).then( (response) => {  
-      this.$log.debug("New User created:", response); 
-      alert("Profile Updated") 
-      this.$router.push({ path: '/app/user/home' })
+  
+    api.createNew(this.form.email, this.form.fname, this.form.lname, this.form.age, this.form.race, this.form.ethnicity, this.form.gender, this.form.address, this.form.city, this.form.state, this.form.zip).then( (response) => {  
+      this.$log.debug("New item created:", response);  
     }).catch((error) => {  
       this.$log.debug(error);  
       this.error = "Failed to add todo"  
-	});  } else{
-    api.modifyUser(this.userObj.data.id, this.form.email, this.form.type, this.form.fname, this.form.lname, this.form.age, this.form.race, this.form.ethnicity, this.form.gender, this.form.address, this.form.city, this.form.state, this.form.zip).then( (response) => {  
-      this.$log.debug("User Updated:", response); 
-      alert("Profile Updated")
-      this.$router.push({ path: '/app/user/home' })
-    }).catch((error) => {  
-      this.$log.debug(error);  
-      this.error = "Failed to add todo"  
-	});
-      
-  }
+	});  
   
    
   },  

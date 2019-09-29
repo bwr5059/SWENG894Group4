@@ -39,16 +39,14 @@ export default {
   name: 'home',
   props: {
     msg: String,
-    activeUser: Object,
-    
+    activeUser: Object
     
   },data: () => {  
       return {  
         //activeUser: null ,
         todos: [], 
         error: null,
-        userProfileComplete: null,
-        authorized: true
+        userProfileComplete: null
       }  
     },  
 
@@ -83,7 +81,7 @@ export default {
   },  
 
   mounted: function() {
-    api.getUser(17)  
+    api.getUser(5)  
     .then(response => {  
       this.$log.debug("Data loaded: ", response.data)  
       this.todos = response.data  

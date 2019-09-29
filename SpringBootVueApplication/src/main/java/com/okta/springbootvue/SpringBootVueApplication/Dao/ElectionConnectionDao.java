@@ -56,12 +56,12 @@ public class ElectionConnectionDao {
 			
 			electionList.add(election);
 		}
+		con.close(); 
 		System.out.println("list is: "+electionList.size());
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 		return electionList;
-		//con.close();  
 
 	}
 	
@@ -97,12 +97,12 @@ public class ElectionConnectionDao {
 		stmt.setString(19,election.getStart_date());
 		stmt.setString(20,election.getStart_time());
 		stmt.executeUpdate();  
+		con.close();
 		
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 		return electionList;
-		//con.close();  
 		
 	}
 	
@@ -137,13 +137,13 @@ public class ElectionConnectionDao {
 		stmt.setString(19,election.getStart_date());
 		stmt.setString(20,election.getStart_time());
 		stmt.setInt(21,election.getElectionID());
-		stmt.executeUpdate();  
+		stmt.executeUpdate(); 
+		con.close(); 
 		
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 		return electionList;
-		//con.close();  
 	}
 	
 	public List<Election> deleteElection(Connection conn, int electionID, List<Election> electionList){
@@ -157,12 +157,12 @@ public class ElectionConnectionDao {
 		
 		stmt.setInt(1,electionID);
 		stmt.executeUpdate();  
+		con.close(); 
 		
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 		return electionList;
-		//con.close();  
 		
 	}
 	
@@ -178,11 +178,11 @@ public class ElectionConnectionDao {
 		stmt.setInt(1,electionID);
 		stmt.setString(2,id);
 		stmt.executeUpdate();  
+		con.close(); 
 		
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		//con.close();  
 		
 	}
 	
@@ -197,12 +197,12 @@ public class ElectionConnectionDao {
 		
 		stmt.setInt(1,electionID);
 		stmt.setString(2,id);
-		stmt.executeUpdate();  
+		stmt.executeUpdate();
+		con.close(); 
 		
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		//con.close();  
 		
 	}
 }

@@ -48,7 +48,7 @@ public class ConnectionDao {
 			user.setRace(rs.getString(15));
 			userList.add(user);
 		}
-		con.close(); 
+		conn.close(); 
 		System.out.println("list is: "+userList.size());
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -83,7 +83,7 @@ public class ConnectionDao {
 		stmt.setString(14,user.getUser_name());
 		stmt.setString(15,user.getRace());
 		stmt.executeUpdate();  
-		con.close(); 
+		conn.close(); 
 		
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -119,7 +119,7 @@ public class ConnectionDao {
 		stmt.setString(15,user.getRace());
 		stmt.setString(16,user.getId());
 		stmt.executeUpdate();  
-		con.close();
+		conn.close();
 		
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -141,7 +141,7 @@ public class ConnectionDao {
 		stmt.setString(2,id);
 		stmt.executeUpdate(); 
 		
-		con.close();  
+		conn.close();  
 		
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -160,7 +160,7 @@ public class ConnectionDao {
 		
 		stmt.setString(1,Id);
 		stmt.executeUpdate(); 
-		con.close(); 
+		conn.close(); 
 		
 		}catch(Exception e) {
 			e.printStackTrace();

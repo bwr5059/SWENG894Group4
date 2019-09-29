@@ -30,7 +30,10 @@ public class ElectionServiceImpl implements ElectionService{
 	static{
 		//users = populateDummyUsers();
 	}
-	
+
+	/**
+	 * getConnection() - Calls the RetrieveConnection() method of ElectionConnectionDao. Retrieves election using connection.
+	 */
 	public void getConnection() {
 		conn = connDao.RetriveConnection();
 		elections= connDao.getElectionList(conn);

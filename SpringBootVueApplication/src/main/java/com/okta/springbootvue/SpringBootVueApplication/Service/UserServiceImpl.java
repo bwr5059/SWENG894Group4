@@ -12,6 +12,10 @@ import org.springframework.stereotype.Service;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ConnectionDao;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 
+/**
+ * UserServiceImpl Class - Implements UserService interface. Connects UserService class methods to database by
+ * calling the connDao RetrieveConnection method and associated methods to execute statements.
+ */
 @Service("userService")
 public class UserServiceImpl implements UserService{
 	
@@ -25,19 +29,30 @@ public class UserServiceImpl implements UserService{
 	static{
 		//users = populateDummyUsers();
 	}
-	
+
+	/**
+	 * getConnection() - Calls the RetrieveConnection() method of ConnectionDao. Retrieves user using connection.
+	 */
 	public void getConnection() {
 		conn = connDao.RetriveConnection();
 		users= connDao.getUserList(conn);
 	}
 
-	//Select All Rows from User Table
+	/**
+	 * findAllUsers() - Retrieves all rows from user table.
+	 * @return
+	 */
 	public List<User> findAllUsers() {
 		connDao.RetriveConnection();
 		users= connDao.getUserList(conn);
 		return users;
 	}
-	
+
+	/**
+	 * findByID() - Finds and returns a user from the user table by ID. If user does not exist return null.
+	 * @param id
+	 * @return
+	 */
 	//Find single user by id
 	public User findById(String id) {
 		users = findAllUsers();
@@ -48,7 +63,12 @@ public class UserServiceImpl implements UserService{
 		}
 		return null;
 	}
-	
+
+	/**
+	 * findByEmail() - Finds and returns a user from the user table by email. If user does not exist return null.
+	 * @param email
+	 * @return
+	 */
 	//Find single user by email
 	public User findByEmail(String email) {
 		users = findAllUsers();
@@ -59,7 +79,12 @@ public class UserServiceImpl implements UserService{
 		}
 		return null;
 	}
-	
+
+	/**
+	 * addUser() - Adds a user to the user table.
+	 * @param user
+	 * @param type
+	 */
 	//Add single user to db
 	public void addUser(User user, String type) {
 		users = findAllUsers();
@@ -74,6 +99,10 @@ public class UserServiceImpl implements UserService{
 		users.add(user);
 	}
 
+	/**
+	 * updateUser() -
+	 * @param user
+	 */
 	//Update existing user in db
 	public void updateUser(User user) {
 		connDao.updateUser(conn, user, users);
@@ -82,7 +111,12 @@ public class UserServiceImpl implements UserService{
 		int index = users.indexOf(user);
 		users.set(index, user);*/
 	}
-	
+
+	/**
+	 * updateUserType() - Takes a userID and type as parameters and updates the user table by userID.
+	 * @param id
+	 * @param type
+	 */
 	//Update existing user type in db
 		public void updateUserType(String id, String type) {
 			connDao.updateUserType(conn, id, type);
@@ -92,6 +126,10 @@ public class UserServiceImpl implements UserService{
 			users.set(index, user);*/
 		}
 
+	/**
+	 * deleteUserByID() -
+	 * @param id
+	 */
 	//Delete single user in db
 	public void deleteUserById(String id) {
 		
@@ -105,10 +143,18 @@ public class UserServiceImpl implements UserService{
 		
 	}
 
+	/**
+	 * isUserExist() -
+	 * @param user
+	 * @return
+	 */
 	public boolean isUserExist(User user) {
 		return findByEmail(user.getEmail())!=null;
 	}
-	
+
+	/**
+	 * deleteAllUsers() -
+	 */
 	public void deleteAllUsers(){
 		users.clear();
 	}

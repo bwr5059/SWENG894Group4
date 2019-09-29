@@ -10,8 +10,17 @@ import java.sql.PreparedStatement;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 
+/**
+ * ConnectionDao Class - Connects to MySQL database vision-database and performs queries through methods to update
+ * database.
+ */
 public class ConnectionDao {
 	Connection con = null;
+
+	/**
+	 * RetrieveConnection() - Establishes and returns a connection to the MYSQL database.
+	 * @return con
+	 */
 	public Connection RetriveConnection() {
 	try {
 		Class.forName("com.mysql.jdbc.Driver");  
@@ -20,7 +29,12 @@ public class ConnectionDao {
 		}catch(Exception e){ System.out.println(e);}
 	return con;  
 	}
-	
+
+	/**
+	 * getUserList() - Performs select MySQL statement to retrieve all users from user table.
+	 * @param conn
+	 * @return List<User>
+	 */
 	public List<User> getUserList(Connection conn){
 		if(conn == null) {
 			conn = RetriveConnection();
@@ -56,7 +70,14 @@ public class ConnectionDao {
 		//con.close();  
 		
 	}
-	
+
+	/**
+	 * insertUser() - Inserts a new user row into the user database table using MySQL statement.
+	 * @param conn
+	 * @param user
+	 * @param userList
+	 * @return List<User>
+	 */
 	public List<User> insertUser(Connection conn, User user, List<User> userList){
 		if(conn == null) {
 			conn = RetriveConnection();
@@ -91,7 +112,14 @@ public class ConnectionDao {
 		//con.close();  
 		
 	}
-	
+
+	/**
+	 * updateUser() - Updates a user in the user database table with received values using MySQL statement.
+	 * @param conn
+	 * @param user
+	 * @param userList
+	 * @return List<User>
+	 */
 	public List<User> updateUser(Connection conn, User user, List<User> userList){
 		if(conn == null) {
 			conn = RetriveConnection();
@@ -127,7 +155,13 @@ public class ConnectionDao {
 		//con.close();  
 		
 	}
-	
+
+	/**
+	 * updateUserType() - Takes parameters userID and type. Updates user using MySQL statement.
+	 * @param conn
+	 * @param id
+	 * @param type
+	 */
 	public void updateUserType(Connection conn, String id, String type){
 		if(conn == null) {
 			conn = RetriveConnection();
@@ -147,7 +181,14 @@ public class ConnectionDao {
 		//con.close();  
 		
 	}
-	
+
+	/**
+	 * deleteUser() - Takes parameters userID and uses MySQL statement to delete user by userID.
+	 * @param conn
+	 * @param Id
+	 * @param userList
+	 * @return
+	 */
 	public List<User> deleteUser(Connection conn, String Id, List<User> userList){
 		if(conn == null) {
 			conn = RetriveConnection();

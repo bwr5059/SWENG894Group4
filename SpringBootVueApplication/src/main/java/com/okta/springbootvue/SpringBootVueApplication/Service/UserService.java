@@ -4,6 +4,9 @@ import java.util.List;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 
+/**
+ * UserService Class - Interface for UserService.
+ */
 public interface UserService {
 	
 	//Retrieves all Rows from User Table

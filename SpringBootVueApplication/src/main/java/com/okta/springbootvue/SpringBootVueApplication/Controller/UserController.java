@@ -28,6 +28,9 @@ import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ConnectionDao;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.UserService;
 
+/**
+ * Class UserController - Returns user object and data using CRUD methods.
+ */
 @RestController
 public class UserController {
 
@@ -35,7 +38,10 @@ public class UserController {
   @Autowired
   UserService userService;
 
-  //Return all Existing Users
+    /**
+     * listAllUsers() - Calls findAllUsers() method in userService class to return a list of all current users in the system.
+     * @return
+     */
   @GetMapping("/user/")
   public ResponseEntity<List<User>> listAllUsers() {
       List<User> users = userService.findAllUsers();
@@ -44,8 +50,12 @@ public class UserController {
       }
       return new ResponseEntity<List<User>>(users, HttpStatus.OK);
   }
-  
-  //Return Single User by ID
+
+    /**
+     * getUser() - Receives a userID parameter. Calls the findByID() method of user service, if found returns a user by specified ID.
+     * @param id
+     * @return
+     */
   @GetMapping("/user/{id}")
   public ResponseEntity<User> getUser(@PathVariable("id") String id) {
       User user = userService.findById(id);
@@ -55,16 +65,27 @@ public class UserController {
       }
       return new ResponseEntity<User>(user, HttpStatus.OK);
   }
-  
-  //Add New User
+
+    /**
+     * newUser() - Receives a User object and type as parameters. Calls the addUser method of userService. Returns a user.
+     * @param user
+     * @param type
+     * @return user
+     */
   @PostMapping("/user/addProfile/{type}")
   public User newUser(@RequestBody User user, @PathVariable String type) {
 
       userService.addUser(user, type);
       return user;
   }
-  
-  //Modify Existing User
+
+    /**
+     * modifyUser() - Receives a User Object and a userID as parameters. If user exists in the system, modifies user
+     * information.
+     * @param user
+     * @param id
+     * @return
+     */
   @PutMapping("/user/modifyProfile/{id}")
   public ResponseEntity<User> modifyUser(@RequestBody User user, @PathVariable String id) {
 	  
@@ -95,8 +116,14 @@ public class UserController {
       return new ResponseEntity<User>(currentUser, HttpStatus.OK);
 	    
   }
-  
-  //Modify Existing User Type
+
+    /**
+     * modifyUser() - Takes a userID and type as parameters. If userID is found in the system, modifies the type field
+     * in the user database table.
+     * @param id
+     * @param type
+     * @return
+     */
   @PutMapping("/user/addAdmin/{id}/{type}")
   public ResponseEntity<User> modifyUser(@PathVariable String id, @PathVariable String type) {
 	  
@@ -111,7 +138,12 @@ public class UserController {
       return new ResponseEntity<User>(currentUser, HttpStatus.OK);
 	    
   }
-  
+
+    /**
+     * deleteUser() - Takes a userID as a parameter, deletes user from user database table if userID exists in system.
+     * @param id
+     * @return
+     */
   //Remove Existing User
   @DeleteMapping("/user/removeProfile/{id}")
   public ResponseEntity<User> deleteUser(@PathVariable("id") String id) {

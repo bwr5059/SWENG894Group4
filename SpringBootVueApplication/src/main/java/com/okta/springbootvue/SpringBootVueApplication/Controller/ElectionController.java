@@ -133,7 +133,7 @@ public class ElectionController {
   
   //Associate a Candidate
   @PostMapping("/election/associateCandidate/{electionID}/{id}")
-  public ResponseEntity<Election> getElection(@PathVariable("electionID") int electionID, @PathVariable("id") String id){
+  public ResponseEntity<Election> getElectionType(@PathVariable("electionID") int electionID, @PathVariable("id") String id){
 	  Election election = electionService.findById(electionID);
 	  User user = userService.findById(id);
 	  

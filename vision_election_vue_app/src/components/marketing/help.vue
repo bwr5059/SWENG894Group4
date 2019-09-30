@@ -8,7 +8,7 @@
   <b-nav tabs>
     <b-nav-item ><router-link to="/help/account">Account</router-link></b-nav-item>
     <b-nav-item ><router-link to="/help/election">Election</router-link></b-nav-item>
-    <b-nav-item ><router-link to="/help/election_settings">Election Settings</router-link></b-nav-item>
+    <b-nav-item ><router-link to="/help/electionSettings">Election Settings</router-link></b-nav-item>
     <b-nav-item ><router-link to="/help/registration">Registration</router-link></b-nav-item>
     <b-nav-item ><router-link to="/help/voters" >Voters</router-link></b-nav-item>
     <b-nav-item ><router-link to="/help/candidates">Candidates</router-link></b-nav-item>

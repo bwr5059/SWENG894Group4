@@ -10,8 +10,8 @@
           id="input-1"
           
           required
-          v-model="this.electionObj.data.electionId"
-          readonly
+          v-model="electionID"
+          
         ></b-form-input>
       </b-form-group>
       
@@ -59,6 +59,7 @@ export default {
     electionObj: null,
     electionTitle: '',
     electionDescription: '',
+    electionId: '',
     error: '',
     authorized: false
       }
@@ -77,7 +78,7 @@ export default {
       createElection: function(){
       
   
-    api.createNew(this.electionTitle, this.electionDescription, ).then( (response) => {  
+    api.createNew("12345", this.electionTitle, this.electionDescription, ).then( (response) => {  
       this.$log.debug("New item created:", response);  
       this.electionObj = response
     }).catch((error) => {  
@@ -99,7 +100,7 @@ export default {
       },
 
       deleteElection: function(){
-        api.removeElection(this.electionObj.data.electionId).then((response)=> {
+        api.removeElection(this.electionObj.data.electionID).then((response)=> {
           this.$log.debug("Election deleted:", response);
           
         })

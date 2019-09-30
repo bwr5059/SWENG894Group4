@@ -36,7 +36,7 @@ import api from '@/apis/userApi'
     api.getUsers()  
     .then(response => {  
       this.$log.debug("Users loaded: ", response.data)
-      this.users = response.data
+      this.users = response.data._embedded.users
       this.editable = false
       
   })

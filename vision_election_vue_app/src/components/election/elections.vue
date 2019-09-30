@@ -25,7 +25,7 @@ import api from '@/apis/electionApi'
         items: null,
         selecteditem: null,
         data: null,
-        fields: ['electionId', 'title', 'closeDate', 'closeTime', 'numCandidates', 'numVotes'],
+        fields: ['electionID', 'title', 'closeDate', 'closeTime', 'numCandidates', 'numVotes'],
       }
     },
 
@@ -56,7 +56,7 @@ import api from '@/apis/electionApi'
       this.selecteditem = items
       //selectedElectionID = this.selecteditem[0].electionId
    
-      this.$router.push({path: `/app/home/election/${this.selecteditem[0].electionId}/details`})
+      this.$router.push({path: `/app/home/election/${this.selecteditem[0].electionID}/details`})
   
     }
 }

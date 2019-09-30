@@ -23,8 +23,8 @@ export default {
       }, 
   // (C)reate  
   createNew: (id, email, type, fName, lName, age, race, ethnicity, gender, address, city, state, zip, userName) => 
-  instance.post('/user/addProfile/'+type, {Id: id, Email: email, First_name: fName, Last_name: lName, Age: age, Race: race, Ethnicity: ethnicity
-    ,Gender: gender, Address: address, City: city, State: state, Zip: zip, Profile_complete: "True", User_name: userName, transformResponse: [function (data) {  
+  instance.post('/user/addProfile/'+type, {id: id, email: email, first_name: fName, last_name: lName, age: age, race: race, ethnicity: ethnicity
+    ,gender: gender, address: address, city: city, state: state, zip: zip, profile_complete: 1, user_name: userName, transformResponse: [function (data) {  
       return data? JSON.parse(data) : data;  }]}),  
   // (R)ead  
   getUser: (id) => instance.get('/user/'+id, {  
@@ -39,9 +39,9 @@ export default {
     }]  
   }), 
   // (U)pdate  
-  modifyUser: (ID, email, type, fName, lName, age, race, ethnicity, gender, address, city, state, zip) => 
-  instance.put('/user/modifyProfile/'+ID, {email: email, type: type, firstName: fName, lastName: lName, age: age, race: race, ethnicity: ethnicity
-    ,gender: gender, address: address, city: city, state: state, zip: zip, profileComplete: "True"}), 
+  modifyUser: (ID, email, type, fName, lName, age, race, ethnicity, gender, address, city, state, zip, userName) => 
+  instance.put('/user/modifyProfile/'+ID, {id: ID, email: email, type: type, first_name: fName, last_name: lName, age: age, race: race, ethnicity: ethnicity
+    ,gender: gender, address: address, city: city, state: state, zip: zip, profile_complete: 1, user_name: userName}), 
 
     addAdmin: (ID, type,) => 
     instance.put('/user/addAdmin/'+ID+'/'+type, {type: type,   

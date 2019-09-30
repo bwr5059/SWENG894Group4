@@ -203,8 +203,8 @@ export default {
       this.userObj = response
       this.form.email = this.$parent.activeUser.email
       this.form.type = this.userObj.data.type
-      this.form.fname = this.userObj.data.firstName
-      this.form.lname = this.userObj.data.lastName
+      this.form.fname = this.$parent.activeUser.given_name
+      this.form.lname = this.$parent.activeUser.family_name
       this.form.age = this.userObj.data.age
       this.form.race = this.userObj.data.race
       this.form.ethnicity = this.userObj.data.ethnicity
@@ -270,7 +270,7 @@ export default {
       this.$log.debug(error);  
       this.error = "Failed to add todo"  
 	});  } else{
-    api.modifyUser(this.userObj.data.id, this.form.email, this.form.type, this.form.fname, this.form.lname, this.form.age, this.form.race, this.form.ethnicity, this.form.gender, this.form.address, this.form.city, this.form.state, this.form.zip).then( (response) => {  
+    api.modifyUser(this.userObj.data.id, this.form.email, this.form.type, this.form.fname, this.form.lname, this.form.age, this.form.race, this.form.ethnicity, this.form.gender, this.form.address, this.form.city, this.form.state, this.form.zip, this.activeUser.email).then( (response) => {  
       this.$log.debug("User Updated:", response); 
       alert("Profile Updated")
       this.$router.push({ path: '/app/user/home' })

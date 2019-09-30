@@ -54,7 +54,7 @@
       <b-button v-show="!editable" class="ml-1">Register</b-button>
     </b-form>
 </b-card>
-<b-card>
+<b-card v-show="!this.$parent.$parent.authorized">
 <b-row>
   <b-col>
     Election ID: {{this.form.electionId}}
@@ -142,7 +142,7 @@ methods: {
       api.getElection(id).then( (response) => {  
       this.$log.debug("Success getting election:", response);  
       this.data = response
-      this.form.electionId = this.data.data.electionId
+      this.form.electionId = this.data.data.electionID
       this.form.electionTitle = this.data.data.title
     }).catch((error) => {  
       this.$log.debug(error);  
@@ -167,8 +167,8 @@ methods: {
         this.$log.debug("Updated election", response)
       }).catch((error)=>{
         this.$log.debug(error)
-      })
-      this.$router.push({ path: '/app/user/home' })
+      }).then(this.$router.push({ path: '/app/user/home' }))
+      
     }
   
 

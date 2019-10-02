@@ -1,3 +1,12 @@
+/*---------------------------------------------------------------------
+|  Class ElectionConnectionDao
+|
+|  Purpose: Election Database Queries
+|
+|  Version: Sprint 1
+|  
+*-------------------------------------------------------------------*/
+
 package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao;
 
 import java.sql.Connection;
@@ -11,23 +20,23 @@ import java.sql.PreparedStatement;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 
+/**
+ * ElectionConnectionDao Class - Connects to MySQL database vision-database and performs queries through methods to update
+ * database.
+ */
 public class ElectionConnectionDao {
-	Connection con = null;
-	public Connection RetriveConnection() {
-	try {
-		Class.forName("com.mysql.jdbc.Driver");  
-		con=DriverManager.getConnection(  
-		"jdbc:mysql://vision-database.cmhohrk4u5fw.us-east-2.rds.amazonaws.com:3306/vision_database","admin","visionelection19");
-		}catch(Exception e){ System.out.println(e);}
-	return con;  
-	}
+	ConnectionDao connectionDao = new ConnectionDao();
 	
-	public List<Election> getElectionList(Connection conn){
+	/**
+	 * getElectionList - Performs select MySQL statement to retrieve all elections from election table.
+	 * @param conn
+	 * @return List<Election>
+	 */
+	public List<Election> getElectionList(){
 		List<Election> electionList = new ArrayList<>();
 		try {
-			if(conn == null) {
-				conn = RetriveConnection();
-			}
+			Connection conn = connectionDao.RetrieveConnection();
+			
 		Statement stmt=conn.createStatement();  
 		ResultSet rs=stmt.executeQuery("select * from election");  
 		while(rs.next())  {
@@ -56,7 +65,7 @@ public class ElectionConnectionDao {
 			
 			electionList.add(election);
 		}
-		conn.close(); 
+		connectionDao.ReleaseConnection(conn);
 		System.out.println("list is: "+electionList.size());
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -65,11 +74,16 @@ public class ElectionConnectionDao {
 
 	}
 	
-	public List<Election> insertElection(Connection conn, Election election, List<Election> electionList){
+	/**
+	 * insertElection() - Inserts a new election row into the election database table using MySQL statement.
+	 * @param conn
+	 * @param election
+	 * @param electionList
+	 * @return List<Election>
+	 */
+	public List<Election> insertElection(Election election, List<Election> electionList){
 		try {
-			if(conn == null) {
-				conn = RetriveConnection();
-			}
+			Connection conn = connectionDao.RetrieveConnection();
 		String sql = "INSERT INTO election (electionID, title, closed, admin1, admin2, admin3, admin4, admin5, admin6, choice1, choice2, " +
 				"choice3, choice4, choice5, close_date, close_time, num_candidates, num_votes, start_date, start_time) " + 
 				"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -96,7 +110,7 @@ public class ElectionConnectionDao {
 		stmt.setString(19,election.getStart_date());
 		stmt.setString(20,election.getStart_time());
 		stmt.executeUpdate();  
-		conn.close();
+		connectionDao.ReleaseConnection(conn);
 		
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -105,11 +119,16 @@ public class ElectionConnectionDao {
 		
 	}
 	
-	public List<Election> updateElection(Connection conn, Election election, List<Election> electionList){
+	/**
+	 * updateElection() - Updates an election in the election database table with received values using MySQL statement.
+	 * @param conn
+	 * @param election
+	 * @param electionList
+	 * @return List<Election>
+	 */
+	public List<Election> updateElection(Election election, List<Election> electionList){
 		try {
-			if(conn == null) {
-				conn = RetriveConnection();
-			}
+			Connection conn = connectionDao.RetrieveConnection();
 		String sql = "UPDATE election SET electionID=?, title=?, closed=?, admin1=?, admin2=?, admin3=?, admin4=?, admin5=?, admin5=?, choice1=?, choice2=?, " +
 				"choice1=?, choice4=?, choice5=?, close_date=?, close_time=?, num_candidates=?, num_votes=?, start_date=?, start_time=? WHERE electionID=?";
 		PreparedStatement stmt=conn.prepareStatement(sql);
@@ -136,7 +155,7 @@ public class ElectionConnectionDao {
 		stmt.setString(20,election.getStart_time());
 		stmt.setInt(21,election.getElectionID());
 		stmt.executeUpdate(); 
-		conn.close(); 
+		connectionDao.ReleaseConnection(conn);
 		
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -144,17 +163,22 @@ public class ElectionConnectionDao {
 		return electionList;
 	}
 	
-	public List<Election> deleteElection(Connection conn, int electionID, List<Election> electionList){
+	/**
+	 * deleteElection() - Removes an election from the election database table that matches electionID parameter.
+	 * @param conn
+	 * @param electionID
+	 * @param electionList
+	 * @return List<Election>
+	 */
+	public List<Election> deleteElection(int electionID, List<Election> electionList){
 		try {
-			if(conn == null) {
-				conn = RetriveConnection();
-			}
+			Connection conn = connectionDao.RetrieveConnection();
 		String sql = "DELETE FROM election WHERE electionID=?";
 		PreparedStatement stmt=conn.prepareStatement(sql);
 		
 		stmt.setInt(1,electionID);
 		stmt.executeUpdate();  
-		conn.close(); 
+		connectionDao.ReleaseConnection(conn);
 		
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -163,18 +187,22 @@ public class ElectionConnectionDao {
 		
 	}
 	
-	public void insertVoteAuth(Connection conn, int electionID, String id){
+	/**
+	 * insertVoteAuth - Receives an electionID and userID as parameters and insterts them into the voteAuthorization table.
+	 * @param conn
+	 * @param electionID
+	 * @param id
+	 */
+	public void insertVoteAuth(int electionID, String id){
 		try {
-			if(conn == null) {
-				conn = RetriveConnection();
-			}
+			Connection conn = connectionDao.RetrieveConnection();
 		String sql = "INSERT INTO voteAuthorization (electionID, userID) VALUES (?,?)";
 		PreparedStatement stmt=conn.prepareStatement(sql);
 		
 		stmt.setInt(1,electionID);
 		stmt.setString(2,id);
 		stmt.executeUpdate();  
-		conn.close(); 
+		connectionDao.ReleaseConnection(conn);
 		
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -182,18 +210,47 @@ public class ElectionConnectionDao {
 		
 	}
 	
-	public void insertElectionCandidate(Connection conn, int electionID, String id){
+	/**
+	 * insertElectionCandidate() - Receives an electionID and userID as parameters and inserts them into the electionCandidate
+	 * table.
+	 * @param conn
+	 * @param electionID
+	 * @param id
+	 */
+	public void insertElectionCandidate(int electionID, String id){
 		try {
-			if(conn == null) {
-				conn = RetriveConnection();
-			}
+			Connection conn = connectionDao.RetrieveConnection();
 		String sql = "INSERT INTO electionCandidate (electionID, canID) VALUES (?,?)";
 		PreparedStatement stmt=conn.prepareStatement(sql);
 		
 		stmt.setInt(1,electionID);
 		stmt.setString(2,id);
 		stmt.executeUpdate();
-		conn.close(); 
+		connectionDao.ReleaseConnection(conn); 
+		
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	/**
+	 * removeElectionCandidate() - Receives an electionID and userID as parameters and inserts them into the electionCandidate
+	 * table.
+	 * @param conn
+	 * @param electionID
+	 * @param id
+	 */
+	public void removeElectionCandidate(int electionID, String id){
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+		String sql = "DELETE FROM electionCandidate WHERE electionID=? AND canID=?";
+		PreparedStatement stmt=conn.prepareStatement(sql);
+		
+		stmt.setInt(1,electionID);
+		stmt.setString(2,id);
+		stmt.executeUpdate();
+		connectionDao.ReleaseConnection(conn); 
 		
 		}catch(Exception e) {
 			e.printStackTrace();

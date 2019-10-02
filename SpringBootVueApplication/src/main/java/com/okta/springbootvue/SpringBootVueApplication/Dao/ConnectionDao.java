@@ -22,11 +22,11 @@ public class ConnectionDao {
 	}
 	
 	public List<User> getUserList(Connection conn){
-		if(conn == null) {
-			conn = RetriveConnection();
-		}
 		List<User> userList = new ArrayList<>();
 		try {
+			if(conn == null) {
+				conn = RetriveConnection();
+			}
 		Statement stmt=conn.createStatement();  
 		ResultSet rs=stmt.executeQuery("select * from user");  
 		while(rs.next())  {
@@ -58,11 +58,10 @@ public class ConnectionDao {
 	}
 	
 	public List<User> insertUser(Connection conn, User user, List<User> userList){
-		if(conn == null) {
-			conn = RetriveConnection();
-		}
-
 		try {
+			if(conn == null) {
+				conn = RetriveConnection();
+			}
 		String sql = "INSERT INTO user (id, email, type, age, ethnicity, gender, address, city, state, zip, first_name, " +
 				"last_name, profile_complete, user_name, race) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		PreparedStatement stmt=conn.prepareStatement(sql);
@@ -93,11 +92,10 @@ public class ConnectionDao {
 	}
 	
 	public List<User> updateUser(Connection conn, User user, List<User> userList){
-		if(conn == null) {
-			conn = RetriveConnection();
-		}
-
 		try {
+			if(conn == null) {
+				conn = RetriveConnection();
+			}
 		String sql = "UPDATE user SET id=?, email=?, type=?, age=?, ethnicity=?, gender=?, address=?, city=?, state=?, zip=?, first_name=?, " +
 				"last_name=?, profile_complete=?, user_name=?, race=? WHERE id=?";
 		PreparedStatement stmt=conn.prepareStatement(sql);
@@ -129,11 +127,10 @@ public class ConnectionDao {
 	}
 	
 	public void updateUserType(Connection conn, String id, String type){
-		if(conn == null) {
-			conn = RetriveConnection();
-		}
-
 		try {
+			if(conn == null) {
+				conn = RetriveConnection();
+			}
 		String sql = "UPDATE user SET type=? WHERE id=?";
 		PreparedStatement stmt=conn.prepareStatement(sql);
 		
@@ -150,11 +147,10 @@ public class ConnectionDao {
 	}
 	
 	public List<User> deleteUser(Connection conn, String Id, List<User> userList){
-		if(conn == null) {
-			conn = RetriveConnection();
-		}
-
 		try {
+			if(conn == null) {
+				conn = RetriveConnection();
+			}
 		String sql = "DELETE FROM user WHERE id=?";
 		PreparedStatement stmt=conn.prepareStatement(sql);
 		

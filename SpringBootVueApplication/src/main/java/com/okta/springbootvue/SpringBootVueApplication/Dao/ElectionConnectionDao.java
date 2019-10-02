@@ -23,11 +23,11 @@ public class ElectionConnectionDao {
 	}
 	
 	public List<Election> getElectionList(Connection conn){
-		if(conn == null) {
-			conn = RetriveConnection();
-		}
 		List<Election> electionList = new ArrayList<>();
 		try {
+			if(conn == null) {
+				conn = RetriveConnection();
+			}
 		Statement stmt=conn.createStatement();  
 		ResultSet rs=stmt.executeQuery("select * from election");  
 		while(rs.next())  {
@@ -66,11 +66,10 @@ public class ElectionConnectionDao {
 	}
 	
 	public List<Election> insertElection(Connection conn, Election election, List<Election> electionList){
-		if(conn == null) {
-			conn = RetriveConnection();
-		}
-
 		try {
+			if(conn == null) {
+				conn = RetriveConnection();
+			}
 		String sql = "INSERT INTO election (electionID, title, closed, admin1, admin2, admin3, admin4, admin5, admin6, choice1, choice2, " +
 				"choice3, choice4, choice5, close_date, close_time, num_candidates, num_votes, start_date, start_time) " + 
 				"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -107,11 +106,10 @@ public class ElectionConnectionDao {
 	}
 	
 	public List<Election> updateElection(Connection conn, Election election, List<Election> electionList){
-		if(conn == null) {
-			conn = RetriveConnection();
-		}
-
 		try {
+			if(conn == null) {
+				conn = RetriveConnection();
+			}
 		String sql = "UPDATE election SET electionID=?, title=?, closed=?, admin1=?, admin2=?, admin3=?, admin4=?, admin5=?, admin5=?, choice1=?, choice2=?, " +
 				"choice1=?, choice4=?, choice5=?, close_date=?, close_time=?, num_candidates=?, num_votes=?, start_date=?, start_time=? WHERE electionID=?";
 		PreparedStatement stmt=conn.prepareStatement(sql);
@@ -147,17 +145,16 @@ public class ElectionConnectionDao {
 	}
 	
 	public List<Election> deleteElection(Connection conn, int electionID, List<Election> electionList){
-		if(conn == null) {
-			conn = RetriveConnection();
-		}
-
 		try {
+			if(conn == null) {
+				conn = RetriveConnection();
+			}
 		String sql = "DELETE FROM election WHERE electionID=?";
 		PreparedStatement stmt=conn.prepareStatement(sql);
 		
 		stmt.setInt(1,electionID);
 		stmt.executeUpdate();  
-		con.close(); 
+		conn.close(); 
 		
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -167,11 +164,10 @@ public class ElectionConnectionDao {
 	}
 	
 	public void insertVoteAuth(Connection conn, int electionID, String id){
-		if(conn == null) {
-			conn = RetriveConnection();
-		}
-
 		try {
+			if(conn == null) {
+				conn = RetriveConnection();
+			}
 		String sql = "INSERT INTO voteAuthorization (electionID, userID) VALUES (?,?)";
 		PreparedStatement stmt=conn.prepareStatement(sql);
 		
@@ -187,11 +183,10 @@ public class ElectionConnectionDao {
 	}
 	
 	public void insertElectionCandidate(Connection conn, int electionID, String id){
-		if(conn == null) {
-			conn = RetriveConnection();
-		}
-
 		try {
+			if(conn == null) {
+				conn = RetriveConnection();
+			}
 		String sql = "INSERT INTO electionCandidate (electionID, canID) VALUES (?,?)";
 		PreparedStatement stmt=conn.prepareStatement(sql);
 		

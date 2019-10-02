@@ -1,3 +1,12 @@
+/*---------------------------------------------------------------------
+|  Class User
+|
+|  Purpose: Set up attributes for User Objects 
+|
+|  Version: Sprint 1
+|  
+*-------------------------------------------------------------------*/
+
 package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model;
 
 import lombok.*;  
@@ -9,6 +18,9 @@ import javax.persistence.Entity;
 @Entity  
 @Data  
 @NoArgsConstructor  
+/**
+ * User Class -
+ */
 public class User {  
       
   @Id 
@@ -38,6 +50,8 @@ public class User {
   
   private String last_name;
   
+  //User registration state
+  //Automatically set to no or 0
   private int profile_complete = 0;
   
   private String user_name;

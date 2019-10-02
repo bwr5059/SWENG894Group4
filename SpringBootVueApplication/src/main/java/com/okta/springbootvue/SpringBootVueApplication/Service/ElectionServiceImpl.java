@@ -1,3 +1,12 @@
+/*---------------------------------------------------------------------
+|  Class ElectionServiceImpl
+|
+|  Purpose: Implementation of Election Services
+|
+|  Version: Sprint 1
+|  
+*-------------------------------------------------------------------*/
+
 package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service;
 
 import java.sql.Connection;
@@ -13,20 +22,27 @@ import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.Electio
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 
+/**
+ * ElectionServiceImpl Class - Implements ElectionService interface. Connects ElectionService class methods to database by
+ * calling the connDao RetrieveConnection method and associated methods to execute statements.
+ */
 @Service("electionService")
 public class ElectionServiceImpl implements ElectionService{
 	
-	private static final AtomicLong counter = new AtomicLong();
+	//private static final AtomicLong counter = new AtomicLong();
 	
 	private static List<Election> elections;
 	
 	ElectionConnectionDao connDao = new ElectionConnectionDao();
 	Connection conn = null;
 
-	//Select All Rows from User Table
+	/**
+	 * findAllElections() - Retrieves all rows from election table.
+	 * @return List<Election> elections
+	 */
 	public List<Election> findAllElections() {
 		try{
-			elections= connDao.getElectionList(connDao.RetriveConnection());
+			elections= connDao.getElectionList();
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -34,7 +50,11 @@ public class ElectionServiceImpl implements ElectionService{
 		
 	}
 	
-	//Find single user by id
+	/**
+	 * findByID() - Finds and returns an election from the election table by ID. If election does not exist return null.
+	 * @param electionID
+	 * @return
+	 */
 	public Election findById(int electionID) {
 		elections = findAllElections();
 		for(Election election : elections){
@@ -45,29 +65,59 @@ public class ElectionServiceImpl implements ElectionService{
 		return null;
 	}
 	
+	/**
+	 * addElection() - Adds an election to the election table.
+	 * @param election
+	 */
 	public void addElection(Election election) {
 		elections = findAllElections();
 		
-		connDao.insertElection(conn, election, elections);
+		connDao.insertElection(election, elections);
 		elections.add(election);
 	}
 	
+	/**
+	 * updateElection() - Updates an existing election.
+	 * @param election
+	 */
 	public void updateElection(Election election) {
-		connDao.updateElection(conn, election, elections);
+		connDao.updateElection(election, elections);
 	}
 	
+	/**
+	 * deleteElectionByID() - Deletes an election from the database matching the electionID parameter.
+	 * @param electionID
+	 */
 	public void deleteElectionById(int electionID) {
-		connDao.deleteElection(conn, electionID, elections);
+		connDao.deleteElection(electionID, elections);
 	}
 	
+	/**
+	 * associateVoter() - Adds a userID and associated electionID to the vote authorization database table.
+	 * @param electionID
+	 * @param id
+	 */
 	public void associateVoter(int electionID, String id) {	
-		connDao.insertVoteAuth(conn, electionID, id);
+		connDao.insertVoteAuth(electionID, id);
 	}
 	
+	/**
+	 * associateCandidate() - Adds an userID and associated electionID to the electionDandidate database table.
+	 * @param electionID
+	 * @param id
+	 */
 	public void associateCandidate(int electionID, String id) {
-		connDao.insertElectionCandidate(conn, electionID, id);
+		connDao.insertElectionCandidate(electionID, id);
 	}
 	
+	/**
+	 * withdrawCandidate() - Removes an userID and associated electionID to the electionCandidate database table.
+	 * @param electionID
+	 * @param id
+	 */
+	public void withdrawCandidate(int electionID, String id) {
+		connDao.removeElectionCandidate(electionID, id);
+	}
 	
 
 }

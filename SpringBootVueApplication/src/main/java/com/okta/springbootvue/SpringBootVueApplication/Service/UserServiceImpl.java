@@ -1,3 +1,12 @@
+/*---------------------------------------------------------------------
+|  Class UserServiceImpl
+|
+|  Purpose: Implementation of User Services
+|
+|  Version: Sprint 1
+|  
+*-------------------------------------------------------------------*/
+
 package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service;
 
 import java.sql.Connection;
@@ -9,9 +18,13 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ConnectionDao;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.UserConnectionDao;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 
+/**
+ * UserServiceImpl Class - Implements UserService interface. Connects UserService class methods to database by
+ * calling the connDao RetrieveConnection method and associated methods to execute statements.
+ */
 @Service("userService")
 public class UserServiceImpl implements UserService{
 	
@@ -19,20 +32,27 @@ public class UserServiceImpl implements UserService{
 	
 	private static List<User> users;
 	
-	ConnectionDao connDao = new ConnectionDao();
+	UserConnectionDao connDao = new UserConnectionDao();
 	Connection conn = null;
 
-	//Select All Rows from User Table
+	/**
+	 * findAllUsers() - Retrieves all rows from user table.
+	 * @return
+	*/
 	public List<User> findAllUsers() {
 		try {
-			users= connDao.getUserList(connDao.RetriveConnection());
+			users= connDao.getUserList();
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 		return users;
 	}
 	
-	//Find single user by id
+	/**
+	 * findByID() - Finds and returns a user from the user table by ID. If user does not exist return null.
+	 * @param id
+	 * @return
+	*/
 	public User findById(String id) {
 		users = findAllUsers();
 		for(User user : users){
@@ -43,18 +63,11 @@ public class UserServiceImpl implements UserService{
 		return null;
 	}
 	
-	//Find single user by email
-	public User findByEmail(String email) {
-		users = findAllUsers();
-		for(User user : users){
-			if(user.getEmail().equalsIgnoreCase(email)){
-				return user;
-			}
-		}
-		return null;
-	}
-	
-	//Add single user to db
+	/**
+	 * addUser() - Adds a user to the user table.
+	 * @param user
+	 * @param type
+	*/
 	public void addUser(User user, String type) {
 		users = findAllUsers();
 		if(type.equals("Candidate")) {
@@ -64,32 +77,34 @@ public class UserServiceImpl implements UserService{
 		}
 		user.setProfile_complete(0);
 		
-		connDao.insertUser(conn, user, users);
+		connDao.insertUser(user, users);
 		users.add(user);
 	}
 
-	//Update existing user in db
+	/**
+	 * updateUser() -
+	 * @param user
+	*/
 	public void updateUser(User user) {
-		connDao.updateUser(conn, user, users);
+		connDao.updateUser(user, users);
 	}
 	
-	//Update existing user type in db
+	/**
+	 * updateUserType() - Takes a userID and type as parameters and updates the user table by userID.
+	 * @param id
+	 * @param type
+	 */
 		public void updateUserType(String id, String type) {
-			connDao.updateUserType(conn, id, type);
+			connDao.updateUserType(id, type);
 		}
 
-	//Delete single user in db
+		/**
+		 * deleteUserByID() -
+		 * @param id
+		 */
 	public void deleteUserById(String id) {
-		connDao.deleteUser(conn, id, users);
+		connDao.deleteUser(id, users);
 		
-	}
-
-	public boolean isUserExist(User user) {
-		return findByEmail(user.getEmail())!=null;
-	}
-	
-	public void deleteAllUsers(){
-		users.clear();
 	}
 
 }

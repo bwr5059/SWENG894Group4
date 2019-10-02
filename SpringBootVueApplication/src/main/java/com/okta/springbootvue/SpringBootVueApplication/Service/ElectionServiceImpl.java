@@ -22,21 +22,16 @@ public class ElectionServiceImpl implements ElectionService{
 	
 	ElectionConnectionDao connDao = new ElectionConnectionDao();
 	Connection conn = null;
-	
-	static{
-		//users = populateDummyUsers();
-	}
-	
-	public void getConnection() {
-		conn = connDao.RetriveConnection();
-		elections= connDao.getElectionList(conn);
-	}
 
 	//Select All Rows from User Table
 	public List<Election> findAllElections() {
-		connDao.RetriveConnection();
-		elections= connDao.getElectionList(conn);
+		try{
+			elections= connDao.getElectionList(connDao.RetriveConnection());
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 		return elections;
+		
 	}
 	
 	//Find single user by id

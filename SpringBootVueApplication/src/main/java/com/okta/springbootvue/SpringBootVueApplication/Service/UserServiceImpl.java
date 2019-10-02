@@ -21,20 +21,14 @@ public class UserServiceImpl implements UserService{
 	
 	ConnectionDao connDao = new ConnectionDao();
 	Connection conn = null;
-	
-	static{
-		//users = populateDummyUsers();
-	}
-	
-	public void getConnection() {
-		conn = connDao.RetriveConnection();
-		users= connDao.getUserList(conn);
-	}
 
 	//Select All Rows from User Table
 	public List<User> findAllUsers() {
-		connDao.RetriveConnection();
-		users= connDao.getUserList(conn);
+		try {
+			users= connDao.getUserList(connDao.RetriveConnection());
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 		return users;
 	}
 	
@@ -77,30 +71,15 @@ public class UserServiceImpl implements UserService{
 	//Update existing user in db
 	public void updateUser(User user) {
 		connDao.updateUser(conn, user, users);
-		
-		/*users = findAllUsers();
-		int index = users.indexOf(user);
-		users.set(index, user);*/
 	}
 	
 	//Update existing user type in db
 		public void updateUserType(String id, String type) {
 			connDao.updateUserType(conn, id, type);
-			
-			/*users = findAllUsers();
-			int index = users.indexOf(user);
-			users.set(index, user);*/
 		}
 
 	//Delete single user in db
 	public void deleteUserById(String id) {
-		
-		/*for (Iterator<User> iterator = users.iterator(); iterator.hasNext(); ) {
-		    User user = iterator.next();
-		    if (user.getId().equals(id)) {
-		        iterator.remove();
-		    }
-		}*/
 		connDao.deleteUser(conn, id, users);
 		
 	}

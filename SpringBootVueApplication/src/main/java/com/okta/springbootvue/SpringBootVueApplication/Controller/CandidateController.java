@@ -66,7 +66,7 @@ public class CandidateController {
 	 * @param candidate
 	 * @return 
 	 */
-	@PostMapping("/candidate/addCandidate/")
+	@PostMapping("/candidate/addCandidate")
 	public ResponseEntity<Candidate> newCandidate(@RequestBody Candidate candidate) {
 		
 		candidateService.addCandidate(candidate);

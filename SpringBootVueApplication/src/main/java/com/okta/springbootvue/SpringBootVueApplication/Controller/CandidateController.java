@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 //import src.main.java.com.okta.springbootvue.SpringBootVueApplication;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.CandidateConnectionDao;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.CandidateService;
 
@@ -60,6 +61,37 @@ public class CandidateController {
 		}
 		return new ResponseEntity<List<Candidate>>(candidates, HttpStatus.OK);
 	}	
+	
+	/**
+	 * getCandidate () - Calls findByID() method in candidateService class, returns response containing candidate if id
+	 * is found in database.
+	 * @param id
+	 * @return new ResponseEntity<Election>(candidate, HttpStatus)
+	**/
+	@GetMapping("/candidate/{canID}")
+	public ResponseEntity<Candidate> getCandidate(@PathVariable("canID") String canID) {
+		Candidate candidate = candidateService.findById(canID);
+		if (candidate == null) {
+			System.out.println("DID NOT FIND");
+			return new ResponseEntity<Candidate>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<Candidate>(candidate, HttpStatus.OK);
+	}
+	
+	/**
+	 * getCandidateName () - Calls findByID() method in candidateService class, returns response containing candidate if id
+	 * is found in database.
+	 * @param id
+	 * @return new ResponseEntity<Election>(candidate, HttpStatus)
+	**/
+	@GetMapping("/candidate/name/{name}")
+	public ResponseEntity<Candidate> getCandidateName(@PathVariable("name") String name) {
+		Candidate candidate = candidateService.findByName(name);
+		if (candidate == null) {
+			return new ResponseEntity<Candidate>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<Candidate>(candidate, HttpStatus.OK);
+	}
   
 	/**
 	 * newCandidate() - Receives a Candidate object. Calls the addCandidate method of candidateService. Returns a candidate.
@@ -72,5 +104,39 @@ public class CandidateController {
 		candidateService.addCandidate(candidate);
 		return new ResponseEntity<Candidate>(candidate, HttpStatus.CREATED);
 	}
+	
+	/**
+	   * modifyCandidate() - Takes a candidate object and canID and ,if ID is found in the database, updates candidate
+	   * table fields.
+	   * @param candidate
+	   * @param canID
+	   * @return
+	   */
+		@PutMapping("/candidate/modifyCandidate/{canID}")
+		public ResponseEntity<Candidate> modifyCandidate(@RequestBody Candidate candidate, @PathVariable String canID) {
+			
+			Candidate currentCandidate = candidateService.findById(canID);
+		  
+			if (currentCandidate==null) {
+				return new ResponseEntity<Candidate>(HttpStatus.NOT_FOUND);
+			}  
+		  
+			//Populate currentElection object from submitted object
+			currentCandidate.setCanID(candidate.getCanID());
+			currentCandidate.setUserID(candidate.getUserID());
+			currentCandidate.setFirst_name(candidate.getFirst_name());
+			currentCandidate.setLast_name(candidate.getLast_name());
+			currentCandidate.setEmail(candidate.getEmail());
+			currentCandidate.setElectionID(candidate.getElectionID());
+			currentCandidate.setAbout(candidate.getAbout());
+			currentCandidate.setEducation(candidate.getEducation());
+			currentCandidate.setEmployment(candidate.getEmployment());
+			currentCandidate.setExperience(candidate.getExperience());
+			currentCandidate.setContact(candidate.getContact());
+	       
+			candidateService.updateCandidate(currentCandidate);
+			return new ResponseEntity<Candidate>(currentCandidate, HttpStatus.OK);
+		    
+		}
     
 }

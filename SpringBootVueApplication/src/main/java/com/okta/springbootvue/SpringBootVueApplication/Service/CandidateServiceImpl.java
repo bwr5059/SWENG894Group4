@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.CandidateConnectionDao;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 
 @Service("candidateService")
@@ -33,12 +34,50 @@ public class CandidateServiceImpl implements CandidateService{
 		return candidates;
 	}
 	
-	//Add single user to db
+	/**
+	 * findByID() - Finds and returns a candidate from the candidate table by ID. If candidate does not exist return null.
+	 * @param canID
+	 * @return
+	 */
+	public Candidate findById(String canID) {
+		candidates = findAllCandidates();
+		for(Candidate candidate : candidates){
+			if(candidate.getCanID().equals(canID)){
+				return candidate;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * findByName() - Finds and returns a candidate from the candidate table by First and Last Name. If candidate does not exist return null.
+	 * @param canID
+	 * @return
+	 */
+	public Candidate findByName(String name) {
+		candidates = findAllCandidates();
+		for(Candidate candidate : candidates){
+			if((candidate.getFirst_name() + " " + candidate.getLast_name()).equals(name)){
+				return candidate;
+			}
+		}
+		return null;
+	}
+	
+	//Add single candidate to db
 	public String addCandidate(Candidate candidate) {
-		//candidates = findAllCandidates();
+		candidates = findAllCandidates();
 		connDao.insertCandidate(candidate);
-		//users.add(user);
+		candidates.add(candidate);
 		return "Success";
+	}
+	
+	/**
+	 * updateCandidate() - Updates an existing candidate.
+	 * @param candidate
+	 */
+	public void updateCandidate(Candidate candidate) {
+		connDao.updateCandidate(candidate, candidates);
 	}
 
 }

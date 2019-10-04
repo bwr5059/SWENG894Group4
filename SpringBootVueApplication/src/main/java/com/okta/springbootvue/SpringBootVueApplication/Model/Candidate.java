@@ -24,7 +24,7 @@ import javax.persistence.Entity;
 public class Candidate {  
       
   @Id 
-  private int canID;  
+  private String canID;  
   
   private String userID;
   

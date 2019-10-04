@@ -9,6 +9,7 @@ import java.util.List;
 import java.sql.PreparedStatement;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 
 public class CandidateConnectionDao {
@@ -28,7 +29,7 @@ public class CandidateConnectionDao {
 			ResultSet rs=stmt.executeQuery("select * from candidate");  
 			while(rs.next())  {
 				Candidate candidate = new Candidate();
-				candidate.setCanID(rs.getInt(1));
+				candidate.setCanID(rs.getString(1));
 				candidate.setUserID(rs.getString(2));
 				candidate.setFirst_name(rs.getString(3));
 				candidate.setLast_name(rs.getString(4));
@@ -61,7 +62,7 @@ public class CandidateConnectionDao {
 		
 		//stmt.setInt(1,candidate.getCanID());
 		
-		stmt.setInt(1,candidate.getCanID());
+		stmt.setString(1,candidate.getCanID());
 		stmt.setString(2,candidate.getUserID());
 		stmt.setString(3,candidate.getFirst_name());
 		stmt.setString(4,candidate.getLast_name());
@@ -79,6 +80,41 @@ public class CandidateConnectionDao {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	/**
+	 * updateCandidate() - Updates a candidate in the candidate database table with received values using MySQL statement.
+	 * @param conn
+	 * @param candidate
+	 * @param candidateList
+	 * @return List<Candidate>
+	 */
+	public List<Candidate> updateCandidate(Candidate candidate, List<Candidate> candidateList){
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+		String sql = "UPDATE candidate SET canID=?, userID=?, first_name=?, last_name=?, email=?, electionID=?, about=?, education=?, employment=?, experience=?, contact=? " +
+				"WHERE canID=?";
+		PreparedStatement stmt=conn.prepareStatement(sql);
+		
+		stmt.setString(1,candidate.getCanID());
+		stmt.setString(2,candidate.getUserID());
+		stmt.setString(3,candidate.getFirst_name());
+		stmt.setString(4,candidate.getLast_name());
+		stmt.setString(5,candidate.getEmail());
+		stmt.setInt(6,candidate.getElectionID());
+		stmt.setString(7,candidate.getAbout());
+		stmt.setString(8,candidate.getEducation());
+		stmt.setString(9,candidate.getEmployment());
+		stmt.setString(10,candidate.getExperience());
+		stmt.setString(11,candidate.getContact());
+		stmt.setString(12,candidate.getCanID());
+		stmt.executeUpdate(); 
+		connectionDao.ReleaseConnection(conn);
+		
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return candidateList;
 	}
 
 }

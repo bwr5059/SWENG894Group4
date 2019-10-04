@@ -9,8 +9,13 @@
             </b-navbar-nav>
             <b-navbar-nav class="ml-auto">
                 <b-nav-form>
+                <b-form-select v-model='searchType' size='sm' class='mr-1'>
+                  <option :value="null">Select a search option</option>
+                  <option value="Election">Election</option>
+                  <option value="Candidate">Candidate</option>
+                </b-form-select>
                 <b-form-input size="sm" class="mr-sm-2" placeholder="Search" v-model="form.id" @keydown.enter.prevent></b-form-input>
-                <b-button size="sm"  v-on:click='searchElection'>Search</b-button>
+                <b-button size="sm"  v-on:click='startSearch'>Search</b-button>
                 </b-nav-form>
             </b-navbar-nav>
         </b-navbar>
@@ -34,10 +39,12 @@ export default {
     authorized: true,
     form: {
           id: '',
+  
         },
     userObj: null,
     profileComplete: null,
-    activeUser: null
+    activeUser: null,
+    searchType: null,
       }
 },
 created: function(){
@@ -76,10 +83,34 @@ mounted: function() {
   },
 
     methods: {
-    searchElection: function(){
-        alert("test")
-        this.$router.push({path: `/app/home/election/${this.form.id}/details`})
+/* startSearch() method gets current searchType var and triggers the appropriate
+router path.  
+*/
+    
+    startSearch: function(){
+      if(this.searchType=="Election"){
+        this.searchElection();
+      }else if(this.searchType=="Candidate"){
+        this.searchCandidate();
+      }
+
     },
+
+    searchElection: function(){
+        alert("Routing to election details")
+        this.$router.push({path: `/app/home/election/${this.form.id}/details`})
+        this.form.id="";
+        this.searchType=null;
+    },
+
+    searchCandidate: function(){
+        alert("Routing to Candidate Profile")
+        //this.$router.push({path: `/app/home/Candidate/${this.form.id}`})
+        this.form.id="";
+        this.searchType=null;
+    },
+
+
      refreshActiveUser: function()
     {
       this.activeUser =  this.$parent.activeUser

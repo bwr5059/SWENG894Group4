@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-table striped hover :items="users" selectable select-mode="single"  ref="selectableTable" :fields="fields" @row-selected="enableAdd">
+    <b-table striped hover :items="users" selectable select-mode="single"  ref="selectableTable" :fields="fields" @row-selected="enableAdd" :busy="isBusy">
       <template v-slot:cell(selected)="{ rowSelected }">
         <template v-if="rowSelected">
           <span aria-hidden="true">&check;</span>
@@ -11,8 +11,15 @@
           <span class="sr-only">Not selected</span>
         </template>
       </template>
+      <template v-slot:table-busy>
+        <div class="text-center text-danger my-2">
+          <b-spinner class="align-middle"></b-spinner>
+          <strong>Loading...</strong>
+        </div>
+      </template>
     </b-table>
-    <b-button v-if="editable" v-on:click='addAdminUser'>Add</b-button>
+    <b-button v-if="editable&&this.selecteditem[0].type=='Voter'" v-on:click='addAdminUser'>Add</b-button>
+    <b-button v-if="editable&&this.selecteditem[0].type=='Admin'" v-on:click='removeAdminUser'>Remove</b-button>
   </div>
 </template>
 
@@ -23,10 +30,12 @@ import api from '@/apis/userApi'
       name: 'addElectionAdmin',
     data() {
       return {
-        items: null,
+        item: null,
         selecteditem: [],
         users: null,
         editable: false,
+        isSelected: false,
+        isBusy: true,
         fields: ['email', 'type', 'selected'],
       }
     },
@@ -38,11 +47,14 @@ import api from '@/apis/userApi'
       this.$log.debug("Users loaded: ", response.data)
       this.users = response.data._embedded.users
       this.editable = false
+      this.isBusy = false
       
   })
       
     
     },
+
+  
     methods: {
 
     enableAdd(items){
@@ -64,6 +76,10 @@ import api from '@/apis/userApi'
       this.error = "Failed to add admin"  
     })
     },
+
+    removeAdminUser: function(){
+      alert("removing admin")
+    }
     
 
     //api.modifyUser(ID, email, type, fName, lName, age, race, ethnicity, gender, address, city, state, zip)

@@ -3,6 +3,9 @@
 |
 |  Purpose: Set up Candidate REST Endpoints
 |
+|  Methods: listAllCandidates, getCandidate, getCandidateName, newCandidate,
+|           modifyCandidate
+|
 |  Version: Sprint 1
 |  
 *-------------------------------------------------------------------*/
@@ -47,7 +50,6 @@ public class CandidateController {
 	//CandidateController calls CandidateService
 	@Autowired
 	CandidateService candidateService;
-
 
 	/**
    	* listAllCandidates() - Calls findAllCandidates() method in candidateService class to return a list of all current candidate profiles in the system.

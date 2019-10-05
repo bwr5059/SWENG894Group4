@@ -3,6 +3,10 @@
 |
 |  Purpose: Set up Election REST Endpoints
 |
+|  Methods: listAllElections, getElection, newElection, modifyElection,
+|           deleteElection, associateVoter, associateCandidate, 
+|           removeCandidate
+|
 |  Version: Sprint 1
 |  
 *-------------------------------------------------------------------*/
@@ -71,7 +75,7 @@ public class ElectionController {
 	**/
 	@GetMapping("/election/{electionID}")
 	public ResponseEntity<Election> getElection(@PathVariable("electionID") int electionID) {
-		Election election = electionService.findById(electionID);
+		Election election = electionService.findElectionById(electionID);
 		if (election == null) {
 			return new ResponseEntity<Election>(HttpStatus.NOT_FOUND);
 		}
@@ -103,7 +107,7 @@ public class ElectionController {
 	@PutMapping("/election/modifyElection/{electionID}")
 	public ResponseEntity<Election> modifyElection(@RequestBody Election election, @PathVariable int electionID) {
 		
-		Election currentElection = electionService.findById(electionID);
+		Election currentElection = electionService.findElectionById(electionID);
 	  
 		if (currentElection==null) {
 			return new ResponseEntity<Election>(HttpStatus.NOT_FOUND);
@@ -138,13 +142,13 @@ public class ElectionController {
 	}
   
 	/**
-	 * deleteUser() - Takes an electionID, searches the database election table for ID, and deletes election if ID is found.
+	 * deleteElection() - Takes an electionID, searches the database election table for ID, and deletes election if ID is found.
 	 * @param electionID
 	 * @return new ResponseEntity<Election>(HttpStatus)
 	 */
 	@DeleteMapping("/election/removeElection/{electionID}")
-	public ResponseEntity<Election> deleteUser(@PathVariable("electionID") int electionID) {
-		Election election = electionService.findById(electionID);
+	public ResponseEntity<Election> deleteElection(@PathVariable("electionID") int electionID) {
+		Election election = electionService.findElectionById(electionID);
 		if (election == null) {
 			return new ResponseEntity<Election>(HttpStatus.NOT_FOUND);
 		}
@@ -154,19 +158,18 @@ public class ElectionController {
 	}
   
 	/**
-	 * getElection() - Takes and electionID and userID. If both values are found in database calls associateVoter method of
+	 * associateVoter() - Takes and electionID and userID. If both values are found in database calls associateVoter method of
 	 * electionService class to add user and election to authorization database table.
 	 * @param electionID
 	 * @param id
 	 * @return
 	 */
 	@PostMapping("/election/associateVoter/{electionID}/{id}")
-	public ResponseEntity<Election> getElection(@PathVariable("electionID") int electionID, @PathVariable("id") String id){
-		Election election = electionService.findById(electionID);
+	public ResponseEntity<Election> associateVoter(@PathVariable("electionID") int electionID, @PathVariable("id") String id){
+		Election election = electionService.findElectionById(electionID);
 		User user = userService.findById(id);
 	  
 		if (election == null || user == null) {
-			System.out.println("Election or User not found.");
 			return new ResponseEntity<Election>(HttpStatus.NOT_FOUND);
 		}
 
@@ -182,12 +185,11 @@ public class ElectionController {
 	 * @return
 	 */
 	@PostMapping("/election/associateCandidate/{electionID}/{id}")
-	public ResponseEntity<Election> getElectionType(@PathVariable("electionID") int electionID, @PathVariable("id") String id){
-		Election election = electionService.findById(electionID);
+	public ResponseEntity<Election> associateCandidate(@PathVariable("electionID") int electionID, @PathVariable("id") String id){
+		Election election = electionService.findElectionById(electionID);
 		User user = userService.findById(id);
 	  
 		if (election == null || user == null) {
-			System.out.println("Election or User not found.");
 			return new ResponseEntity<Election>(HttpStatus.NOT_FOUND);
 		}
 
@@ -196,19 +198,18 @@ public class ElectionController {
 	}
 	
 	/**
-	 * getElectionType() - Takes an electionID and userID as parameters. If both are found in database, uses associateCandidate
-	 * method of the electionService class to add userID and electionID to candidate database table.
+	 * removeCandidate() - Takes an electionID and userID as parameters. If both are found in database, uses withdrawCandidate
+	 * method of the electionService class to delete userID and electionID from candidate database table.
 	 * @param electionID
 	 * @param id
 	 * @return
 	 */
 	@DeleteMapping("/election/withdrawCandidate/{electionID}/{id}")
 	public ResponseEntity<Election> removeCandidate(@PathVariable("electionID") int electionID, @PathVariable("id") String id){
-		Election election = electionService.findById(electionID);
+		Election election = electionService.findElectionById(electionID);
 		User user = userService.findById(id);
 	  
 		if (election == null || user == null) {
-			//System.out.println("Election or User not found.");
 			return new ResponseEntity<Election>(HttpStatus.NOT_FOUND);
 		}
 

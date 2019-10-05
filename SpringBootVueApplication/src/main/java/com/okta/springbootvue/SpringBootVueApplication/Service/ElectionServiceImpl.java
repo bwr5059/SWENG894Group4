@@ -29,23 +29,18 @@ import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 @Service("electionService")
 public class ElectionServiceImpl implements ElectionService{
 	
-	//private static final AtomicLong counter = new AtomicLong();
-	
+	//Complete List of Existing Elections
 	private static List<Election> elections;
 	
+	//Object to call all Election Queries
 	ElectionConnectionDao connDao = new ElectionConnectionDao();
-	Connection conn = null;
 
 	/**
 	 * findAllElections() - Retrieves all rows from election table.
 	 * @return List<Election> elections
 	 */
 	public List<Election> findAllElections() {
-		try{
-			elections= connDao.getElectionList();
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
+		elections= connDao.getElectionList();
 		return elections;
 		
 	}
@@ -71,7 +66,6 @@ public class ElectionServiceImpl implements ElectionService{
 	 */
 	public void addElection(Election election) {
 		elections = findAllElections();
-		
 		connDao.insertElection(election, elections);
 		elections.add(election);
 	}

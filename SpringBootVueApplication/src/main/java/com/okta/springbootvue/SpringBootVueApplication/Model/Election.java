@@ -10,9 +10,7 @@
 package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model;
 
 import lombok.*;  
-
 import javax.persistence.Id;  
-import javax.persistence.GeneratedValue;  
 import javax.persistence.Entity;  
   
 @Entity  
@@ -23,7 +21,7 @@ import javax.persistence.Entity;
  */
 public class Election {  
       
-  @Id @GeneratedValue  
+  @Id  
   private int electionID;  
   
   private String title;

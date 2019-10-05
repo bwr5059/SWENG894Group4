@@ -1,16 +1,12 @@
 <template>
   <div>
-    <b-table striped hover :items="items" selectable select-mode="single" @row-selected="selected" ref="selectableTable" :fields='fields'>
-      <!-- <template v-slot:cell(closeTime)="{ rowSelected }">
-        <template v-if="rowSelected">
-          <span aria-hidden="true">&check;</span>
-          <span class="sr-only">Selected</span>
-        </template>
-        <template v-else>
-          <span aria-hidden="true">&nbsp;</span>
-          <span class="sr-only">Not selected</span>
-        </template>
-      </template> -->
+    <b-table striped hover :items="items" selectable select-mode="single" @row-selected="selected" ref="selectableTable" :fields='fields' :busy="isBusy">
+      <template v-slot:table-busy>
+        <div class="text-center text-dark my-2">
+          <b-spinner class="align-middle"></b-spinner>
+          <strong>Loading...</strong>
+        </div>
+      </template>
     </b-table>
   </div>
 </template>
@@ -25,7 +21,8 @@ import api from '@/apis/electionApi'
         items: null,
         selecteditem: null,
         data: null,
-        fields: ['electionID', 'title', 'closeDate', 'closeTime', 'numCandidates', 'numVotes'],
+        isBusy: true,
+        fields: ['electionID', 'title', 'start_date', 'close_date', 'numCandidates', 'numVotes'],
       }
     },
 
@@ -46,6 +43,7 @@ import api from '@/apis/electionApi'
         api.getElections().then( (response) => {  
       this.$log.debug("Success getting election:", response);  
       this.items = response.data
+      this.isBusy=false
     }).catch((error) => {  
       this.$log.debug(error);  
       this.error = "Failed to get elections"  

@@ -34,8 +34,8 @@ export default {
     }]  
   }),  
   // (U)pdate  
-  updateElection: (electionTitle, electionDescription, id)=> instance.put('/election/modifyElection/'+id, {electionID: id, title: electionTitle,  
-    transformResponse: [function (data) {  
+  updateElection: (electionTitle, electionDescription, startDate, closeDate, id)=> instance.put('/election/modifyElection/'+id, {electionID: id, title: electionTitle,  
+    start_date: startDate, close_date: closeDate, transformResponse: [function (data) {  
       return data? JSON.parse(data) : data;  
     }]  
   }),
@@ -45,9 +45,20 @@ export default {
       return data? JSON.parse(data) : data;  
     }]  
   }),
-
-
- // updateForId: (id, text, completed) => instance.put('todos/'+id, {title: text, completed: completed}),  
+  //registers a voter against an election
+  registerVoter: (voterID, electionID)=> instance.post('/election/associateVoter/'+electionID+'/'+voterID, {transformResponse: 
+  [function (data) {
+    return data? JSON.parse(data) : data;
+  }]}),
+  //registers a candidate against an election
+  registerCandidate: (candidateID, electionID)=> instance.post('/election/associateCandidate/'+electionID+'/'+candidateID, {transformResponse: 
+    [function (data) {
+      return data? JSON.parse(data) : data;
+    }]}),
+  withdrawCandidate: (candidateID, electionID)=> instance.delete('/election/withdrawCandidate/'+electionID+'/'+candidateID, {transformResponse: 
+    [function (data) {
+      return data? JSON.parse(data) : data;
+    }]}),
   // (D)elete  
   removeElection: (id) => instance.delete("/elections/remove/"+id, {transformResponse: [function (data) {  
     return data? JSON.parse(data) : data; 

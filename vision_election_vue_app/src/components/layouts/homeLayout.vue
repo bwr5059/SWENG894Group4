@@ -36,7 +36,7 @@ export default {
 
    data: () => {  
       return {
-    authorized: true,
+    authorized: false,
     form: {
           id: '',
   

@@ -61,7 +61,7 @@ public class ElectionConnectionDao {
 			election.setNum_votes(rs.getInt(18));
 			election.setStart_date(rs.getString(19));
 			election.setStart_time(rs.getString(20));
-			
+			election.setDescription(rs.getString(21));
 			
 			electionList.add(election);
 		}
@@ -85,8 +85,8 @@ public class ElectionConnectionDao {
 		try {
 			Connection conn = connectionDao.RetrieveConnection();
 		String sql = "INSERT INTO election (electionID, title, closed, admin1, admin2, admin3, admin4, admin5, admin6, choice1, choice2, " +
-				"choice3, choice4, choice5, close_date, close_time, num_candidates, num_votes, start_date, start_time) " + 
-				"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				"choice3, choice4, choice5, close_date, close_time, num_candidates, num_votes, start_date, start_time, description) " + 
+				"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		PreparedStatement stmt=conn.prepareStatement(sql);
 		
 		stmt.setInt(1,election.getElectionID());
@@ -109,6 +109,7 @@ public class ElectionConnectionDao {
 		stmt.setInt(18,election.getNum_votes());
 		stmt.setString(19,election.getStart_date());
 		stmt.setString(20,election.getStart_time());
+		stmt.setString(21,election.getDescription());
 		stmt.executeUpdate();  
 		connectionDao.ReleaseConnection(conn);
 		
@@ -130,7 +131,7 @@ public class ElectionConnectionDao {
 		try {
 			Connection conn = connectionDao.RetrieveConnection();
 		String sql = "UPDATE election SET electionID=?, title=?, closed=?, admin1=?, admin2=?, admin3=?, admin4=?, admin5=?, admin5=?, choice1=?, choice2=?, " +
-				"choice1=?, choice4=?, choice5=?, close_date=?, close_time=?, num_candidates=?, num_votes=?, start_date=?, start_time=? WHERE electionID=?";
+				"choice1=?, choice4=?, choice5=?, close_date=?, close_time=?, num_candidates=?, num_votes=?, start_date=?, start_time=?, description=? WHERE electionID=?";
 		PreparedStatement stmt=conn.prepareStatement(sql);
 		
 		stmt.setInt(1,election.getElectionID());
@@ -153,7 +154,8 @@ public class ElectionConnectionDao {
 		stmt.setInt(18,election.getNum_votes());
 		stmt.setString(19,election.getStart_date());
 		stmt.setString(20,election.getStart_time());
-		stmt.setInt(21,election.getElectionID());
+		stmt.setString(21,election.getDescription());
+		stmt.setInt(22,election.getElectionID());
 		stmt.executeUpdate(); 
 		connectionDao.ReleaseConnection(conn);
 		

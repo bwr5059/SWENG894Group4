@@ -67,6 +67,45 @@ public class UserConnectionDao {
 	}
 	
 	/**
+	 * getUserByID() - Performs select MySQL statement to retrieve single user from user table.
+	 * @param conn
+	 * @return User
+	 */
+	public User getUserById(String id){
+		User user = new User();
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+			String sql = "SELECT * FROM user WHERE id=?"; 
+			PreparedStatement stmt=conn.prepareStatement(sql); 
+			stmt.setString(1,id);
+			 
+			ResultSet rs=stmt.executeQuery();
+			while(rs.next()) {
+				user.setId(rs.getString(1));
+				user.setEmail(rs.getString(2));
+				user.setType(rs.getString(3));
+				user.setAge(rs.getInt(4));
+				user.setEthnicity(rs.getString(5));
+				user.setGender(rs.getString(6));
+				user.setAddress(rs.getString(7));
+				user.setCity(rs.getString(8));
+				user.setState(rs.getString(9));
+				user.setZip(rs.getString(10));
+				user.setFirst_name(rs.getString(11));
+				user.setLast_name(rs.getString(12));
+				user.setProfile_complete(rs.getInt(13));
+				user.setUser_name(rs.getString(14));
+				user.setRace(rs.getString(15));
+			}
+			
+			connectionDao.ReleaseConnection(conn);
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		return user;
+	}
+	
+	/**
 	 * insertUser() - Inserts a new user row into the user database table using MySQL statement.
 	 * @param conn
 	 * @param user

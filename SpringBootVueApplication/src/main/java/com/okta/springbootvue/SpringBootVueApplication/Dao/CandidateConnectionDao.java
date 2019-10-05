@@ -50,17 +50,82 @@ public class CandidateConnectionDao {
 		return candidateList;
 	}
 	
+	/**
+	 * getCandidateByID() - Performs select MySQL statement to retrieve single candidate from candidate table.
+	 * @param conn
+	 * @return Candidate
+	 */
+	public Candidate getCandidateById(String canID){
+		Candidate candidate = new Candidate();
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+			String sql = "SELECT * FROM candidate WHERE canID=?"; 
+			PreparedStatement stmt=conn.prepareStatement(sql); 
+			stmt.setString(1,canID);
+			 
+			ResultSet rs=stmt.executeQuery();
+			while(rs.next())  {
+				candidate.setCanID(rs.getString(1));
+				candidate.setUserID(rs.getString(2));
+				candidate.setFirst_name(rs.getString(3));
+				candidate.setLast_name(rs.getString(4));
+				candidate.setEmail(rs.getString(5));
+				candidate.setElectionID(rs.getInt(6));
+				candidate.setAbout(rs.getString(7));
+				candidate.setEducation(rs.getString(8));
+				candidate.setEmployment(rs.getString(9));
+				candidate.setExperience(rs.getString(10));
+				candidate.setContact(rs.getString(11));
+			}
+			
+			connectionDao.ReleaseConnection(conn);
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		return candidate;
+	}
+	
+	/**
+	 * getCandidateByName() - Performs select MySQL statement to retrieve single candidate from candidate table.
+	 * @param conn
+	 * @return Candidate
+	 */
+	public Candidate getCandidateByName(String name){
+		Candidate candidate = new Candidate();
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+			String sql = "SELECT * FROM candidate WHERE last_name=?"; 
+			PreparedStatement stmt=conn.prepareStatement(sql); 
+			stmt.setString(1,name);
+			 
+			ResultSet rs=stmt.executeQuery();
+			while(rs.next())  {
+				candidate.setCanID(rs.getString(1));
+				candidate.setUserID(rs.getString(2));
+				candidate.setFirst_name(rs.getString(3));
+				candidate.setLast_name(rs.getString(4));
+				candidate.setEmail(rs.getString(5));
+				candidate.setElectionID(rs.getInt(6));
+				candidate.setAbout(rs.getString(7));
+				candidate.setEducation(rs.getString(8));
+				candidate.setEmployment(rs.getString(9));
+				candidate.setExperience(rs.getString(10));
+				candidate.setContact(rs.getString(11));
+			}
+			
+			connectionDao.ReleaseConnection(conn);
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		return candidate;
+	}
+	
 	public void insertCandidate(Candidate candidate){
 		try {
 			Connection conn = connectionDao.RetrieveConnection();
 		String sql = "INSERT INTO vision_database.candidate (canID, userID, first_name, last_name, email, electionID, about, education, employment, experience, contact) " +
 				"VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-		/*String sql = "INSERT INTO vision_database.candidate (canID) " +
-				"VALUES (?)";*/
 		PreparedStatement stmt=conn.prepareStatement(sql);
-		
-		
-		//stmt.setInt(1,candidate.getCanID());
 		
 		stmt.setString(1,candidate.getCanID());
 		stmt.setString(2,candidate.getUserID());

@@ -3,6 +3,10 @@
 |
 |  Purpose: Election Database Queries
 |
+|  Methods: getElectionList, getElectionByID, insertElection, updateElection,
+|           deleteElection, insertVoteAuth, insertElectionCandidate,
+|           removeElectionCandidate
+|
 |  Version: Sprint 1
 |  
 *-------------------------------------------------------------------*/
@@ -72,6 +76,51 @@ public class ElectionConnectionDao {
 		}
 		return electionList;
 
+	}
+	
+	/**
+	 * getElectionByID() - Performs select MySQL statement to retrieve single user from user table.
+	 * @param conn
+	 * @return User
+	 */
+	public Election getElectionById(int electionID){
+		Election election = new Election();
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+			String sql = "SELECT * FROM election WHERE electionID=?"; 
+			PreparedStatement stmt=conn.prepareStatement(sql); 
+			stmt.setInt(1,electionID);
+			 
+			ResultSet rs=stmt.executeQuery();
+			while(rs.next()) {
+				election.setElectionID(rs.getInt(1));
+				election.setTitle(rs.getString(2));
+				election.setClosed(rs.getInt(3));
+				election.setAdmin1(rs.getInt(4));
+				election.setAdmin2(rs.getInt(5));
+				election.setAdmin3(rs.getInt(6));
+				election.setAdmin4(rs.getInt(7));
+				election.setAdmin5(rs.getInt(8));
+				election.setAdmin6(rs.getInt(9));
+				election.setChoice1(rs.getString(10));
+				election.setChoice2(rs.getString(11));
+				election.setChoice3(rs.getString(12));
+				election.setChoice4(rs.getString(13));
+				election.setChoice5(rs.getString(14));
+				election.setClose_date(rs.getString(15));
+				election.setClose_time(rs.getString(16));
+				election.setNum_candidates(rs.getInt(17));
+				election.setNum_votes(rs.getInt(18));
+				election.setStart_date(rs.getString(19));
+				election.setStart_time(rs.getString(20));
+				election.setDescription(rs.getString(21));
+			}
+			
+			connectionDao.ReleaseConnection(conn);
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		return election;
 	}
 	
 	/**

@@ -21,7 +21,7 @@ public interface ElectionService {
 	List<Election> findAllElections(); 
 	
 	//Returns an election by ID
-	Election findById(int electionID);
+	Election findElectionById(int electionID);
 	
 	//Adds an election to the system
 	void addElection(Election election);

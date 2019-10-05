@@ -1,3 +1,14 @@
+/*---------------------------------------------------------------------
+|  Class CandidateServiceImpl
+|
+|  Purpose: Implementation of Candidate Services
+|
+|  Methods: findAllCandidates, findById, findByName, addCandidate, updateCandidate
+|
+|  Version: Sprint 1
+|  
+*-------------------------------------------------------------------*/
+
 package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service;
 
 import java.sql.Connection;
@@ -40,13 +51,8 @@ public class CandidateServiceImpl implements CandidateService{
 	 * @return
 	 */
 	public Candidate findById(String canID) {
-		candidates = findAllCandidates();
-		for(Candidate candidate : candidates){
-			if(candidate.getCanID().equals(canID)){
-				return candidate;
-			}
-		}
-		return null;
+		Candidate candidate = connDao.getCandidateById(canID);
+		return candidate;
 	}
 	
 	/**
@@ -55,13 +61,8 @@ public class CandidateServiceImpl implements CandidateService{
 	 * @return
 	 */
 	public Candidate findByName(String name) {
-		candidates = findAllCandidates();
-		for(Candidate candidate : candidates){
-			if((candidate.getFirst_name() + " " + candidate.getLast_name()).equals(name)){
-				return candidate;
-			}
-		}
-		return null;
+		Candidate candidate = connDao.getCandidateByName(name);
+		return candidate;
 	}
 	
 	//Add single candidate to db

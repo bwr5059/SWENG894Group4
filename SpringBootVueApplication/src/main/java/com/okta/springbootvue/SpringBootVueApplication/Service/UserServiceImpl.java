@@ -3,6 +3,9 @@
 |
 |  Purpose: Implementation of User Services
 |
+|  Methods: findAllUsers, findById, addUser, updateUser, updateUserType,
+|           deleteUserById
+|
 |  Version: Sprint 1
 |  
 *-------------------------------------------------------------------*/
@@ -37,30 +40,21 @@ public class UserServiceImpl implements UserService{
 
 	/**
 	 * findAllUsers() - Retrieves all rows from user table.
-	 * @return
+	 * @return User List
 	*/
 	public List<User> findAllUsers() {
-		try {
-			users= connDao.getUserList();
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
+		users= connDao.getUserList();
 		return users;
 	}
 	
 	/**
 	 * findByID() - Finds and returns a user from the user table by ID. If user does not exist return null.
 	 * @param id
-	 * @return
+	 * @return User
 	*/
 	public User findById(String id) {
-		users = findAllUsers();
-		for(User user : users){
-			if(user.getId().equals(id)){
-				return user;
-			}
-		}
-		return null;
+		User user = connDao.getUserById(id);
+		return user;
 	}
 	
 	/**
@@ -82,7 +76,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	/**
-	 * updateUser() -
+	 * updateUser() -Modify an existing user
 	 * @param user
 	*/
 	public void updateUser(User user) {
@@ -94,14 +88,14 @@ public class UserServiceImpl implements UserService{
 	 * @param id
 	 * @param type
 	 */
-		public void updateUserType(String id, String type) {
-			connDao.updateUserType(id, type);
-		}
+	public void updateUserType(String id, String type) {
+		connDao.updateUserType(id, type);
+	}
 
-		/**
-		 * deleteUserByID() -
-		 * @param id
-		 */
+	/**
+	 * deleteUserByID() -
+	 * @param id
+	*/
 	public void deleteUserById(String id) {
 		connDao.deleteUser(id, users);
 		

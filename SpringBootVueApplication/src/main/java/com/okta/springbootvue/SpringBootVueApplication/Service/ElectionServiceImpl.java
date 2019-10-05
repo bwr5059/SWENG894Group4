@@ -3,6 +3,10 @@
 |
 |  Purpose: Implementation of Election Services
 |
+|  Methods: findAllElections, findElectionById, addElection, updateElection,
+|           deleteElectionById, associateVoter, associateCandidate, 
+|           withdrawCandidate
+|
 |  Version: Sprint 1
 |  
 *-------------------------------------------------------------------*/
@@ -46,18 +50,13 @@ public class ElectionServiceImpl implements ElectionService{
 	}
 	
 	/**
-	 * findByID() - Finds and returns an election from the election table by ID. If election does not exist return null.
+	 * findElectionByID() - Finds and returns an election from the election table by ID. If election does not exist return null.
 	 * @param electionID
 	 * @return
 	 */
-	public Election findById(int electionID) {
-		elections = findAllElections();
-		for(Election election : elections){
-			if(election.getElectionID() == electionID){
-				return election;
-			}
-		}
-		return null;
+	public Election findElectionById(int electionID) {
+		Election election = connDao.getElectionById(electionID);
+		return election;
 	}
 	
 	/**

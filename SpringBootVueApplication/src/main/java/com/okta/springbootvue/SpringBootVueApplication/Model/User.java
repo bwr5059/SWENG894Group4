@@ -11,8 +11,7 @@ package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model;
 
 import lombok.*;  
 
-import javax.persistence.Id;  
-import javax.persistence.GeneratedValue;  
+import javax.persistence.Id;   
 import javax.persistence.Entity;  
   
 @Entity  

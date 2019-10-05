@@ -130,6 +130,7 @@ public class ElectionController {
 		currentElection.setNum_votes(election.getNum_votes());
 		currentElection.setStart_date(election.getStart_date());
 		currentElection.setStart_time(election.getStart_time());
+		currentElection.setDescription(election.getDescription());
        
 		electionService.updateElection(currentElection);
 		return new ResponseEntity<Election>(currentElection, HttpStatus.OK);

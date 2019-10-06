@@ -1,9 +1,9 @@
 package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Controller;
 
 
-class UserNotFoundException extends RuntimeException {
+class CandidateNotFoundException extends RuntimeException {
 
-  UserNotFoundException(Long id) {
+  CandidateNotFoundException(Long id) {
     super("Could not find user " + id);
   }
 }

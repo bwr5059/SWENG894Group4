@@ -1,3 +1,15 @@
+/*---------------------------------------------------------------------
+|  Class UserServiceImpl
+|
+|  Purpose: Implementation of User Services
+|
+|  Methods: findAllUsers, findById, addUser, updateUser, updateUserType,
+|           deleteUserById
+|
+|  Version: Sprint 1
+|  
+*-------------------------------------------------------------------*/
+
 package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service;
 
 import java.sql.Connection;
@@ -9,7 +21,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ConnectionDao;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.UserConnectionDao;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 
 /**
@@ -23,69 +35,33 @@ public class UserServiceImpl implements UserService{
 	
 	private static List<User> users;
 	
-	ConnectionDao connDao = new ConnectionDao();
+	UserConnectionDao connDao = new UserConnectionDao();
 	Connection conn = null;
-	
-	static{
-		//users = populateDummyUsers();
-	}
-
-	/**
-	 * getConnection() - Calls the RetrieveConnection() method of ConnectionDao. Retrieves user using connection.
-	 */
-	public void getConnection() {
-		conn = connDao.RetriveConnection();
-		users= connDao.getUserList(conn);
-	}
 
 	/**
 	 * findAllUsers() - Retrieves all rows from user table.
-	 * @return
-	 */
+	 * @return User List
+	*/
 	public List<User> findAllUsers() {
-		connDao.RetriveConnection();
-		users= connDao.getUserList(conn);
+		users= connDao.getUserList();
 		return users;
 	}
-
+	
 	/**
 	 * findByID() - Finds and returns a user from the user table by ID. If user does not exist return null.
 	 * @param id
-	 * @return
-	 */
-	//Find single user by id
+	 * @return User
+	*/
 	public User findById(String id) {
-		users = findAllUsers();
-		for(User user : users){
-			if(user.getId().equals(id)){
-				return user;
-			}
-		}
-		return null;
+		User user = connDao.getUserById(id);
+		return user;
 	}
-
-	/**
-	 * findByEmail() - Finds and returns a user from the user table by email. If user does not exist return null.
-	 * @param email
-	 * @return
-	 */
-	//Find single user by email
-	public User findByEmail(String email) {
-		users = findAllUsers();
-		for(User user : users){
-			if(user.getEmail().equalsIgnoreCase(email)){
-				return user;
-			}
-		}
-		return null;
-	}
-
+	
 	/**
 	 * addUser() - Adds a user to the user table.
 	 * @param user
 	 * @param type
-	 */
-	//Add single user to db
+	*/
 	public void addUser(User user, String type) {
 		users = findAllUsers();
 		if(type.equals("Candidate")) {
@@ -95,68 +71,34 @@ public class UserServiceImpl implements UserService{
 		}
 		user.setProfile_complete(0);
 		
-		connDao.insertUser(conn, user, users);
+		connDao.insertUser(user, users);
 		users.add(user);
 	}
 
 	/**
-	 * updateUser() -
+	 * updateUser() -Modify an existing user
 	 * @param user
-	 */
-	//Update existing user in db
+	*/
 	public void updateUser(User user) {
-		connDao.updateUser(conn, user, users);
-		
-		/*users = findAllUsers();
-		int index = users.indexOf(user);
-		users.set(index, user);*/
+		connDao.updateUser(user, users);
 	}
-
+	
 	/**
 	 * updateUserType() - Takes a userID and type as parameters and updates the user table by userID.
 	 * @param id
 	 * @param type
 	 */
-	//Update existing user type in db
-		public void updateUserType(String id, String type) {
-			connDao.updateUserType(conn, id, type);
-			
-			/*users = findAllUsers();
-			int index = users.indexOf(user);
-			users.set(index, user);*/
-		}
+	public void updateUserType(String id, String type) {
+		connDao.updateUserType(id, type);
+	}
 
 	/**
 	 * deleteUserByID() -
 	 * @param id
-	 */
-	//Delete single user in db
+	*/
 	public void deleteUserById(String id) {
+		connDao.deleteUser(id, users);
 		
-		/*for (Iterator<User> iterator = users.iterator(); iterator.hasNext(); ) {
-		    User user = iterator.next();
-		    if (user.getId().equals(id)) {
-		        iterator.remove();
-		    }
-		}*/
-		connDao.deleteUser(conn, id, users);
-		
-	}
-
-	/**
-	 * isUserExist() -
-	 * @param user
-	 * @return
-	 */
-	public boolean isUserExist(User user) {
-		return findByEmail(user.getEmail())!=null;
-	}
-
-	/**
-	 * deleteAllUsers() -
-	 */
-	public void deleteAllUsers(){
-		users.clear();
 	}
 
 }

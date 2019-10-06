@@ -44,27 +44,4 @@ public class Candidate {
   
   private String contact;
 
-  public String getCanID() {
-    return this.canID;
-  }
-
-  public String getUserID() {
-    return this.userID;
-  }
-
-  public String getFirst_name() {
-    return this.first_name;
-  }
-
-  public String getLast_name() {
-    return this.last_name;
-  }
-
-  public void setCanID(String candid) {
-    this.canID = candid;
-  }
-
-  public void setUserID(String uid) {
-    this.userID = uid;
-  }
 }

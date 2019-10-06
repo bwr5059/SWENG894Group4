@@ -60,12 +60,9 @@ public class CandidateConnectionDaoTest {
     @Test
     public void insertCandidate() {
 
-        Candidate candidate1 = new Candidate();
 
-        candidate1.setCanID("candidate1ID");
-        candidate1.setUserID("candidate1UID");
 
-        //Candidate candidate = CandidateDao.insertCandidate();
+
     }
 
     @Test

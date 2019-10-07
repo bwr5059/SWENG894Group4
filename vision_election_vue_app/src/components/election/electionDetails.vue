@@ -34,6 +34,7 @@
             <b-form-input
               id="input-4"
               required
+              v-model='form.electionDescription'
               :disabled="!editable"
             ></b-form-input>
           </b-form-group>
@@ -194,6 +195,7 @@ methods: {
      * is successful, it sets the current form data to the election data received and sets the show variable
      * to show the data card.
      * @{id} inbound id of the election being retrieved by the api
+     * update response data
      */
     getElection: function(id){
       this.$log.debug("Calling API:")

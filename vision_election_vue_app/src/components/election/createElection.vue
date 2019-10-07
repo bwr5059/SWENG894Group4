@@ -34,7 +34,29 @@
           v-model='electionDescription'
         ></b-form-input>
       </b-form-group>
-    
+      <b-row>
+          <b-col>
+          <b-form-group id="input-group-5" label="Start Date:" label-for="input-5">
+            <b-form-input
+              id="input-4"
+              type="date"
+              required
+              v-model='this.electionStartDate'
+              
+            ></b-form-input>
+          </b-form-group>
+          </b-col>
+          <b-col>
+          <b-form-group id="input-group-6" label="Close Date:" label-for="input-6">
+            <b-form-input
+              id="input-4"
+              type="date"
+              required
+              v-model='this.electionEndDate'
+            ></b-form-input>
+          </b-form-group>
+          </b-col>
+        </b-row>
   
       <b-button v-on:click="updateElection" class="mr-1">Create</b-button>
       <b-button v-on:click="deleteElection">Cancel</b-button>
@@ -60,6 +82,8 @@ export default {
     electionTitle: '',
     electionDescription: '',
     electionId: '',
+    electionStartDate: '',
+    electionEndDate: '',
     error: '',
     authorized: false
       }
@@ -78,9 +102,10 @@ export default {
       createElection: function(){
       
   
-    api.createNew("12345", this.electionTitle, this.electionDescription, ).then( (response) => {  
-      this.$log.debug("New item created:", response);  
+    api.createNew().then( (response) => {  
+      this.$log.debug("New election created:", response);  
       this.electionObj = response
+      this.electionId = this.electionObj.electionID
     }).catch((error) => {  
       this.$log.debug(error);  
       this.error = "Failed to add todo"  
@@ -89,12 +114,12 @@ export default {
       },
 
       updateElection: function(){
-        api.updateElection(this.electionTitle, this.electionDescription, this.electionObj.data.electionId).then( (response) => {  
-      this.$log.debug("New item created:", response);  
+        api.updateElection(this.electionTitle, this.electionDescription, this.electionStartDate, this.electionEndDate, this.electionObj.data.electionId).then( (response) => {  
+      this.$log.debug("Election updated:", response);  
       this.electionObj = response
     }).catch((error) => {  
       this.$log.debug(error);  
-      this.error = "Failed to add todo"  
+      this.error = "Failed update election"  
       });
       this.$router.push({ path: '/app/user/home' }) 
       },

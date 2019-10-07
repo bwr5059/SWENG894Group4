@@ -22,8 +22,8 @@ export default {
         })  
       }, 
   // (C)reate  
-  createNew: (id) => 
-  instance.post('/election/addElection', {electionID: id, transformResponse: [function (data) {  
+  createNew: () => 
+  instance.post('/election/addElection', {transformResponse: [function (data) {  
     return data? JSON.parse(data) : data;  
   }]  
 }),  
@@ -35,7 +35,7 @@ export default {
   }),  
   // (U)pdate  
   updateElection: (electionTitle, electionDescription, startDate, closeDate, id)=> instance.put('/election/modifyElection/'+id, {electionID: id, title: electionTitle,  
-    start_date: startDate, close_date: closeDate, transformResponse: [function (data) {  
+    start_date: startDate, close_date: closeDate, description: electionDescription, transformResponse: [function (data) {  
       return data? JSON.parse(data) : data;  
     }]  
   }),

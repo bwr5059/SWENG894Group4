@@ -5,7 +5,7 @@
 |
 |  Methods: listAllElections, getElection, newElection, modifyElection,
 |           deleteElection, associateVoter, associateCandidate, 
-|           removeCandidate
+|           removeCandidate, viewCandidates
 |
 |  Version: Sprint 1
 |  
@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ElectionConnectionDao;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.ElectionService;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.UserService;
@@ -154,7 +155,7 @@ public class ElectionController {
 		}
 	 
 		electionService.deleteElectionById(electionID);
-		return new ResponseEntity<Election>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<Election>(HttpStatus.OK);
 	}
   
 	/**
@@ -215,6 +216,23 @@ public class ElectionController {
 
 		electionService.withdrawCandidate(electionID, id);
 		return new ResponseEntity<Election>(HttpStatus.OK);
+	}
+	
+	/**
+	 * viewCandidates() - Takes an electionID as a parameter. View candidates by elections.
+	 * @param electionID
+	 * @return
+	 */
+	@GetMapping("/election/viewCandidates/{electionID}")
+	public ResponseEntity<List<Candidate>> viewCandidates(@PathVariable("electionID") int electionID){ 
+		Election election = electionService.findElectionById(electionID);
+	  
+		if (election == null) {
+			return new ResponseEntity<List<Candidate>>(HttpStatus.NOT_FOUND);
+		}
+
+		List<Candidate> candidates = electionService.viewCandidates(electionID);
+		return new ResponseEntity<List<Candidate>>(candidates, HttpStatus.OK);
 	}
   
 }

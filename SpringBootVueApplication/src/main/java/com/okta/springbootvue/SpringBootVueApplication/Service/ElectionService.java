@@ -12,6 +12,7 @@ package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service;
 import java.util.List;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
 
 /**
  * ElectionService Class - Interface for ElectionService.
@@ -40,5 +41,8 @@ public interface ElectionService {
 	
 	//Removes user as a candidate in an election
 	void withdrawCandidate(int electionID, String id);
+	
+	//View Candidates by Election
+	List<Candidate> viewCandidates(int electionID);
 		
 }

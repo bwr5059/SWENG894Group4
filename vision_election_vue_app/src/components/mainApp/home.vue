@@ -39,14 +39,16 @@ export default {
   name: 'home',
   props: {
     msg: String,
-    activeUser: Object
+    activeUser: Object,
+    
     
   },data: () => {  
       return {  
         //activeUser: null ,
         todos: [], 
         error: null,
-        userProfileComplete: null
+        userProfileComplete: null,
+        authorized: true
       }  
     },  
 
@@ -81,18 +83,19 @@ export default {
   },  
 
   mounted: function() {
-    api.getUser(5)  
-    .then(response => {  
-      this.$log.debug("Data loaded: ", response.data)  
-      this.todos = response.data  
-      this.userProfileComplete = 1
-  })  
-    .catch(error => {  
-      this.$log.debug(error)  
-      this.error = "User Profile not complete"  
-      this.userProfileComplete = 0
+  //   api.getUser(5)  
+  //   .then(response => {  
+  //     this.$log.debug("Data loaded: ", response.data)  
+  //     this.todos = response.data  
+  //     this.userProfileComplete = 1
+  // })  
+  //   .catch(error => {  
+  //     this.$log.debug(error)  
+  //     this.error = "User Profile not complete"  
+  //     this.userProfileComplete = 0
       
-  }) 
+  // }) 
+ 
   
   },
   watch: {  
@@ -115,7 +118,7 @@ export default {
     },
 
     checkUser() {
-      if(this.userProfileComplete==0){
+      if(this.$parent.profileComplete==0){
         alert("test2")
         this.$router.push({path:'/profile'})
       }

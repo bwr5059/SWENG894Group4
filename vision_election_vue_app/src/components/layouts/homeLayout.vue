@@ -1,14 +1,16 @@
 <template>
     <div class=container>
-        <b-navbar type="dark" variant="dark">
+        <b-navbar type="light">
             <b-navbar-nav>
-                <router-link to="/app/user/home" class="nav-link">Election</router-link>
-                <router-link v-show="!authorized" to="/app/user/createElection" class="btn btn-primary my-2 my-sm-0 mr-1" tag="button" id='home-button'> New </router-link>
+                <router-link to="/app/user/home" class="navbar-brand">Election</router-link>
+                <router-link v-show="authorized" to="/app/user/createElection" class="btn btn-secondary my-2 my-sm-0 mr-1" tag="button" id='home-button'> New </router-link>
+                <router-link v-show="authorized" to="/app/user/addAdmin" class="btn btn-secondary my-2 my-sm-0 mr-1" tag="button" id='home-button'> Election Admin </router-link>
+                <router-link to="/app/home/elections" class="btn btn-secondary my-2 my-sm-0 mr-1">Search all</router-link>
             </b-navbar-nav>
             <b-navbar-nav class="ml-auto">
                 <b-nav-form>
-                <b-form-input size="sm" class="mr-sm-2" placeholder="Search"></b-form-input>
-                <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>
+                <b-form-input size="sm" class="mr-sm-2" placeholder="Search" v-model="form.id" @keydown.enter.prevent></b-form-input>
+                <b-button size="sm"  v-on:click='searchElection'>Search</b-button>
                 </b-nav-form>
             </b-navbar-nav>
         </b-navbar>
@@ -17,12 +19,54 @@
 </template>
 
 <script>
+
+import api from '@/apis/userApi'
 export default {
   name: 'homeLayout',
   props: {
     msg: String,
-    authorized: false,
+    
    
-  }
+  },
+
+   data: () => {  
+      return {
+    authorized: false,
+    form: {
+          id: '',
+        },
+    userObj: null,
+    profileComplete: null
+    
+      }
+},
+mounted: function() {
+    api.getUser(5)  
+    .then(response => {  
+      this.$log.debug("Data loaded: ", response.data)  
+      this.userObj = response.data  
+      this.profileComplete = 1
+     if(this.userObj.type == "Admin"){
+        this.authorized = true
+        
+     }
+  })  
+    .catch(error => {  
+      this.$log.debug(error)  
+      this.error = "User Profile not complete"  
+      this.$log.debug("User not found")
+      this.authorized = false
+      this.profileComplete = 0
+      
+  }) 
+  
+  },
+
+    methods: {
+    searchElection: function(){
+        alert("test")
+        this.$router.push({path: `/app/home/election/${this.form.id}/details`})
+    }
+    }
 }
 </script>

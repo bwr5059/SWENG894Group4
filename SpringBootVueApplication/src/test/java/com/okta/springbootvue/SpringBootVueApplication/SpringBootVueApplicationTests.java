@@ -1,5 +1,3 @@
-package src.test.java.com.okta.springbootvue.SpringBootVueApplication;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -196,6 +194,7 @@ public class SpringBootVueApplicationTests {
     @Test
     public void TestUserServices() throws Exception {
     	//Mockito.when(userService.findAllUsers()).thenReturn("Success");
+    	
     }
     
     @Test

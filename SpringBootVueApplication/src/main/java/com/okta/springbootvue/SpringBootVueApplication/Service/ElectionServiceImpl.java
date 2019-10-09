@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ElectionConnectionDao;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
 
 /**
  * ElectionServiceImpl Class - Implements ElectionService interface. Connects ElectionService class methods to database by
@@ -35,6 +36,7 @@ public class ElectionServiceImpl implements ElectionService{
 	
 	//Complete List of Existing Elections
 	private static List<Election> elections;
+	private static List<Candidate> candidates;
 	
 	//Object to call all Election Queries
 	ElectionConnectionDao connDao = new ElectionConnectionDao();
@@ -110,6 +112,16 @@ public class ElectionServiceImpl implements ElectionService{
 	 */
 	public void withdrawCandidate(int electionID, String id) {
 		connDao.removeElectionCandidate(electionID, id);
+	}
+	
+	/**
+	 * viewCandidates() -
+	 * @param electionID
+	*/
+	public List<Candidate> viewCandidates(int electionID) {
+		candidates= connDao.getCandidatesByElection(electionID);
+		return candidates;
+		
 	}
 	
 

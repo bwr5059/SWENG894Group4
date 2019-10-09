@@ -5,7 +5,7 @@
 |
 |  Methods: getElectionList, getElectionByID, insertElection, updateElection,
 |           deleteElection, insertVoteAuth, insertElectionCandidate,
-|           removeElectionCandidate
+|           removeElectionCandidate, getCandidatesByElection
 |
 |  Version: Sprint 1
 |  
@@ -23,6 +23,7 @@ import java.sql.PreparedStatement;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
 
 /**
  * ElectionConnectionDao Class - Connects to MySQL database vision-database and performs queries through methods to update
@@ -307,6 +308,44 @@ public class ElectionConnectionDao {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	/**
+	 * getCandidatesByElection() - Performs select MySQL statement to retrieve single candidate from candidate table.
+	 * @param conn
+	 * @return Candidate
+	 */
+	public List<Candidate> getCandidatesByElection(int electionID){
+		List<Candidate> candidateList = new ArrayList<>();
+		
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+			String sql = "SELECT * FROM candidate WHERE electionID=?"; 
+			PreparedStatement stmt=conn.prepareStatement(sql); 
+			stmt.setInt(1,electionID);
+			 
+			ResultSet rs=stmt.executeQuery();
+			while(rs.next())  {
+				Candidate candidate = new Candidate();
+				candidate.setCanID(rs.getString(1));
+				candidate.setUserID(rs.getString(2));
+				candidate.setFirst_name(rs.getString(3));
+				candidate.setLast_name(rs.getString(4));
+				candidate.setEmail(rs.getString(5));
+				candidate.setElectionID(rs.getInt(6));
+				candidate.setAbout(rs.getString(7));
+				candidate.setEducation(rs.getString(8));
+				candidate.setEmployment(rs.getString(9));
+				candidate.setExperience(rs.getString(10));
+				candidate.setContact(rs.getString(11));
+				candidateList.add(candidate);
+			}
+			
+			connectionDao.ReleaseConnection(conn);
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		return candidateList;
 	}
 }
 

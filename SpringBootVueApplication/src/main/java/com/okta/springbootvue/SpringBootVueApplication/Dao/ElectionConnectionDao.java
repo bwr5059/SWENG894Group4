@@ -33,6 +33,28 @@ public class ElectionConnectionDao {
 	ConnectionDao connectionDao = new ConnectionDao();
 	
 	/**
+	 * getMaxID() - Gets current highest electionID
+	 * @return int
+	 */
+	public int getMaxID(){
+		int maxID = 0;
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+			Statement stmt=conn.createStatement(); 
+			ResultSet rs=stmt.executeQuery("SELECT MAX(electionID) FROM election"); 
+			while(rs.next())  {
+				maxID = rs.getInt(1);
+			}
+			connectionDao.ReleaseConnection(conn);
+		
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return maxID;
+		
+	}
+	
+	/**
 	 * getElectionList - Performs select MySQL statement to retrieve all elections from election table.
 	 * @param conn
 	 * @return List<Election>
@@ -132,6 +154,9 @@ public class ElectionConnectionDao {
 	 * @return List<Election>
 	 */
 	public List<Election> insertElection(Election election, List<Election> electionList){
+		int newID = getMaxID() + 1;
+		election.setElectionID(newID);
+		
 		try {
 			Connection conn = connectionDao.RetrieveConnection();
 		String sql = "INSERT INTO election (electionID, title, closed, admin1, admin2, admin3, admin4, admin5, admin6, choice1, choice2, " +

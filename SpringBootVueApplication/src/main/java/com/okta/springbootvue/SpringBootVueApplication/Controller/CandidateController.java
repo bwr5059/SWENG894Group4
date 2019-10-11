@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Question;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.CandidateConnectionDao;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.CandidateService;
 
@@ -139,6 +140,19 @@ public class CandidateController {
 			candidateService.updateCandidate(currentCandidate);
 			return new ResponseEntity<Candidate>(currentCandidate, HttpStatus.OK);
 		    
+		}
+		
+		/**
+		 * answerQuestion() - Receives a qID and answer. Calls the answerQuestion method of candidateService. Returns a question.
+		 * @param qID
+		 * @param answer
+		 * @return 
+		 */
+		@PutMapping("/candidate/answerQuestion/{qID}")
+		public ResponseEntity<Question> answerQuestion(@RequestBody Question question, @PathVariable int qID) {
+			
+			candidateService.answerQuestion(question, qID);
+			return new ResponseEntity<Question>(HttpStatus.OK);
 		}
     
 }

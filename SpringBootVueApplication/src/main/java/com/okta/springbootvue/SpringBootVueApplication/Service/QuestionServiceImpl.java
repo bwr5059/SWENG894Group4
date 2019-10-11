@@ -39,6 +39,16 @@ public class QuestionServiceImpl implements QuestionService{
 	QuestionConnectionDao connDao = new QuestionConnectionDao();
 	
 	/**
+	 * findByID() - Finds and returns a user from the user table by ID. If user does not exist return null.
+	 * @param id
+	 * @return User
+	*/
+	public Question findById(int qID) {
+		Question question = connDao.getQuestionByID(qID);
+		return question;
+	}
+	
+	/**
 	 * viewQuestionsByCandidate() -
 	 * @param canID
 	*/

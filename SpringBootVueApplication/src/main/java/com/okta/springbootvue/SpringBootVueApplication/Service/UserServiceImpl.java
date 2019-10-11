@@ -22,7 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.UserConnectionDao;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.QuestionConnectionDao;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Question;
 
 /**
  * UserServiceImpl Class - Implements UserService interface. Connects UserService class methods to database by
@@ -37,6 +39,7 @@ public class UserServiceImpl implements UserService{
 	
 	UserConnectionDao connDao = new UserConnectionDao();
 	Connection conn = null;
+	QuestionConnectionDao questionConnDao = new QuestionConnectionDao();
 
 	/**
 	 * findAllUsers() - Retrieves all rows from user table.
@@ -99,6 +102,14 @@ public class UserServiceImpl implements UserService{
 	public void deleteUserById(String id) {
 		connDao.deleteUser(id, users);
 		
+	}
+	
+	/**
+	 * addQuestion() - Ask Candidate a Question
+	 * @param question
+	*/
+	public void addQuestion(Question question) {
+		questionConnDao.insertQuestion(question);
 	}
 
 }

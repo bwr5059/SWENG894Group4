@@ -12,6 +12,7 @@ package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service;
 import java.util.List;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Question;
 
 /**
  * UserService Class - Interface for UserService.
@@ -35,5 +36,8 @@ public interface UserService {
 	
 	//Deletes a user by ID
 	void deleteUserById(String id);
+	
+	//Adds a question to a candidate
+	void addQuestion(Question question);
 	
 }

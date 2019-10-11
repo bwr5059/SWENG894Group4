@@ -21,14 +21,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.CandidateConnectionDao;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.QuestionConnectionDao;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Question;
 
 @Service("candidateService")
 public class CandidateServiceImpl implements CandidateService{
 	
 	CandidateConnectionDao connDao = new CandidateConnectionDao();
+	QuestionConnectionDao questionConnDao = new QuestionConnectionDao();
 	
 	private static List<Candidate> candidates;
 	
@@ -79,6 +82,15 @@ public class CandidateServiceImpl implements CandidateService{
 	 */
 	public void updateCandidate(Candidate candidate) {
 		connDao.updateCandidate(candidate, candidates);
+	}
+	
+	/**
+	 * answerQuestion() - Adds an answer to a question entry.
+	 * @param qID
+	 * @param answer
+	 */
+	public void answerQuestion(Question question, int qID) {
+		questionConnDao.insertAnswer(question, qID);
 	}
 
 }

@@ -13,6 +13,7 @@ import java.util.List;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Question;
 
 /**
  * CandidateService Class - Interface for CandidateService.
@@ -33,6 +34,9 @@ public interface CandidateService {
 	
 	//Updates a candidate in the system
 	void updateCandidate(Candidate candidate);
+	
+	//Answers a voter question
+	void answerQuestion(Question question, int qID);
 	
 	
 }

@@ -19,6 +19,9 @@ import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candi
  */
 public interface QuestionService {
 
+	//Returns a question by ID
+	Question findById(int qID);
+	
 	//View Questions by Candidate
 	List<Question> viewQuestionsByCandidate(String canID);
 		

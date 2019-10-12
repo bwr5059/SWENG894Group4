@@ -74,8 +74,7 @@ public class CandidateController {
 	@GetMapping("/candidate/{canID}")
 	public ResponseEntity<Candidate> getCandidate(@PathVariable("canID") String canID) {
 		Candidate candidate = candidateService.findById(canID);
-		if (candidate == null) {
-			System.out.println("DID NOT FIND");
+		if (candidate.getCanID() == null) {
 			return new ResponseEntity<Candidate>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<Candidate>(candidate, HttpStatus.OK);
@@ -90,7 +89,7 @@ public class CandidateController {
 	@GetMapping("/candidate/name/{name}")
 	public ResponseEntity<Candidate> getCandidateName(@PathVariable("name") String name) {
 		Candidate candidate = candidateService.findByName(name);
-		if (candidate == null) {
+		if (candidate.getCanID() == null) {
 			return new ResponseEntity<Candidate>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<Candidate>(candidate, HttpStatus.OK);
@@ -120,7 +119,7 @@ public class CandidateController {
 			
 			Candidate currentCandidate = candidateService.findById(canID);
 		  
-			if (currentCandidate==null) {
+			if (currentCandidate.getCanID()==null) {
 				return new ResponseEntity<Candidate>(HttpStatus.NOT_FOUND);
 			}  
 		  

@@ -70,12 +70,12 @@
       <b-button v-show="!editable" class="ml-1">Register</b-button>
     </b-form>
 </b-card>
+<b-card v-show="!this.$parent.$parent.authorized&&show" :title="voterCandidateHeader" :sub-title="voterCandidateSub">
   <div>
       <div class="d-flex justify-content-center mb-3">
         <b-spinner v-if="!show" label="Loading..."></b-spinner>
       </div>
   </div>
-<b-card v-show="!this.$parent.$parent.authorized&&show" :title="voterCandidateHeader" :sub-title="voterCandidateSub">
 <b-container>
 <b-row>
 {{this.form.electionDescription}}

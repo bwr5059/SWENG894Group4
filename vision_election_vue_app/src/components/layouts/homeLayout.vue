@@ -6,6 +6,8 @@
                 <router-link v-show="authorized" to="/app/user/createElection" class="btn btn-secondary my-2 my-sm-0 mr-1" tag="button" id='home-button'> New </router-link>
                 <router-link v-show="authorized" to="/app/user/addAdmin" class="btn btn-secondary my-2 my-sm-0 mr-1" tag="button" id='home-button'> Election Admin </router-link>
                 <router-link to="/app/home/elections" class="btn btn-secondary my-2 my-sm-0 mr-1">Search all</router-link>
+                <router-link to="/app/home/candidates" class="btn btn-secondary my-2 my-sm-0 mr-1">Candidates</router-link>
+                <router-link v-show="isCandidate" to="/candidate" class="btn btn-secondary my-2 my-sm-0 mr-1">Candidate Profile</router-link>
             </b-navbar-nav>
             <b-navbar-nav class="ml-auto">
                 <b-nav-form>
@@ -37,6 +39,8 @@ export default {
    data: () => {  
       return {
     authorized: false,
+    isCandidate:false,
+    name:'Duruike',
     form: {
           id: '',
   
@@ -105,7 +109,7 @@ router path.
 
     searchCandidate: function(){
         alert("Routing to Candidate Profile")
-        //this.$router.push({path: `/app/home/Candidate/${this.form.id}`})
+       this.$router.push({path: `/app/home/Candidate/${this.form.id}/details`})
         this.form.id="";
         this.searchType=null;
     },
@@ -122,6 +126,10 @@ router path.
       this.profileComplete = 1
      if(this.userObj.type == "Admin"){
         this.authorized = true
+        
+     }
+      if(this.userObj.type == "Candidate"){
+        this.isCandidate = true
         
      }
   })  

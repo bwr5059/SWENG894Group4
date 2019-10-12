@@ -20,6 +20,10 @@ import registrationHelp from './components/help/registrationHelp.vue'
 import votersHelp from './components/help/votersHelp.vue'
 import candidatesHelp from './components/help/candidatesHelp.vue'
 import ballotHelp from './components/help/ballotHelp.vue'
+import candidates from './components/candidate/candidates.vue'
+import candidateProfile_main from './components/candidate/CandidateProfile_main.vue'
+import candidateProfile_general from './components/candidate/candidateProfile_general.vue'
+import viewCandidate from './components/candidate/viewCandidate.vue'
   
 Vue.use(Auth, {  
   issuer: 'https://dev-208412.okta.com/oauth2/default',  
@@ -108,13 +112,31 @@ let router = new Router({
           component: elections
         },
         {
+          path: 'candidates',
+          component: candidates
+        },
+        {
+          path: 'Candidate/:cID',
+          component: viewCandidate,
+          children: [{
+            path:'details',
+            component: candidateProfile_general
+          }
+         ],
+        },
+        {
           path: 'addAdmin',
           component: addElectionAdmin
         }
       
       ],
         meta: {
-            requiresAuth: true}}, 
+            requiresAuth: true}},
+            {
+              path: '/candidate',
+              component: candidateProfile_main,
+              meta: {
+                requiresAuth: true}},
     {
       path: '/profile',
       component: profile,

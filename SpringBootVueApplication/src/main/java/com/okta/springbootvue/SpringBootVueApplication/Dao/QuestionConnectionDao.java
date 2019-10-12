@@ -30,6 +30,28 @@ public class QuestionConnectionDao {
 	ConnectionDao connectionDao = new ConnectionDao();
 	
 	/**
+	 * getMaxID() - Gets current highest qID
+	 * @return int
+	 */
+	public int getMaxID(){
+		int maxID = 0;
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+			Statement stmt=conn.createStatement(); 
+			ResultSet rs=stmt.executeQuery("SELECT MAX(qID) FROM candidateQuestion"); 
+			while(rs.next())  {
+				maxID = rs.getInt(1);
+			}
+			connectionDao.ReleaseConnection(conn);
+		
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return maxID;
+		
+	}
+	
+	/**
 	 * getQuestionByID() - Performs select MySQL statement to retrieve question from candidateQuestion table.
 	 * @param qID
 	 * @return Question List
@@ -97,16 +119,19 @@ public class QuestionConnectionDao {
 	 */
 	public void insertQuestion(Question question){
 		List<Question> questionList = new ArrayList<>();
+		int newID = getMaxID() + 1;
+		question.setQID(newID);
 		
 		try {
 			Connection conn = connectionDao.RetrieveConnection();
-			String sql = "INSERT INTO candidateQuestion(canID, userID, question, answer) VALUES (?,?,?,?)"; 
+			String sql = "INSERT INTO candidateQuestion(qID, canID, userID, question, answer) VALUES (?,?,?,?,?)"; 
 			PreparedStatement stmt=conn.prepareStatement(sql); 
 			
-			stmt.setString(1,question.getCanID());
-			stmt.setString(2,question.getUserID());
-			stmt.setString(3,question.getQuestion());
-			stmt.setString(4,question.getAnswer());	 
+			stmt.setInt(1, question.getQID());
+			stmt.setString(2,question.getCanID());
+			stmt.setString(3,question.getUserID());
+			stmt.setString(4,question.getQuestion());
+			stmt.setString(5,question.getAnswer());	 
 			stmt.executeUpdate();
 			
 			connectionDao.ReleaseConnection(conn);

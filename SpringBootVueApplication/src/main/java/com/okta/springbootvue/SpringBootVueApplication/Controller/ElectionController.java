@@ -174,7 +174,7 @@ public class ElectionController {
 		}
 
 		electionService.associateVoter(electionID, id);
-		return new ResponseEntity<Election>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<Election>(HttpStatus.OK);
 	}
   
 	/**
@@ -194,7 +194,7 @@ public class ElectionController {
 		}
 
 		electionService.associateCandidate(electionID, id);
-		return new ResponseEntity<Election>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<Election>(HttpStatus.OK);
 	}
 	
 	/**
@@ -214,7 +214,7 @@ public class ElectionController {
 		}
 
 		electionService.withdrawCandidate(electionID, id);
-		return new ResponseEntity<Election>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<Election>(HttpStatus.OK);
 	}
   
 }

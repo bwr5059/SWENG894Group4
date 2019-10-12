@@ -43,5 +43,4 @@ public class Candidate {
   private String experience;
   
   private String contact;
-
 }

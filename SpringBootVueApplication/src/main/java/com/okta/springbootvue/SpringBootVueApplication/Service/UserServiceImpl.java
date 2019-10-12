@@ -12,24 +12,20 @@
 
 package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service;
 
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.UserConnectionDao;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
+
+import java.sql.Connection;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * UserServiceImpl Class - Implements UserService interface. Connects UserService class methods to database by
  * calling the connDao RetrieveConnection method and associated methods to execute statements.
  */
 @Service("userService")
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.UserService {
 	
 	private static final AtomicLong counter = new AtomicLong();
 	

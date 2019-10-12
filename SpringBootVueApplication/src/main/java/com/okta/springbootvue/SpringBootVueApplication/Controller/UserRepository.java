@@ -6,4 +6,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;  
   
 @RepositoryRestResource(collectionResourceRel = "users", path = "user")
-interface UserRepository extends JpaRepository<User, Long> {}
+interface UserRepository extends JpaRepository<User, Long> {
+
+    public User findByID(String id);
+}

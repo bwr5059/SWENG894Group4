@@ -202,7 +202,7 @@
                               variant="primary"
                               size="sm"
                               class="float-right"
-                              @click="showmodal=false"
+                              @click="askQuestion()"
                             >
                               Submit
                             </b-button>
@@ -244,6 +244,7 @@
 <script>
 import api from '@/apis/candidateApi'
 import qApi from '@/apis/questionsApi'
+import uApi from '@/apis/userApi'
 export default {
   name: "candidateProfile",
   props: {
@@ -383,7 +384,21 @@ export default {
     cancelQuestion: function(){
       this.questionAsked = null
       this.showmodal = false
-    }
+    },
+
+    askQuestion: function(){
+      uApi.askQuestion(this.questionAsked, this.userObj.id, this.canObj.data.canID) .then(response => {
+        this.$log.debug("Questions asked: ", response.data)
+        this.showmodal=false
+      this.isBusy=true
+      this.getQuestions()
+      }
+      ) .catch(error =>{
+          this.$log.debug(error)
+      })
+      
+    },
+    
    
   }
 };

@@ -49,6 +49,12 @@ export default {
         return data? JSON.parse(data) : data;  
       }]  
     }), 
+
+    askQuestion: (qIN, userID, canID) =>instance.post('/user/askQuestion', {question: qIN, userID: userID, canID: canID, 
+      transformResponse: [function (data) {  
+        return data? JSON.parse(data) : data;  
+      }]  
+    }), 
  
  // updateForId: (id, text, completed) => instance.put('todos/'+id, {title: text, completed: completed}),  
   // (D)elete  

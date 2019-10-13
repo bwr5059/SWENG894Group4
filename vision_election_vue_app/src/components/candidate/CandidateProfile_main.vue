@@ -7,10 +7,13 @@
             <!-- ============================================================== -->
             <!-- Container fluid  -->
             <!-- ============================================================== -->
+            
             <div class="container-fluid">
                 <!-- ============================================================== -->
                 <!-- Bread crumb and right sidebar toggle -->
                 <!-- ============================================================== -->
+              
+                
                 <div class="row page-titles">
                     <div class="col-md-5 align-self-center">
                         <h1 class="display-5">Candidate Profile</h1>
@@ -23,6 +26,14 @@
                 <!-- Start Page Content -->
                 <!-- ============================================================== -->
                 <!-- Row -->
+                <b-container>
+                <div>
+                  <div class="d-flex justify-content-center mb-3">
+                    <b-spinner v-if="!show" label="Loading..."></b-spinner>
+                  </div>
+                </div>
+                </b-container>
+                <b-container v-if="show">
                 <div class="row">
                     <!-- Column -->
                     <div class="col-lg-4 col-xlg-3 col-md-5">
@@ -164,7 +175,7 @@
                             </div>
                           </template>
                           <template v-slot:cell(answer)="row">
-                            <b-button size="sm" @click="row.toggleDetails" class="mr-2" v-show="!row.item.answer" v-b-modal.modal-1>
+                            <b-button size="sm" @click="showModal(row.index, row.item.question)" class="mr-2" v-show="!row.item.answer">
                               Reply
                             </b-button>
                             <b-button size="sm" @click="row.toggleDetails" class="mr-2" v-show="row.item.answer" >
@@ -184,11 +195,11 @@
 
                           
                         </b-table>
-                        <b-modal id="modal-1" title="Candidate Questions" v-model="showmodal">
+                        <b-modal id="modal-1" :title="modalTitle" v-model="showmodal">
                           <b-form-textarea
                             id="textarea"
-                            v-model="questionAsked"
-                            placeholder="Enter a question..."
+                            v-model="qResponse"
+                            placeholder="Enter a response"
                             rows="3"
                             max-rows="6"
                           ></b-form-textarea>
@@ -198,7 +209,7 @@
                               variant="primary"
                               size="sm"
                               class="float-right"
-                              @click="showmodal=false"
+                              @click="answerQuestion(currentQIndex)"
                             >
                               Submit
                             </b-button>
@@ -217,11 +228,14 @@
                       </b-tabs>
                     </div>
                     <!-- Column -->
+                    
                 </div>
+                </b-container>
                 <!-- Row -->
                 <!-- ============================================================== -->
                 <!-- End PAge Content -->
                 <!-- ============================================================== -->
+               
             </div>
             <!-- ============================================================== -->
             <!-- End Container fluid  -->
@@ -265,21 +279,26 @@ export default {
           contact: ''         
         },
         editableLastName:false,
-        show: true,
+        show: false,
         editable: false,
         userObj: '',
         userProfileComplete: 0,
         fields: ['userID', 'question','answer'],
         isBusy: true,
         questions: null,
-        questionAsked: null,
+        qResponse: null,
         showmodal: false,
+        currentQuestion: '',
+        currentQIndex: ''
       }  
     },  
 
   
+    computed: {
     
-
+    modalTitle(){
+    return this.currentQuestion;
+    }},
     mounted: function(){
     this.activeUser = this.$parent.activeUser,
     this.$log.debug(this.activeUser.family_name)
@@ -296,8 +315,9 @@ export default {
       this.form.employment = this.userObj.data.employment
       this.form.experience = this.userObj.data.experience
       this.form.contact = this.userObj.data.contact
+      this.show=true
       this.getQuestions();
-      if(this.userObj.canID){
+      if(this.userObj.data.canID){
         this.userProfileComplete = 1
       }else{
         this.userProfileComplete = 0
@@ -358,7 +378,7 @@ export default {
     
     //update the user
     //fname, lname, about, education, employment, experience, contact
-    api.modifyCandidateByName(this.form.fname, this.form.lastname, this.form.about, this.form.education, this.form.employment, this.form.experience, this.form.contact).then( (response) => {  
+    api.modifyCandidate(this.activeUser.sub, this.activeUser.sub, this.form.fname, this.form.lastname, this.activeUser.email, "", this.form.about, this.form.education, this.form.employment, this.form.experience, this.form.contact).then( (response) => {  
       this.$log.debug("User Updated:", response); 
       alert("Profile Updated")
       this.$router.push({ path: '/app/user/home' })
@@ -386,9 +406,26 @@ export default {
     cancelQuestion: function(){
       this.questionAsked = null
       this.showmodal = false
-    }
+    },
   
+    answerQuestion: function(index){
+      api.answerQuestion(this.qResponse,this.questions[index].qid ) .then(response => {
+        this.$log.debug("Questions answered: ", response.data)
+        this.showmodal = false
+        this.isBusy = true
+        this.getQuestions()
+      }
+      ) .catch(error =>{
+          this.$log.debug(error)
+      })
 
+    },
+
+    showModal: function(index, question){
+      this.showmodal=true
+      this.currentQIndex = index
+      this.currentQuestion = question
+    }
 
 
   

@@ -60,7 +60,7 @@ export default {
       return data? JSON.parse(data) : data;
     }]}),
   // (D)elete  
-  removeElection: (id) => instance.delete("/elections/remove/"+id, {transformResponse: [function (data) {  
+  removeElection: (id) => instance.delete("/election/removeElection/"+id, {transformResponse: [function (data) {  
     return data? JSON.parse(data) : data; 
   }]
 })

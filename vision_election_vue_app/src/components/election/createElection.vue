@@ -1,5 +1,11 @@
 <template>
-    <b-container>
+  <div>
+    <div>
+        <div class="d-flex justify-content-center mb-3">
+          <b-spinner v-if="!show" label="Loading..."></b-spinner>
+        </div>
+      </div>
+    <b-container v-if="show">
     <b-row class ='d-flex justify-content-center'>
     Create an election
     </b-row>
@@ -9,8 +15,8 @@
         <b-form-input
           id="input-1"
           
-          required
-          v-model="electionID"
+          readonly
+          v-model="electionId"
           
         ></b-form-input>
       </b-form-group>
@@ -21,7 +27,7 @@
           
           required
           placeholder="Enter title"
-          v-model='electionTitle'
+          v-model='form.electionTitle'
         ></b-form-input>
       </b-form-group>
     
@@ -31,7 +37,7 @@
           
           required
           placeholder="Enter Description"
-          v-model='electionDescription'
+          v-model='form.electionDescription'
         ></b-form-input>
       </b-form-group>
       <b-row>
@@ -41,7 +47,7 @@
               id="input-4"
               type="date"
               required
-              v-model='this.electionStartDate'
+              v-model='form.electionStartDate'
               
             ></b-form-input>
           </b-form-group>
@@ -52,7 +58,7 @@
               id="input-4"
               type="date"
               required
-              v-model='this.electionEndDate'
+              v-model='form.electionEndDate'
             ></b-form-input>
           </b-form-group>
           </b-col>
@@ -63,6 +69,7 @@
 
     </b-form>
     </b-container>
+  </div>
 </template>
 
 
@@ -79,13 +86,16 @@ export default {
    data: () => {  
       return {
     electionObj: null,
+    electionId: '',
+    form: {
     electionTitle: '',
     electionDescription: '',
-    electionId: '',
     electionStartDate: '',
     electionEndDate: '',
+    },
     error: '',
-    authorized: false
+    authorized: false,
+    show: false
       }
   },
 
@@ -105,7 +115,8 @@ export default {
     api.createNew().then( (response) => {  
       this.$log.debug("New election created:", response);  
       this.electionObj = response
-      this.electionId = this.electionObj.electionID
+      this.electionId = this.electionObj.data.electionID
+      this.show=true
     }).catch((error) => {  
       this.$log.debug(error);  
       this.error = "Failed to add todo"  
@@ -114,7 +125,7 @@ export default {
       },
 
       updateElection: function(){
-        api.updateElection(this.electionTitle, this.electionDescription, this.electionStartDate, this.electionEndDate, this.electionObj.data.electionId).then( (response) => {  
+        api.updateElection(this.form.electionTitle, this.form.electionDescription, this.form.electionStartDate, this.form.electionEndDate, this.electionId).then( (response) => {  
       this.$log.debug("Election updated:", response);  
       this.electionObj = response
     }).catch((error) => {  

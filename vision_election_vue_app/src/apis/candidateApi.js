@@ -44,7 +44,7 @@ export default {
   // (U)pdate  
   modifyCandidate: (canID, userID, fname, lname, email, electionID, about, education, employment, experience, contact) => 
   instance.put('/candidate/modifyCandidate/'+canID, {canID: canID, userID: userID, first_name: fname, last_name: lname, 
-    email: email, electionID: electionID,about: about, education: education, employment: employment, experience: experience, contact: contact}), 
+    email: email, electionID: electionID, about: about, education: education, employment: employment, experience: experience, contact: contact}), 
  
     // (U)pdate  by Last Name
   modifyCandidateByName: (fname, lname, about, education, employment, experience, contact) => 
@@ -56,6 +56,9 @@ export default {
   instance.post('/candidate/addCandidate/', {canID: canID, userID: userID, first_name: fname, last_name: lname, 
     email: email, electionID: electionID,about: about, education: education, employment: employment, experience: experience, contact: contact}), 
   
+  answerQuestion: (answer, qID) => instance.put('candidate/answerQuestion/'+qID, {qID: qID, answer: answer, transformResponse: [function (data) {  
+    return data? JSON.parse(data) : data;  
+  }]  })
     
  // updateForId: (id, text, completed) => instance.put('todos/'+id, {title: text, completed: completed}),  
   // (D)elete  

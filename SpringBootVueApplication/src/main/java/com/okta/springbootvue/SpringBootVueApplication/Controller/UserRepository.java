@@ -8,5 +8,5 @@ import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 @RepositoryRestResource(collectionResourceRel = "users", path = "user")
 interface UserRepository extends JpaRepository<User, Long> {
 
-   
+
 }

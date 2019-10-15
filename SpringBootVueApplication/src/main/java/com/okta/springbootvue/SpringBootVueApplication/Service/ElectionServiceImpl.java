@@ -26,6 +26,7 @@ import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.Electio
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Policy;
 
 /**
  * ElectionServiceImpl Class - Implements ElectionService interface. Connects ElectionService class methods to database by
@@ -122,6 +123,22 @@ public class ElectionServiceImpl implements ElectionService{
 		candidates= connDao.getCandidatesByElection(electionID);
 		return candidates;
 		
+	}
+	
+	/**
+	 * createPolicy() - Adds a policy to the electionPolicy table.
+	 * @param election
+	 */
+	public void createPolicy(Policy policy) {
+		connDao.insertPolicy(policy);
+	}
+	
+	/**
+	 * modifyPolicy() - Adds a policy to the electionPolicy table.
+	 * @param election
+	 */
+	public void modifyPolicy(Policy policy) {
+		connDao.updatePolicy(policy);
 	}
 	
 

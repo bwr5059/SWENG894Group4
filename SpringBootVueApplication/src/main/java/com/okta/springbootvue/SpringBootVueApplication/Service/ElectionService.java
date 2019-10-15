@@ -13,6 +13,7 @@ import java.util.List;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Policy;
 
 /**
  * ElectionService Class - Interface for ElectionService.
@@ -44,5 +45,11 @@ public interface ElectionService {
 	
 	//View Candidates by Election
 	List<Candidate> viewCandidates(int electionID);
+	
+	//Create new Election Policy
+	void createPolicy(Policy policy);
+	
+	//Modify Existing Election Policy
+	void modifyPolicy(Policy policy);
 		
 }

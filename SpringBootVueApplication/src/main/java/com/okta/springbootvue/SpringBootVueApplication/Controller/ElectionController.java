@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Policy;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ElectionConnectionDao;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.ElectionService;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.UserService;
@@ -233,6 +234,42 @@ public class ElectionController {
 
 		List<Candidate> candidates = electionService.viewCandidates(electionID);
 		return new ResponseEntity<List<Candidate>>(candidates, HttpStatus.OK);
+	}
+	
+	/**
+	 * createPolicy() - 
+	 * @param 
+	 * @param 
+	 * @return
+	 */
+	@PostMapping("/election/createPolicy")
+	public ResponseEntity<Policy> createPolicy(@RequestBody Policy policy){
+		Election election = electionService.findElectionById(policy.getElectionID());
+	  
+		if (election == null) {
+			return new ResponseEntity<Policy>(HttpStatus.NOT_FOUND);
+		}
+
+		electionService.createPolicy(policy);
+		return new ResponseEntity<Policy>(HttpStatus.OK);
+	}
+	
+	/**
+	 * modifyPolicy() - 
+	 * @param 
+	 * @param 
+	 * @return
+	 */
+	@PutMapping("/election/modifyPolicy")
+	public ResponseEntity<Policy> modifyPolicy(@RequestBody Policy policy){
+		Election election = electionService.findElectionById(policy.getElectionID());
+	  
+		if (election == null) {
+			return new ResponseEntity<Policy>(HttpStatus.NOT_FOUND);
+		}
+
+		electionService.modifyPolicy(policy);
+		return new ResponseEntity<Policy>(HttpStatus.OK);
 	}
   
 }

@@ -24,6 +24,7 @@ import java.sql.PreparedStatement;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Policy;
 
 /**
  * ElectionConnectionDao Class - Connects to MySQL database vision-database and performs queries through methods to update
@@ -371,6 +372,59 @@ public class ElectionConnectionDao {
 				e.printStackTrace();
 			}
 		return candidateList;
+	}
+	
+	/**
+	 * insertPolicy() - Inserts a new policy row into the electionPolicy database table using MySQL statement.
+	 * @param 
+	 * @param 
+	 * @param 
+	 * @return 
+	 */
+	public void insertPolicy(Policy policy){
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+		String sql = "INSERT INTO electionPolicy (electionID, type, frequency, num_votes) VALUES (?,?,?,?)";
+		PreparedStatement stmt=conn.prepareStatement(sql);
+		
+		stmt.setInt(1,policy.getElectionID());
+		stmt.setString(2,policy.getType());
+		stmt.setInt(3,policy.getFrequency());
+		stmt.setInt(4,policy.getNum_votes());
+
+		stmt.executeUpdate();  
+		connectionDao.ReleaseConnection(conn);
+		
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * updatePolicy() - 
+	 * @param 
+	 * @param 
+	 * @param 
+	 * @return 
+	 */
+	public void updatePolicy(Policy policy){
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+		String sql = "UPDATE electionPolicy SET electionID=?, type=?, frequency=?, num_votes=? WHERE electionID=?";
+		PreparedStatement stmt=conn.prepareStatement(sql);
+		
+		stmt.setInt(1,policy.getElectionID());
+		stmt.setString(2,policy.getType());
+		stmt.setInt(3,policy.getFrequency());
+		stmt.setInt(4,policy.getNum_votes());
+		stmt.setInt(5,policy.getElectionID());
+
+		stmt.executeUpdate(); 
+		connectionDao.ReleaseConnection(conn);
+		
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
 

@@ -197,6 +197,23 @@ public class ElectionController {
 		electionService.withdrawVoter(electionID, id);
 		return new ResponseEntity<Election>(HttpStatus.OK);
 	}
+	
+	/**
+	 * validateVoter () - 
+	 * @param 
+	 * @return =
+	**/
+	@GetMapping("/election/validateVoter/{electionID}/{id}")
+	public String validateVoter(@PathVariable("electionID") int electionID, @PathVariable("id") String id) {
+		Election election = electionService.findElectionById(electionID);
+		User user = userService.findById(id);
+		
+		if (election == null || user == null) {
+			return "Election or User does not exist";
+		}
+		String result = electionService.validateVoter(electionID, id);
+		return result;
+	}
   
 	/**
 	 * getElectionType() - Takes an electionID and userID as parameters. If both are found in database, uses associateCandidate
@@ -236,6 +253,23 @@ public class ElectionController {
 
 		electionService.withdrawCandidate(electionID, id);
 		return new ResponseEntity<Election>(HttpStatus.OK);
+	}
+	
+	/**
+	 * validateCandidate() - 
+	 * @param 
+	 * @return =
+	**/
+	@GetMapping("/election/validateVoter/{electionID}/{id}")
+	public String validateCandidate(@PathVariable("electionID") int electionID, @PathVariable("id") String id) {
+		Election election = electionService.findElectionById(electionID);
+		User user = userService.findById(id);
+		
+		if (election == null || user == null) {
+			return "Election or Candidate does not exist";
+		}
+		String result = electionService.validateCandidate(electionID, id);
+		return result;
 	}
 	
 	/**

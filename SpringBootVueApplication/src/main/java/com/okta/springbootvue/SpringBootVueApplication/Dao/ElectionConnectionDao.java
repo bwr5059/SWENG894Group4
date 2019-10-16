@@ -289,6 +289,30 @@ public class ElectionConnectionDao {
 	}
 	
 	/**
+	 * removeVoteAuth() - 
+	 * table.
+	 * @param conn
+	 * @param electionID
+	 * @param id
+	 */
+	public void removeVoteAuth(int electionID, String id){
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+		String sql = "DELETE FROM voteAuthorization WHERE electionID=? AND userID=?";
+		PreparedStatement stmt=conn.prepareStatement(sql);
+		
+		stmt.setInt(1,electionID);
+		stmt.setString(2,userID);
+		stmt.executeUpdate();
+		connectionDao.ReleaseConnection(conn); 
+		
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	/**
 	 * insertElectionCandidate() - Receives an electionID and userID as parameters and inserts them into the electionCandidate
 	 * table.
 	 * @param conn

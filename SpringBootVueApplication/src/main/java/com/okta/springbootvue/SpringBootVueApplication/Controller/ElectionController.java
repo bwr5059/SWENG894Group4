@@ -178,6 +178,25 @@ public class ElectionController {
 		electionService.associateVoter(electionID, id);
 		return new ResponseEntity<Election>(HttpStatus.OK);
 	}
+	
+	/**
+	 * removeVoter() - 
+	 * @param 
+	 * @param 
+	 * @return
+	 */
+	@DeleteMapping("/election/withdrawVoter/{electionID}/{id}")
+	public ResponseEntity<Election> removeVoter(@PathVariable("electionID") int electionID, @PathVariable("id") String id){
+		Election election = electionService.findElectionById(electionID);
+		User user = userService.findById(id);
+	  
+		if (election == null || user == null) {
+			return new ResponseEntity<Election>(HttpStatus.NOT_FOUND);
+		}
+
+		electionService.withdrawVoter(electionID, id);
+		return new ResponseEntity<Election>(HttpStatus.OK);
+	}
   
 	/**
 	 * getElectionType() - Takes an electionID and userID as parameters. If both are found in database, uses associateCandidate

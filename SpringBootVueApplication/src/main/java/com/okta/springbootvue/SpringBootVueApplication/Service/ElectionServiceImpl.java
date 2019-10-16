@@ -107,6 +107,15 @@ public class ElectionServiceImpl implements ElectionService{
 	}
 	
 	/**
+	 * validateVoter() - 
+	 * @param electionID
+	 * @param id
+	 */
+	public String validateVoter(int electionID, String id) {
+		return connDao.getVoteAuth(electionID, id);
+	}
+	
+	/**
 	 * associateCandidate() - Adds an userID and associated electionID to the electionDandidate database table.
 	 * @param electionID
 	 * @param id
@@ -122,6 +131,15 @@ public class ElectionServiceImpl implements ElectionService{
 	 */
 	public void withdrawCandidate(int electionID, String id) {
 		connDao.removeElectionCandidate(electionID, id);
+	}
+	
+	/**
+	 * validateCandidate() - 
+	 * @param electionID
+	 * @param id
+	 */
+	public String validateCandidate(int electionID, String id) {
+		return connDao.getElectionCandidate(electionID, id);
 	}
 	
 	/**

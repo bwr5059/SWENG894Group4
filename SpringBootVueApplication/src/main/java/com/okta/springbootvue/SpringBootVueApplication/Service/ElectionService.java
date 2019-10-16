@@ -39,12 +39,18 @@ public interface ElectionService {
 	
 	//Removes user as a voter in an election
 	void withdrawVoter(int electionID, String id);
+	
+	//Validates user as a voter in an election
+	String validateVoter(int electionID, String id);
 		
 	//Adds user as a candidate in an election
 	void associateCandidate(int electionID, String id);
 	
 	//Removes user as a candidate in an election
 	void withdrawCandidate(int electionID, String id);
+	
+	//Validates user as a Candidate in an election
+	String validateCandidate(int electionID, String id);
 	
 	//View Candidates by Election
 	List<Candidate> viewCandidates(int electionID);

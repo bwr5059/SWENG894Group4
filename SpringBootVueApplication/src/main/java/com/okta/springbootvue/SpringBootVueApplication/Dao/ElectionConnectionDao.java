@@ -313,6 +313,33 @@ public class ElectionConnectionDao {
 	}
 	
 	/**
+	 * getVoteAuth() - 
+	 * @param 
+	 * @return 
+	 */
+	public String getVoteAuth(int electionID, String userID){
+		Election election = new Election();
+		 String result = "Missing";
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+			String sql = "SELECT * FROM voteAuthorization WHERE electionID=? AND userID=?"; 
+			PreparedStatement stmt=conn.prepareStatement(sql); 
+			stmt.setInt(1,electionID);
+			stmt.setString(2,userID);
+			 
+			ResultSet rs=stmt.executeQuery();
+			while(rs.next()) {
+				result = "Found";
+			}
+			
+			connectionDao.ReleaseConnection(conn);
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		return result;
+	}
+	
+	/**
 	 * insertElectionCandidate() - Receives an electionID and userID as parameters and inserts them into the electionCandidate
 	 * table.
 	 * @param conn
@@ -358,6 +385,33 @@ public class ElectionConnectionDao {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	/**
+	 * getElectionCandidate() - 
+	 * @param 
+	 * @return 
+	 */
+	public String getElectionCandidate(int electionID, String userID){
+		Election election = new Election();
+		 String result = "Missing";
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+			String sql = "SELECT * FROM electionCandidate WHERE electionID=? AND canID=?"; 
+			PreparedStatement stmt=conn.prepareStatement(sql); 
+			stmt.setInt(1,electionID);
+			stmt.setString(2,userID);
+			 
+			ResultSet rs=stmt.executeQuery();
+			while(rs.next()) {
+				result = "Found";
+			}
+			
+			connectionDao.ReleaseConnection(conn);
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		return result;
 	}
 	
 	/**

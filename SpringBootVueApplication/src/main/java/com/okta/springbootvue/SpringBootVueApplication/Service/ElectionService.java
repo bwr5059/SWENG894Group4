@@ -36,6 +36,9 @@ public interface ElectionService {
 	
 	//Adds user's voter permissions to an election
 	void associateVoter(int electionID, String id);
+	
+	//Removes user as a voter in an election
+	void withdrawVoter(int electionID, String id);
 		
 	//Adds user as a candidate in an election
 	void associateCandidate(int electionID, String id);

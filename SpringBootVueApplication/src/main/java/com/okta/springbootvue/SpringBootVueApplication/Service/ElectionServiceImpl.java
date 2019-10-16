@@ -98,6 +98,15 @@ public class ElectionServiceImpl implements ElectionService{
 	}
 	
 	/**
+	 * withdrawVoter() - Removes an userID and associated electionID to the voteAuthorization database table.
+	 * @param electionID
+	 * @param id
+	 */
+	public void withdrawVoter(int electionID, String id) {
+		connDao.removeVoteAuth(electionID, id);
+	}
+	
+	/**
 	 * associateCandidate() - Adds an userID and associated electionID to the electionDandidate database table.
 	 * @param electionID
 	 * @param id

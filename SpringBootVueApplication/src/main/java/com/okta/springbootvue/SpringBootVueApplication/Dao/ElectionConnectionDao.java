@@ -424,25 +424,30 @@ public class ElectionConnectionDao {
 		
 		try {
 			Connection conn = connectionDao.RetrieveConnection();
-			String sql = "SELECT * FROM candidate WHERE electionID=?"; 
+			//String sql = "SELECT * FROM candidate WHERE electionID=?"; 
+			String sql = "SELECT electionCandidate.canID, user.fisrt_name, user.last_name " + 
+				"FROM electionCandidate " +
+				"INNER JOIN user ON electionCandidate.canID = user.id " + 
+				"WHERE electionID=?"; 
 			PreparedStatement stmt=conn.prepareStatement(sql); 
 			stmt.setInt(1,electionID);
 			 
 			ResultSet rs=stmt.executeQuery();
 			while(rs.next())  {
 				Candidate candidate = new Candidate();
-				candidate.setCanID(rs.getString(1));
+				
+				/*candidate.setCanID(rs.getString(1));
 				candidate.setUserID(rs.getString(2));
 				candidate.setFirst_name(rs.getString(3));
-				candidate.setLast_name(rs.getString(4));
-				candidate.setEmail(rs.getString(5));
+				candidate.setLast_name(rs.getString(4));*/
+				/*candidate.setEmail(rs.getString(5));
 				candidate.setElectionID(rs.getInt(6));
 				candidate.setAbout(rs.getString(7));
 				candidate.setEducation(rs.getString(8));
 				candidate.setEmployment(rs.getString(9));
 				candidate.setExperience(rs.getString(10));
-				candidate.setContact(rs.getString(11));
-				candidateList.add(candidate);
+				candidate.setContact(rs.getString(11));*/
+				//candidateList.add(candidate);
 			}
 			
 			connectionDao.ReleaseConnection(conn);

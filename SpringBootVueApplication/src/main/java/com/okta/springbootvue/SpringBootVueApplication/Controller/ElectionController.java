@@ -290,6 +290,21 @@ public class ElectionController {
 	}
 	
 	/**
+	 * getPolicy () - 
+	 * @param 
+	 * @return 
+	**/
+	@GetMapping("/election/getPolicy/{electionID}")
+	public ResponseEntity<Policy> getElection(@PathVariable("electionID") int electionID) {
+		Election election = electionService.findElectionById(electionID);
+		if (election == null) {
+			return new ResponseEntity<Policy>(HttpStatus.NOT_FOUND);
+		}
+		Policy policy = electionService.getPolicy(electionID);
+		return new ResponseEntity<Policy>(policy, HttpStatus.OK);
+	}
+	
+	/**
 	 * createPolicy() - 
 	 * @param 
 	 * @param 

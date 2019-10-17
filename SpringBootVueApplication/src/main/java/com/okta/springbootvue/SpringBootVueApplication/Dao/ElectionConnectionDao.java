@@ -453,6 +453,34 @@ public class ElectionConnectionDao {
 	}
 	
 	/**
+	 * getPolicy() - Performs select MySQL statement to retrieve single user from electionPolicy table.
+	 * @param 
+	 * @return 
+	 */
+	public Policy getElectionById(int electionID){
+		Policy policy = new Policy();
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+			String sql = "SELECT * FROM electionPolicy WHERE electionID=?"; 
+			PreparedStatement stmt=conn.prepareStatement(sql); 
+			stmt.setInt(1,electionID);
+			 
+			ResultSet rs=stmt.executeQuery();
+			while(rs.next()) {
+				policy.setElectionID(rs.getInt(1));
+				policy.setType(rs.getString(2));
+				policy.setFrequency(rs.getInt(3));
+				policy.setNum_votes(rs.getInt(4));
+			}
+			
+			connectionDao.ReleaseConnection(conn);
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		return policy;
+	}
+	
+	/**
 	 * insertPolicy() - Inserts a new policy row into the electionPolicy database table using MySQL statement.
 	 * @param 
 	 * @param 

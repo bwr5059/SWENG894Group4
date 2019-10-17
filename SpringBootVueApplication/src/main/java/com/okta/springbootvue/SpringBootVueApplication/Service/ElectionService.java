@@ -55,6 +55,9 @@ public interface ElectionService {
 	//View Candidates by Election
 	List<Candidate> viewCandidates(int electionID);
 	
+	//Returns a policy by ID
+	Policy getPolicy(int electionID);
+	
 	//Create new Election Policy
 	void createPolicy(Policy policy);
 	

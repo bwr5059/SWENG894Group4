@@ -153,6 +153,16 @@ public class ElectionServiceImpl implements ElectionService{
 	}
 	
 	/**
+	 * getPolicy() - 
+	 * @param electionID
+	 * @return
+	 */
+	public Policy getPolicy(int electionID) {
+		Policy policy = connDao.getPolicy(electionID);
+		return policy;
+	}
+	
+	/**
 	 * createPolicy() - Adds a policy to the electionPolicy table.
 	 * @param election
 	 */

@@ -433,8 +433,13 @@ public class ElectionConnectionDao {
 			stmt.setInt(1,electionID);
 			 
 			ResultSet rs=stmt.executeQuery();
+			JSONArray canJsonAr = new JSONArray();
 			while(rs.next())  {
 				Candidate candidate = new Candidate();
+				candidateJson = new JSONObject();
+				candidateJSON.put("canID",rs.getString(1));
+				candidateJSON.put("first_name",rs.getString(2));
+				candidateJSON.put("last_name",rs.getString(3));
 				
 				/*candidate.setCanID(rs.getString(1));
 				candidate.setUserID(rs.getString(2));
@@ -448,6 +453,7 @@ public class ElectionConnectionDao {
 				candidate.setExperience(rs.getString(10));
 				candidate.setContact(rs.getString(11));*/
 				//candidateList.add(candidate);
+				canJsonAr.put(candidateJson);
 			}
 			
 			connectionDao.ReleaseConnection(conn);

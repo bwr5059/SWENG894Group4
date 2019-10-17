@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
+import java.util.HashMap;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -260,13 +261,13 @@ public class ElectionController {
 	 * @param 
 	 * @return =
 	**/
-	@GetMapping("/election/validateVoter/{electionID}/{id}")
+	@GetMapping("/election/validateCandidate/{electionID}/{id}")
 	public String validateCandidate(@PathVariable("electionID") int electionID, @PathVariable("id") String id) {
 		Election election = electionService.findElectionById(electionID);
 		User user = userService.findById(id);
 		
 		if (election == null || user == null) {
-			return "Election or Candidate does not exist";
+			return "Election or User does not exist";
 		}
 		String result = electionService.validateCandidate(electionID, id);
 		return result;
@@ -278,15 +279,16 @@ public class ElectionController {
 	 * @return
 	 */
 	@GetMapping("/election/viewCandidates/{electionID}")
-	public ResponseEntity<List<Candidate>> viewCandidates(@PathVariable("electionID") int electionID){ 
+	public List<HashMap<String, String>> viewCandidates(@PathVariable("electionID") int electionID){ 
 		Election election = electionService.findElectionById(electionID);
 	  
 		if (election == null) {
-			return new ResponseEntity<List<Candidate>>(HttpStatus.NOT_FOUND);
+			//return new ResponseEntity<List<Candidate>>(HttpStatus.NOT_FOUND);
 		}
 
-		List<Candidate> candidates = electionService.viewCandidates(electionID);
-		return new ResponseEntity<List<Candidate>>(candidates, HttpStatus.OK);
+		List<HashMap<String, String>> candidates = electionService.viewCandidates(electionID);
+		//return new ResponseEntity<List<Candidate>>(candidates, HttpStatus.OK);
+		return candidates;
 	}
 	
 	/**
@@ -295,7 +297,7 @@ public class ElectionController {
 	 * @return 
 	**/
 	@GetMapping("/election/getPolicy/{electionID}")
-	public ResponseEntity<Policy> getElection(@PathVariable("electionID") int electionID) {
+	public ResponseEntity<Policy> getPolicy(@PathVariable("electionID") int electionID) {
 		Election election = electionService.findElectionById(electionID);
 		if (election == null) {
 			return new ResponseEntity<Policy>(HttpStatus.NOT_FOUND);

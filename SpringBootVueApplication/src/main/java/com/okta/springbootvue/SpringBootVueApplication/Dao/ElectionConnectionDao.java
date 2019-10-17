@@ -433,13 +433,16 @@ public class ElectionConnectionDao {
 			stmt.setInt(1,electionID);
 			 
 			ResultSet rs=stmt.executeQuery();
-			JSONArray canJsonAr = new JSONArray();
+			//JSONArray canJsonAr = new JSONArray();
+			List<Map<String, String>> listofMaps = new ArrayList<Map<String, String>>();
+			Hash
 			while(rs.next())  {
-				Candidate candidate = new Candidate();
-				candidateJson = new JSONObject();
-				candidateJSON.put("canID",rs.getString(1));
-				candidateJSON.put("first_name",rs.getString(2));
-				candidateJSON.put("last_name",rs.getString(3));
+				//Candidate candidate = new Candidate();
+				//candidateJson = new JSONObject();
+				Map<String, String> objMap = new HashMap<String, String>();
+				objMap.put("canID",rs.getString(1));
+				objMap.put("first_name",rs.getString(2));
+				objMap.put("last_name",rs.getString(3));
 				
 				/*candidate.setCanID(rs.getString(1));
 				candidate.setUserID(rs.getString(2));
@@ -453,7 +456,8 @@ public class ElectionConnectionDao {
 				candidate.setExperience(rs.getString(10));
 				candidate.setContact(rs.getString(11));*/
 				//candidateList.add(candidate);
-				canJsonAr.put(candidateJson);
+				//canJsonAr.put(candidateJson);
+				listofMaps.add(objMap);//try to return this
 			}
 			
 			connectionDao.ReleaseConnection(conn);

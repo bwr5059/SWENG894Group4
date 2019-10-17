@@ -63,5 +63,26 @@ export default {
   removeElection: (id) => instance.delete("/election/removeElection/"+id, {transformResponse: [function (data) {  
     return data? JSON.parse(data) : data; 
   }]
-})
+}),
+
+  withdrawVoter: (voterID, electionID)=> instance.delete('/election/withdrawVoter/'+electionID+'/'+voterID, {transformResponse: 
+    [function (data) {
+      return data? JSON.parse(data) : data;
+    }]}),
+
+    createPolicy: (electionID, pType, pFrequency, pNumVoters)=> instance.post('/election/createPolicy', {electionID: electionID, Type: pType, Frequency: pFrequency, Num_votes: pNumVoters
+    , transformResponse: 
+      [function (data) {
+        return data? JSON.parse(data) : data;
+      }]}),
+
+  validateVoterRegistration: (electionID, voterID)=> instance.get('/election/validateVoter/'+electionID+'/'+voterID, {transformResponse: 
+    [function (data) {
+      return data
+    }]}),
+
+    validateCandidateRegistration: (electionID, voterID)=> instance.get('/election/validateCandidate/'+electionID+'/'+voterID, {transformResponse: 
+      [function (data) {
+        return data
+      }]}),
 }

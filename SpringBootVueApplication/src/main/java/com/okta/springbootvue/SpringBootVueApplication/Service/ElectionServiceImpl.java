@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -146,9 +147,10 @@ public class ElectionServiceImpl implements ElectionService{
 	 * viewCandidates() -
 	 * @param electionID
 	*/
-	public List<Candidate> viewCandidates(int electionID) {
-		candidates= connDao.getCandidatesByElection(electionID);
-		return candidates;
+	public List<HashMap<String, String>> viewCandidates(int electionID) {
+		List<HashMap<String, String>> listofMaps = new ArrayList<HashMap<String, String>>();
+		listofMaps= connDao.getCandidatesByElection(electionID);
+		return listofMaps;
 		
 	}
 	

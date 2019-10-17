@@ -10,6 +10,7 @@
 package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service;
 
 import java.util.List;
+import java.util.HashMap;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
@@ -53,7 +54,7 @@ public interface ElectionService {
 	String validateCandidate(int electionID, String id);
 	
 	//View Candidates by Election
-	List<Candidate> viewCandidates(int electionID);
+	List<HashMap<String, String>> viewCandidates(int electionID);
 	
 	//Returns a policy by ID
 	Policy getPolicy(int electionID);

@@ -155,7 +155,7 @@
   <b-container>
     <br>
   <b-card title="Candidates">
-    <b-table striped hover :items="items" selectable select-mode="single"  ref="selectableTable" :fields="fields" @row-selected="enableVote" :busy="isBusy">
+    <b-table striped hover :items="candidates" selectable select-mode="single"  ref="selectableTable" :fields="fields" @row-selected="enableVote" :busy="isBusy">
       <template v-slot:cell(selected)="{ rowSelected }">
         <template v-if="rowSelected">
           <span aria-hidden="true">&check;</span>
@@ -173,7 +173,7 @@
         </div>
       </template>
       <template v-slot:cell(name)="data">
-       <router-link :to='{path: `/app/home/Candidate/${data.item.last_Name}/details`}' class="navbar-text mr-1" id='profile-button'> {{data.item.first_Name}} {{data.item.last_Name}} </router-link>
+       <router-link :to='{path: `/app/home/Candidate/${data.item.last_name}/details`}' class="navbar-text mr-1" id='profile-button'> {{data.item.first_name}} {{data.item.last_name}} </router-link>
       </template>
     </b-table>
   </b-card>
@@ -223,14 +223,11 @@ export default {
           policyMaxVotes: ''
         },
         fields: null,
-        items: [
-          { first_Name: "Lawrence" , last_Name: "Mielke", id: "12345"}
-        ],
         isBusy: false,
         selecteditem: [],
         isSelected: false,
         showmodal: false,
-        
+        candidates: null
       }  
     },  
 
@@ -303,6 +300,7 @@ methods: {
       this.form.electionStartDate = this.data.data.start_date
       this.getCandidates()
       this.getRegistration()
+      this.getPolicy()
     }).catch((error) => {  
       this.$log.debug(error);  
       this.error = "Failed to get election"  
@@ -342,6 +340,8 @@ methods: {
           }
         }).catch((error)=>
         this.$log.debug(error))
+      } else if(this.regType=="Admin"){
+        this.show = true
       }
 
       
@@ -422,7 +422,14 @@ methods: {
 
     getCandidates: function(){
       this.$log.debug("calling api: get candidates")
-      this.fields = ["Name", "Selected"]
+      api.getCandidates(this.form.electionId).then((response)=>{
+          this.$log.debug("Candidate returned:", response)
+        this.fields = ["Name", "Selected"]
+        this.candidates = response.data
+        }).catch((error)=>
+        this.$log.debug(error))
+      
+      
     },
 
     enableVote(items){
@@ -440,6 +447,15 @@ methods: {
           this.$log.debug("Policy set", response)
           if(response.status==200){alert("Election Policy Set!!")}
           this.showmodal=false
+        }).catch((error)=>
+        this.$log.debug(error))
+    },
+
+    getPolicy: function(){
+      this.$log.debug("calling api: getPolicy()")
+      api.getPolicy(this.form.electionId) .then((response)=>{
+          this.$log.debug("Policy returned", response)
+          
         }).catch((error)=>
         this.$log.debug(error))
     }

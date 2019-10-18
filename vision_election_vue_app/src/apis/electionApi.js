@@ -85,4 +85,14 @@ export default {
       [function (data) {
         return data
       }]}),
+
+      getCandidates: (electionID)=> instance.get('/election/viewCandidates/'+electionID, {transformResponse: 
+        [function (data) {
+          return data? JSON.parse(data) : data;
+        }]},),
+
+    getPolicy: (electionID)=> instance.get('/election/getPolicy/'+electionID, {transformResponse: 
+        [function (data) {
+          return data? JSON.parse(data) : data;
+        }]}),
 }

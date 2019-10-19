@@ -24,10 +24,10 @@ public class Policy {
   @Id  
   private int electionID;  
   
+  private String type;
+  
   private int frequency;
   
   private int num_votes;
-  
-  private String type;
       
 }

@@ -10,8 +10,11 @@
 package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service;
 
 import java.util.List;
+import java.util.HashMap;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Policy;
 
 /**
  * ElectionService Class - Interface for ElectionService.
@@ -34,11 +37,32 @@ public interface ElectionService {
 	
 	//Adds user's voter permissions to an election
 	void associateVoter(int electionID, String id);
+	
+	//Removes user as a voter in an election
+	void withdrawVoter(int electionID, String id);
+	
+	//Validates user as a voter in an election
+	String validateVoter(int electionID, String id);
 		
 	//Adds user as a candidate in an election
 	void associateCandidate(int electionID, String id);
 	
 	//Removes user as a candidate in an election
 	void withdrawCandidate(int electionID, String id);
+	
+	//Validates user as a Candidate in an election
+	String validateCandidate(int electionID, String id);
+	
+	//View Candidates by Election
+	List<HashMap<String, String>> viewCandidates(int electionID);
+	
+	//Returns a policy by ID
+	Policy getPolicy(int electionID);
+	
+	//Create new Election Policy
+	void createPolicy(Policy policy);
+	
+	//Modify Existing Election Policy
+	void modifyPolicy(Policy policy);
 		
 }

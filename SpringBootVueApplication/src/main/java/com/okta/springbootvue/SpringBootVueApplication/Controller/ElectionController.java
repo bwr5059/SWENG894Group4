@@ -5,7 +5,7 @@
 |
 |  Methods: listAllElections, getElection, newElection, modifyElection,
 |           deleteElection, associateVoter, associateCandidate, 
-|           removeCandidate
+|           removeCandidate, viewCandidates
 |
 |  Version: Sprint 1
 |  
@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
+import java.util.HashMap;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +37,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Policy;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ElectionConnectionDao;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.ElectionService;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.UserService;
@@ -154,7 +157,7 @@ public class ElectionController {
 		}
 	 
 		electionService.deleteElectionById(electionID);
-		return new ResponseEntity<Election>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<Election>(HttpStatus.OK);
 	}
   
 	/**
@@ -175,6 +178,42 @@ public class ElectionController {
 
 		electionService.associateVoter(electionID, id);
 		return new ResponseEntity<Election>(HttpStatus.OK);
+	}
+	
+	/**
+	 * removeVoter() - 
+	 * @param 
+	 * @param 
+	 * @return
+	 */
+	@DeleteMapping("/election/withdrawVoter/{electionID}/{id}")
+	public ResponseEntity<Election> removeVoter(@PathVariable("electionID") int electionID, @PathVariable("id") String id){
+		Election election = electionService.findElectionById(electionID);
+		User user = userService.findById(id);
+	  
+		if (election == null || user == null) {
+			return new ResponseEntity<Election>(HttpStatus.NOT_FOUND);
+		}
+
+		electionService.withdrawVoter(electionID, id);
+		return new ResponseEntity<Election>(HttpStatus.OK);
+	}
+	
+	/**
+	 * validateVoter () - 
+	 * @param 
+	 * @return =
+	**/
+	@GetMapping("/election/validateVoter/{electionID}/{id}")
+	public String validateVoter(@PathVariable("electionID") int electionID, @PathVariable("id") String id) {
+		Election election = electionService.findElectionById(electionID);
+		User user = userService.findById(id);
+		
+		if (election == null || user == null) {
+			return "Election or User does not exist";
+		}
+		String result = electionService.validateVoter(electionID, id);
+		return result;
 	}
   
 	/**
@@ -215,6 +254,92 @@ public class ElectionController {
 
 		electionService.withdrawCandidate(electionID, id);
 		return new ResponseEntity<Election>(HttpStatus.OK);
+	}
+	
+	/**
+	 * validateCandidate() - 
+	 * @param 
+	 * @return =
+	**/
+	@GetMapping("/election/validateCandidate/{electionID}/{id}")
+	public String validateCandidate(@PathVariable("electionID") int electionID, @PathVariable("id") String id) {
+		Election election = electionService.findElectionById(electionID);
+		User user = userService.findById(id);
+		
+		if (election == null || user == null) {
+			return "Election or User does not exist";
+		}
+		String result = electionService.validateCandidate(electionID, id);
+		return result;
+	}
+	
+	/**
+	 * viewCandidates() - Takes an electionID as a parameter. View candidates by elections.
+	 * @param electionID
+	 * @return
+	 */
+	@GetMapping("/election/viewCandidates/{electionID}")
+	public List<HashMap<String, String>> viewCandidates(@PathVariable("electionID") int electionID){ 
+		Election election = electionService.findElectionById(electionID);
+	  
+		if (election == null) {
+			//return new ResponseEntity<List<Candidate>>(HttpStatus.NOT_FOUND);
+		}
+
+		List<HashMap<String, String>> candidates = electionService.viewCandidates(electionID);
+		//return new ResponseEntity<List<Candidate>>(candidates, HttpStatus.OK);
+		return candidates;
+	}
+	
+	/**
+	 * getPolicy () - 
+	 * @param 
+	 * @return 
+	**/
+	@GetMapping("/election/getPolicy/{electionID}")
+	public ResponseEntity<Policy> getPolicy(@PathVariable("electionID") int electionID) {
+		Election election = electionService.findElectionById(electionID);
+		if (election == null) {
+			return new ResponseEntity<Policy>(HttpStatus.NOT_FOUND);
+		}
+		Policy policy = electionService.getPolicy(electionID);
+		return new ResponseEntity<Policy>(policy, HttpStatus.OK);
+	}
+	
+	/**
+	 * createPolicy() - 
+	 * @param 
+	 * @param 
+	 * @return
+	 */
+	@PostMapping("/election/createPolicy")
+	public ResponseEntity<Policy> createPolicy(@RequestBody Policy policy){
+		Election election = electionService.findElectionById(policy.getElectionID());
+	  
+		if (election == null) {
+			return new ResponseEntity<Policy>(HttpStatus.NOT_FOUND);
+		}
+
+		electionService.createPolicy(policy);
+		return new ResponseEntity<Policy>(HttpStatus.OK);
+	}
+	
+	/**
+	 * modifyPolicy() - 
+	 * @param 
+	 * @param 
+	 * @return
+	 */
+	@PutMapping("/election/modifyPolicy")
+	public ResponseEntity<Policy> modifyPolicy(@RequestBody Policy policy){
+		Election election = electionService.findElectionById(policy.getElectionID());
+	  
+		if (election == null) {
+			return new ResponseEntity<Policy>(HttpStatus.NOT_FOUND);
+		}
+
+		electionService.modifyPolicy(policy);
+		return new ResponseEntity<Policy>(HttpStatus.OK);
 	}
   
 }

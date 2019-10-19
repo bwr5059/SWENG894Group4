@@ -1,6 +1,3 @@
-package src.test.java.com.okta.springbootvue.SpringBootVueApplication;
-
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,6 +28,7 @@ public class SpringBootVueApplicationTests {
 	public Candidate candidate = new Candidate();
 	public Candidate candidate2 = new Candidate();
 	public CandidateServiceImpl candidateService = new CandidateServiceImpl();
+	public Question question = new Question();
 
 	@Test
     public void TestSetUser() throws Exception {
@@ -193,13 +191,13 @@ public class SpringBootVueApplicationTests {
     	assertEquals("experience", candidate.getExperience());
     	assertEquals("contact", candidate.getContact());
     }
-
-    @Ignore
+    
     @Test
     public void TestUserServices() throws Exception {
     	//Mockito.when(userService.findAllUsers()).thenReturn("Success");
+    	
     }
-    @Ignore
+    
     @Test
     public void CreateElection() throws Exception {
     	

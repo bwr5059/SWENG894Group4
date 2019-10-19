@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,8 @@ import org.springframework.stereotype.Service;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ElectionConnectionDao;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Policy;
 
 /**
  * ElectionServiceImpl Class - Implements ElectionService interface. Connects ElectionService class methods to database by
@@ -35,6 +38,7 @@ public class ElectionServiceImpl implements ElectionService{
 	
 	//Complete List of Existing Elections
 	private static List<Election> elections;
+	private static List<Candidate> candidates;
 	
 	//Object to call all Election Queries
 	ElectionConnectionDao connDao = new ElectionConnectionDao();
@@ -95,6 +99,24 @@ public class ElectionServiceImpl implements ElectionService{
 	}
 	
 	/**
+	 * withdrawVoter() - Removes an userID and associated electionID to the voteAuthorization database table.
+	 * @param electionID
+	 * @param id
+	 */
+	public void withdrawVoter(int electionID, String id) {
+		connDao.removeVoteAuth(electionID, id);
+	}
+	
+	/**
+	 * validateVoter() - 
+	 * @param electionID
+	 * @param id
+	 */
+	public String validateVoter(int electionID, String id) {
+		return connDao.getVoteAuth(electionID, id);
+	}
+	
+	/**
 	 * associateCandidate() - Adds an userID and associated electionID to the electionDandidate database table.
 	 * @param electionID
 	 * @param id
@@ -110,6 +132,52 @@ public class ElectionServiceImpl implements ElectionService{
 	 */
 	public void withdrawCandidate(int electionID, String id) {
 		connDao.removeElectionCandidate(electionID, id);
+	}
+	
+	/**
+	 * validateCandidate() - 
+	 * @param electionID
+	 * @param id
+	 */
+	public String validateCandidate(int electionID, String id) {
+		return connDao.getElectionCandidate(electionID, id);
+	}
+	
+	/**
+	 * viewCandidates() -
+	 * @param electionID
+	*/
+	public List<HashMap<String, String>> viewCandidates(int electionID) {
+		List<HashMap<String, String>> listofMaps = new ArrayList<HashMap<String, String>>();
+		listofMaps= connDao.getCandidatesByElection(electionID);
+		return listofMaps;
+		
+	}
+	
+	/**
+	 * getPolicy() - 
+	 * @param electionID
+	 * @return
+	 */
+	public Policy getPolicy(int electionID) {
+		Policy policy = connDao.getPolicy(electionID);
+		return policy;
+	}
+	
+	/**
+	 * createPolicy() - Adds a policy to the electionPolicy table.
+	 * @param election
+	 */
+	public void createPolicy(Policy policy) {
+		connDao.insertPolicy(policy);
+	}
+	
+	/**
+	 * modifyPolicy() - Adds a policy to the electionPolicy table.
+	 * @param election
+	 */
+	public void modifyPolicy(Policy policy) {
+		connDao.updatePolicy(policy);
 	}
 	
 

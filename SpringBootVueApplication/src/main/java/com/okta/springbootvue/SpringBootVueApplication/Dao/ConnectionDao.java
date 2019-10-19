@@ -11,6 +11,13 @@ package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.sql.PreparedStatement;
+
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 
 /**
  * ConnectionDao Class - Connects to MySQL database vision-database

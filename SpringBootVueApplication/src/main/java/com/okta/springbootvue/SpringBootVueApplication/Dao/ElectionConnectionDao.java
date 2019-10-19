@@ -5,7 +5,7 @@
 |
 |  Methods: getElectionList, getElectionByID, insertElection, updateElection,
 |           deleteElection, insertVoteAuth, insertElectionCandidate,
-|           removeElectionCandidate
+|           removeElectionCandidate, getCandidatesByElection
 |
 |  Version: Sprint 1
 |  
@@ -20,9 +20,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.PreparedStatement;
+import java.util.HashMap;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Policy;
 
 /**
  * ElectionConnectionDao Class - Connects to MySQL database vision-database and performs queries through methods to update
@@ -30,6 +33,28 @@ import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
  */
 public class ElectionConnectionDao {
 	ConnectionDao connectionDao = new ConnectionDao();
+	
+	/**
+	 * getMaxID() - Gets current highest electionID
+	 * @return int
+	 */
+	public int getMaxID(){
+		int maxID = 0;
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+			Statement stmt=conn.createStatement(); 
+			ResultSet rs=stmt.executeQuery("SELECT MAX(electionID) FROM election"); 
+			while(rs.next())  {
+				maxID = rs.getInt(1);
+			}
+			connectionDao.ReleaseConnection(conn);
+		
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return maxID;
+		
+	}
 	
 	/**
 	 * getElectionList - Performs select MySQL statement to retrieve all elections from election table.
@@ -131,6 +156,9 @@ public class ElectionConnectionDao {
 	 * @return List<Election>
 	 */
 	public List<Election> insertElection(Election election, List<Election> electionList){
+		int newID = getMaxID() + 1;
+		election.setElectionID(newID);
+		
 		try {
 			Connection conn = connectionDao.RetrieveConnection();
 		String sql = "INSERT INTO election (electionID, title, closed, admin1, admin2, admin3, admin4, admin5, admin6, choice1, choice2, " +
@@ -262,6 +290,57 @@ public class ElectionConnectionDao {
 	}
 	
 	/**
+	 * removeVoteAuth() - 
+	 * table.
+	 * @param conn
+	 * @param electionID
+	 * @param id
+	 */
+	public void removeVoteAuth(int electionID, String userID){
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+		String sql = "DELETE FROM voteAuthorization WHERE electionID=? AND userID=?";
+		PreparedStatement stmt=conn.prepareStatement(sql);
+		
+		stmt.setInt(1,electionID);
+		stmt.setString(2,userID);
+		stmt.executeUpdate();
+		connectionDao.ReleaseConnection(conn); 
+		
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	/**
+	 * getVoteAuth() - 
+	 * @param 
+	 * @return 
+	 */
+	public String getVoteAuth(int electionID, String userID){
+		Election election = new Election();
+		 String result = "Missing";
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+			String sql = "SELECT * FROM voteAuthorization WHERE electionID=? AND userID=?"; 
+			PreparedStatement stmt=conn.prepareStatement(sql); 
+			stmt.setInt(1,electionID);
+			stmt.setString(2,userID);
+			 
+			ResultSet rs=stmt.executeQuery();
+			while(rs.next()) {
+				result = "Found";
+			}
+			
+			connectionDao.ReleaseConnection(conn);
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		return result;
+	}
+	
+	/**
 	 * insertElectionCandidate() - Receives an electionID and userID as parameters and inserts them into the electionCandidate
 	 * table.
 	 * @param conn
@@ -307,6 +386,167 @@ public class ElectionConnectionDao {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	/**
+	 * getElectionCandidate() - 
+	 * @param 
+	 * @return 
+	 */
+	public String getElectionCandidate(int electionID, String userID){
+		Election election = new Election();
+		 String result = "Missing";
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+			String sql = "SELECT * FROM electionCandidate WHERE electionID=? AND canID=?"; 
+			PreparedStatement stmt=conn.prepareStatement(sql); 
+			stmt.setInt(1,electionID);
+			stmt.setString(2,userID);
+			 
+			ResultSet rs=stmt.executeQuery();
+			while(rs.next()) {
+				result = "Found";
+			}
+			
+			connectionDao.ReleaseConnection(conn);
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		return result;
+	}
+	
+	/**
+	 * getCandidatesByElection() - Performs select MySQL statement to retrieve single candidate from candidate table.
+	 * @param conn
+	 * @return Candidate
+	 */
+	public List<HashMap<String, String>> getCandidatesByElection(int electionID){
+		List<Candidate> candidateList = new ArrayList<>();
+		List<HashMap<String, String>> listofMaps = new ArrayList<HashMap<String, String>>();
+		
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+			//String sql = "SELECT * FROM candidate WHERE electionID=?"; 
+			String sql = "SELECT electionCandidate.canID, user.first_name, user.last_name " + 
+				"FROM electionCandidate " +
+				"INNER JOIN user ON electionCandidate.canID = user.id " + 
+				"WHERE electionID=?"; 
+			PreparedStatement stmt=conn.prepareStatement(sql); 
+			stmt.setInt(1,electionID);
+			 
+			ResultSet rs=stmt.executeQuery();
+			//JSONArray canJsonAr = new JSONArray();
+			
+			while(rs.next())  {
+				//Candidate candidate = new Candidate();
+				//candidateJson = new JSONObject();
+				HashMap<String, String> objMap = new HashMap<String, String>();
+				objMap.put("canID",rs.getString(1));
+				objMap.put("first_name",rs.getString(2));
+				objMap.put("last_name",rs.getString(3));
+				
+				/*candidate.setCanID(rs.getString(1));
+				candidate.setUserID(rs.getString(2));
+				candidate.setFirst_name(rs.getString(3));
+				candidate.setLast_name(rs.getString(4));*/
+				/*candidate.setEmail(rs.getString(5));
+				candidate.setElectionID(rs.getInt(6));
+				candidate.setAbout(rs.getString(7));
+				candidate.setEducation(rs.getString(8));
+				candidate.setEmployment(rs.getString(9));
+				candidate.setExperience(rs.getString(10));
+				candidate.setContact(rs.getString(11));*/
+				//candidateList.add(candidate);
+				//canJsonAr.put(candidateJson);
+				listofMaps.add(objMap);//try to return this
+			}
+			
+			connectionDao.ReleaseConnection(conn);
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		return listofMaps;
+	}
+	
+	/**
+	 * getPolicy() - Performs select MySQL statement to retrieve single user from electionPolicy table.
+	 * @param 
+	 * @return 
+	 */
+	public Policy getPolicy(int electionID){
+		Policy policy = new Policy();
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+			String sql = "SELECT * FROM policy WHERE electionID=?"; 
+			PreparedStatement stmt=conn.prepareStatement(sql); 
+			stmt.setInt(1,electionID);
+			
+			ResultSet rs=stmt.executeQuery();
+			while(rs.next()) {
+				policy.setElectionID(rs.getInt(1));
+				policy.setFrequency(rs.getInt(2));
+				policy.setNum_votes(rs.getInt(3));
+				policy.setType(rs.getString(4));
+			}
+			
+			connectionDao.ReleaseConnection(conn);
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		return policy;
+	}
+	
+	/**
+	 * insertPolicy() - Inserts a new policy row into the electionPolicy database table using MySQL statement.
+	 * @param 
+	 * @param 
+	 * @param 
+	 * @return 
+	 */
+	public void insertPolicy(Policy policy){
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+		String sql = "INSERT INTO electionPolicy (electionID, frequency, num_votes, type) VALUES (?,?,?,?)";
+		PreparedStatement stmt=conn.prepareStatement(sql);
+		
+		stmt.setInt(1,policy.getElectionID());
+		stmt.setInt(2,policy.getFrequency());
+		stmt.setInt(3,policy.getNum_votes());
+		stmt.setString(4,policy.getType());
+
+		stmt.executeUpdate();  
+		connectionDao.ReleaseConnection(conn);
+		
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * updatePolicy() - 
+	 * @param 
+	 * @param 
+	 * @param 
+	 * @return 
+	 */
+	public void updatePolicy(Policy policy){
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+		String sql = "UPDATE electionPolicy SET electionID=?, frequency=?, num_votes=?, type=? WHERE electionID=?";
+		PreparedStatement stmt=conn.prepareStatement(sql);
+		
+		stmt.setInt(1,policy.getElectionID());
+		stmt.setInt(2,policy.getFrequency());
+		stmt.setInt(3,policy.getNum_votes());
+		stmt.setString(4,policy.getType());
+		stmt.setInt(5,policy.getElectionID());
+
+		stmt.executeUpdate(); 
+		connectionDao.ReleaseConnection(conn);
+		
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
 

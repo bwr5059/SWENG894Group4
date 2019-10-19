@@ -33,8 +33,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Question;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ConnectionDao;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.UserService;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.QuestionService;
 
 /**
  * Class UserController - Returns user object and data using CRUD methods.
@@ -45,6 +47,9 @@ public class UserController {
 	//UserController calls UserService
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	QuestionService questionService;
 
 	/**
    	* listAllUsers() - Calls findAllUsers() method in userService class to return a list of all current users in the system.
@@ -162,7 +167,21 @@ public class UserController {
 	 
 		userService.deleteUserById(id);
 		return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
-
+	}
+	
+	/**
+	 * askQuestion() - Receives a Question object as parameter. Calls the askQuestion method of userService.
+	 * @param question
+	 * @return 
+	 */
+	@PostMapping("/user/askQuestion")
+	public ResponseEntity<Question> askQuestion(@RequestBody Question question) {
+		/*if(questionService.findById(question.getQID())!=null) {
+			return new ResponseEntity<Question>(HttpStatus.CONFLICT); 
+		}*/
+		
+		userService.addQuestion(question);
+		return new ResponseEntity<Question>(question, HttpStatus.CREATED);
 	}
     
 }

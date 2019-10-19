@@ -426,7 +426,6 @@ public class ElectionConnectionDao {
 		
 		try {
 			Connection conn = connectionDao.RetrieveConnection();
-			//String sql = "SELECT * FROM candidate WHERE electionID=?"; 
 			String sql = "SELECT electionCandidate.canID, user.first_name, user.last_name " + 
 				"FROM electionCandidate " +
 				"INNER JOIN user ON electionCandidate.canID = user.id " + 
@@ -435,30 +434,14 @@ public class ElectionConnectionDao {
 			stmt.setInt(1,electionID);
 			 
 			ResultSet rs=stmt.executeQuery();
-			//JSONArray canJsonAr = new JSONArray();
 			
 			while(rs.next())  {
-				//Candidate candidate = new Candidate();
-				//candidateJson = new JSONObject();
 				HashMap<String, String> objMap = new HashMap<String, String>();
 				objMap.put("canID",rs.getString(1));
 				objMap.put("first_name",rs.getString(2));
 				objMap.put("last_name",rs.getString(3));
 				
-				/*candidate.setCanID(rs.getString(1));
-				candidate.setUserID(rs.getString(2));
-				candidate.setFirst_name(rs.getString(3));
-				candidate.setLast_name(rs.getString(4));*/
-				/*candidate.setEmail(rs.getString(5));
-				candidate.setElectionID(rs.getInt(6));
-				candidate.setAbout(rs.getString(7));
-				candidate.setEducation(rs.getString(8));
-				candidate.setEmployment(rs.getString(9));
-				candidate.setExperience(rs.getString(10));
-				candidate.setContact(rs.getString(11));*/
-				//candidateList.add(candidate);
-				//canJsonAr.put(candidateJson);
-				listofMaps.add(objMap);//try to return this
+				listofMaps.add(objMap);
 			}
 			
 			connectionDao.ReleaseConnection(conn);
@@ -477,16 +460,16 @@ public class ElectionConnectionDao {
 		Policy policy = new Policy();
 		try {
 			Connection conn = connectionDao.RetrieveConnection();
-			String sql = "SELECT * FROM policy WHERE electionID=?"; 
+			String sql = "SELECT * FROM electionPolicy WHERE electionID=?"; 
 			PreparedStatement stmt=conn.prepareStatement(sql); 
 			stmt.setInt(1,electionID);
 			
 			ResultSet rs=stmt.executeQuery();
 			while(rs.next()) {
 				policy.setElectionID(rs.getInt(1));
-				policy.setFrequency(rs.getInt(2));
-				policy.setNum_votes(rs.getInt(3));
-				policy.setType(rs.getString(4));
+				policy.setType(rs.getString(2));
+				policy.setFrequency(rs.getInt(3));
+				policy.setNum_votes(rs.getInt(4));
 			}
 			
 			connectionDao.ReleaseConnection(conn);
@@ -506,13 +489,13 @@ public class ElectionConnectionDao {
 	public void insertPolicy(Policy policy){
 		try {
 			Connection conn = connectionDao.RetrieveConnection();
-		String sql = "INSERT INTO electionPolicy (electionID, frequency, num_votes, type) VALUES (?,?,?,?)";
+		String sql = "INSERT INTO electionPolicy (electionID, type, frequency, num_votes) VALUES (?,?,?,?)";
 		PreparedStatement stmt=conn.prepareStatement(sql);
 		
 		stmt.setInt(1,policy.getElectionID());
-		stmt.setInt(2,policy.getFrequency());
-		stmt.setInt(3,policy.getNum_votes());
-		stmt.setString(4,policy.getType());
+		stmt.setString(2,policy.getType());
+		stmt.setInt(3,policy.getFrequency());
+		stmt.setInt(4,policy.getNum_votes());
 
 		stmt.executeUpdate();  
 		connectionDao.ReleaseConnection(conn);
@@ -532,13 +515,13 @@ public class ElectionConnectionDao {
 	public void updatePolicy(Policy policy){
 		try {
 			Connection conn = connectionDao.RetrieveConnection();
-		String sql = "UPDATE electionPolicy SET electionID=?, frequency=?, num_votes=?, type=? WHERE electionID=?";
+		String sql = "UPDATE electionPolicy SET electionID=?, type=?, frequency=?, num_votes=? WHERE electionID=?";
 		PreparedStatement stmt=conn.prepareStatement(sql);
 		
 		stmt.setInt(1,policy.getElectionID());
-		stmt.setInt(2,policy.getFrequency());
-		stmt.setInt(3,policy.getNum_votes());
-		stmt.setString(4,policy.getType());
+		stmt.setString(2,policy.getType());
+		stmt.setInt(3,policy.getFrequency());
+		stmt.setInt(4,policy.getNum_votes());
 		stmt.setInt(5,policy.getElectionID());
 
 		stmt.executeUpdate(); 

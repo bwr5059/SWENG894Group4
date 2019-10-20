@@ -122,6 +122,59 @@
         </b-modal>
   
 </b-card>
+
+<!-- Show the Table of Candidates Under this election -->
+<b-card v-show="this.$parent.$parent.authorized">
+   <div>
+    <h2>Candidates Registered for this Election</h2>
+    <b-button v-show="!editable" v-on:click="showmodalAssociateCandidate=true" class="ml-1 pull-right">Add Candidate to Election</b-button>
+     <b-modal name="associateCandidateModal" id="modal-2" title="Associate Candidate with Election" v-model="showmodalAssociateCandidate">
+            <b-card>
+              <b-form>
+            <b-form-group id="input-group-1" label="Candidate Name:" label-for="input-1">
+              <b-form-select
+                id="input-1"
+                v-model="candidate_id"                
+                :options="eligibleCandidates"
+                 class="mb-3"
+                 value-field="userID"
+                  text-field="last_name"
+              >
+              </b-form-select>
+            </b-form-group> 
+            </b-form>
+            </b-card>
+          <template v-slot:modal-footer>
+              <div class="w-100">
+                <b-button
+                  variant="primary"
+                  size="sm"
+                  class="float-right"
+                  @click="associateCandidate"
+                >
+                Submit
+                </b-button>
+                <b-button
+                  variant="primary"
+                  size="sm"
+                  class="float-right mr-2"
+                  @click="showmodalAssociateCandidate=false"
+                >
+                Cancel
+                </b-button>
+              </div>
+            </template>
+        </b-modal>
+    <b-table striped hover :items="candidates" selectable select-mode="single" @row-selected="selected" ref="selectableTable" :fields='fields_election_candidates' :busy="isBusy">
+      <template v-slot:table-busy>
+        <div class="text-center text-dark my-2">
+          <b-spinner class="align-middle"></b-spinner>
+          <strong>Loading...</strong>
+        </div>  
+      </template>
+    </b-table>
+  </div>
+</b-card>
 <b-card v-show="!this.$parent.$parent.authorized" :title="voterCandidateHeader" :sub-title="voterCandidateSub">
   <div>
       <div class="d-flex justify-content-center mb-3">
@@ -182,18 +235,43 @@
 <br>
 <b-row>
 <b-button v-show="!editable&&!registered" class="ml-1" v-on:click="register">Register</b-button>
-<b-button v-show="!editable&&registered" class="ml-1" v-on:click="withdraw">Withdraw</b-button>
+<b-button v-show="!editable&&registered" class="ml-1" v-on:click="showmodal2=true">Withdraw</b-button>
 <b-button v-show="registered&&isSelected" class="ml-1" v-on:click="castVote">Vote</b-button>
 </b-row>
 </b-container>
+<b-modal id="modal-2" title="Withdraw" v-model="showmodal2">
+            <b-card>
+              Are you sure you want to withdraw?
+            </b-card>
+          <template v-slot:modal-footer>
+              <div class="w-100">
+                <b-button
+                  variant="primary"
+                  size="sm"
+                  class="float-right"
+                  @click="withdraw"
+                >
+                Yes
+                </b-button>
+                <b-button
+                  variant="primary"
+                  size="sm"
+                  class="float-right mr-2"
+                  @click="showmodal2=false"
+                >
+                No
+                </b-button>
+              </div>
+            </template>
+        </b-modal>
 </b-card>
 </div>
 
 </template>
 
 <script>
-
 import api from '@/apis/electionApi'
+import api_candidate from '@/apis/candidateApi'
 export default {
   name: 'electionDetails',
   props: {
@@ -223,14 +301,19 @@ export default {
           policyMaxVotes: ''
         },
         fields: null,
+        fields_election_candidates:null,
+        candidate_id:'',
+        eligibleCandidates:null,
+        selectedCandidate:null,
         isBusy: false,
         selecteditem: [],
         isSelected: false,
         showmodal: false,
+        showmodal2: false,
+        showmodalAssociateCandidate: false,
         candidates: null
       }  
     },  
-
 computed: {
   /**voterCandidateHeader() is computed data to return the current electionID that
    * is displayed in the data card title
@@ -247,7 +330,6 @@ computed: {
     return this.form.electionTitle;
   }
 },
-
 created: function(){
   this.$log.debug("Setting election Data:")
     //sets the current election ID that is pulled from the route/URL
@@ -257,7 +339,6 @@ created: function(){
     this.getElection(this.$route.params.eID);
      this.$log.debug("Created:")
 },
-
 mounted: function(){
   // this.currentElectionData = this.$route.params.eID
   //   this.getElection(this.$route.params.eID);
@@ -267,12 +348,10 @@ mounted: function(){
   //sets the registration type from the userObj
   this.regType = this.userObj.type
 },
-
 watch: {
   //checks when the routing change and refreshes the current election
     '$route': 'refreshData' 
 },
-
 methods: {
     //refreshData() function gets the current election data and sets it to the election ID from the routing
     //and then calls the getElection() function
@@ -299,6 +378,7 @@ methods: {
       this.form.electionCloseDate = this.data.data.close_date
       this.form.electionStartDate = this.data.data.start_date
       this.getCandidates()
+      this.getAllCandidates()
       this.getRegistration()
       this.getPolicy()
     }).catch((error) => {  
@@ -343,7 +423,6 @@ methods: {
       } else if(this.regType=="Admin"){
         this.show = true
       }
-
       
     },
     /**edit() enables editing of election
@@ -406,6 +485,7 @@ methods: {
         }).catch((error)=>
         this.$log.debug(error))
       }else{
+        this.showmodal2=false
         this.show = false
         this.$log.debug("calling api: withdrawVoter")
         api.withdrawVoter(this.userObj.id, this.form.electionId).then((response)=>{
@@ -419,19 +499,28 @@ methods: {
     castVote: function(){
       this.$log.debug("casting vote...")
     },
-
     getCandidates: function(){
       this.$log.debug("calling api: get candidates")
       api.getCandidates(this.form.electionId).then((response)=>{
           this.$log.debug("Candidate returned:", response)
         this.fields = ["Name", "Selected"]
+        this.fields_election_candidates=['first_name','last_name']  
         this.candidates = response.data
         }).catch((error)=>
         this.$log.debug(error))
       
       
     },
-
+     getAllCandidates: function(){
+      this.$log.debug("calling api to: get all candidates ")
+      api_candidate.getCandidates().then((response)=>{
+          this.$log.debug("All Candidate returned:", response.data._embedded.candidates)
+        this.eligibleCandidates = response.data._embedded.candidates
+        }).catch((error)=>
+        this.$log.debug(error))
+      
+      
+    },
     enableVote(items){
       this.selecteditem = items
        if(this.selecteditem[0]){
@@ -440,7 +529,6 @@ methods: {
         this.isSelected = false
       }
     },
-
     setPolicy: function(){
       this.$log.debug("calling api: setPolicy()")
       api.createPolicy(this.form.electionId, this.form.policyPollingType, this.form.policyFrequency, this.form.policyMaxVotes) .then((response)=>{
@@ -450,14 +538,48 @@ methods: {
         }).catch((error)=>
         this.$log.debug(error))
     },
-
     getPolicy: function(){
+      if(this.regType=="Admin"){
       this.$log.debug("calling api: getPolicy()")
       api.getPolicy(this.form.electionId) .then((response)=>{
           this.$log.debug("Policy returned", response)
           
         }).catch((error)=>
+        this.$log.debug(error))}
+    },
+       associateCandidate: function(){
+      this.$log.debug("calling api: associateCandidate()")
+      api.registerCandidate(this.candidate_id,this.form.electionId) .then((response)=>{
+          this.$log.debug("associate sCandidate set", response)
+          if(response.status==200){alert("Candidate Added to Election!!")}
+          this.showmodalAssociateCandidate=false
+        this.$router.push({path: `/app/home/elections`})
+        }).catch((error)=>
         this.$log.debug(error))
+    },
+ disassociateCandidate: function(candidateID){
+      this.$log.debug("calling api: associateCandidate()")
+      api.withdrawCandidate(candidateID,this.form.electionId) .then((response)=>{
+          this.$log.debug("disassociate sCandidate set", response)
+          if(response.status==200){alert("Candidate Removed from Election!!")}
+          this.showmodalAssociateCandidate=false
+             this.$router.push({path: `/app/home/elections`})
+        }).catch((error)=>
+        this.$log.debug(error))
+    },
+//WHEN SELECTED IT ASK to remo  ve the candidate
+      selected: function(items){
+      this.selectedCandidate = items
+     var can_id=this.selectedCandidate[0].canID;
+     var r = confirm("remove candidate from election ?");
+if (r == true) {
+   this.disassociateCandidate(can_id)
+}
+      
+     
+      
+     
+  
     }
 }
 }

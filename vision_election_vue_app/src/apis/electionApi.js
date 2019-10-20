@@ -70,7 +70,7 @@ export default {
       return data? JSON.parse(data) : data;
     }]}),
 
-    createPolicy: (electionID, pType, pFrequency, pNumVoters)=> instance.post('/election/createPolicy', {electionID: electionID, Type: pType, Frequency: pFrequency, Num_votes: pNumVoters
+    createPolicy: (electionID, pType, pFrequency, pNumVoters)=> instance.post('/election/createPolicy', {electionID: electionID, type: pType, frequency: pFrequency, num_votes: pNumVoters
     , transformResponse: 
       [function (data) {
         return data? JSON.parse(data) : data;
@@ -96,5 +96,5 @@ export default {
           return data? JSON.parse(data) : data;
         }]}),
 
-        
+
 }

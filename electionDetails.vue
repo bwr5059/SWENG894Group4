@@ -126,7 +126,7 @@
 <!-- Show the Table of Candidates Under this election -->
 <b-card v-show="this.$parent.$parent.authorized">
    <div>
-    Candidates Registered this Election
+    <h2>Candidates Registered for this Election</h2>
     <b-button v-show="!editable" v-on:click="showmodalAssociateCandidate=true" class="ml-1 pull-right">Add Candidate to Election</b-button>
      <b-modal name="associateCandidateModal" id="modal-2" title="Associate Candidate with Election" v-model="showmodalAssociateCandidate">
             <b-card>

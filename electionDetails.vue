@@ -137,8 +137,8 @@
                 v-model="candidate_id"                
                 :options="eligibleCandidates"
                  class="mb-3"
-      value-field="userID"
-      text-field="first_name"
+                 value-field="userID"
+                  text-field="last_name"
               >
               </b-form-select>
             </b-form-group> 
@@ -281,7 +281,7 @@ export default {
         fields_election_candidates:null,
         candidate_id:'',
         eligibleCandidates:null,
-          selectedCandidate:null,
+        selectedCandidate:null,
         isBusy: false,
         selecteditem: [],
         isSelected: false,
@@ -541,7 +541,7 @@ methods: {
           this.$log.debug("associate sCandidate set", response)
           if(response.status==200){alert("Candidate Added to Election!!")}
           this.showmodalAssociateCandidate=false
-          this.$router.push({path: `/app/home/elections`})
+        this.$router.push({path: `/app/home/elections`})
         }).catch((error)=>
         this.$log.debug(error))
     },
@@ -552,8 +552,7 @@ methods: {
           this.$log.debug("disassociate sCandidate set", response)
           if(response.status==200){alert("Candidate Removed from Election!!")}
           this.showmodalAssociateCandidate=false
-          this.$router.push({path: `/app/home/elections`})
-   
+             this.$router.push({path: `/app/home/elections`})
         }).catch((error)=>
         this.$log.debug(error))
     },

@@ -539,9 +539,12 @@ methods: {
       this.$log.debug("calling api: associateCandidate()")
       api.registerCandidate(this.candidate_id,this.form.electionId) .then((response)=>{
           this.$log.debug("associate sCandidate set", response)
-          if(response.status==200){alert("Candidate Added to Election!!")}
+          if(response.status==200){
+            alert("Candidate Added to Election!!")
+              this.getCandidates()
+            }
           this.showmodalAssociateCandidate=false
-        this.$router.push({path: `/app/home/elections`})
+      //  this.$router.push({path: `/app/home/elections`})
         }).catch((error)=>
         this.$log.debug(error))
     },
@@ -550,9 +553,12 @@ methods: {
       this.$log.debug("calling api: associateCandidate()")
       api.withdrawCandidate(candidateID,this.form.electionId) .then((response)=>{
           this.$log.debug("disassociate sCandidate set", response)
-          if(response.status==200){alert("Candidate Removed from Election!!")}
+          if(response.status==200){
+            alert("Candidate Removed from Election!!")
+              this.getCandidates()
+              }
           this.showmodalAssociateCandidate=false
-             this.$router.push({path: `/app/home/elections`})
+            // this.$router.push({path: `/app/home/elections`})
         }).catch((error)=>
         this.$log.debug(error))
     },

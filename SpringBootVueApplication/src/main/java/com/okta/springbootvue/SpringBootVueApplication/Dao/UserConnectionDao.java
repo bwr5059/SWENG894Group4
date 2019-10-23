@@ -18,6 +18,7 @@ import java.util.List;
 import java.sql.PreparedStatement;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Ballot;
 
 /**
  * ConnectionDao Class - Connects to MySQL database vision-database and performs queries through methods to update
@@ -232,6 +233,35 @@ public class UserConnectionDao {
 			e.printStackTrace();
 		}
 		
+		return userList;
+	}
+	
+	/**
+	 * insertVote() - 
+	 * @param 
+	 * @return 
+	*/
+	public Ballot insertVote(Ballot ballot){
+		try {
+				Connection conn = connectionDao.RetrieveConnection();
+			
+				String sql = "INSERT INTO ballot (voteID, userID, electionID, canID, first_name, last_name) VALUES (?,?,?,?,?,?)";
+				PreparedStatement stmt=conn.prepareStatement(sql);
+		
+				stmt.setInt(1,ballot.getVoteID());
+				stmt.setString(2,ballot.getUserID());
+				stmt.setInt(3,ballot.getElectionID());
+				stmt.setInt(4,ballot.getCanID());
+				stmt.setString(5,ballot.getFirst_name());
+				stmt.setString(6,ballot.getLast_name());
+
+				stmt.executeUpdate();  
+				connectionDao.ReleaseConnection(conn); 
+		
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+			
 		return userList;
 	}
 

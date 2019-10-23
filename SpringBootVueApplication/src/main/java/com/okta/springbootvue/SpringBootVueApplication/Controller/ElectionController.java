@@ -354,7 +354,7 @@ public class ElectionController {
 		if (election == null) {
 			return numVotes;
 		}
-		numVotes = electionService.getVotesbyVoter(electionID, userID);
+		numVotes = electionService.getVotesByVoter(electionID, userID);
 		return numVotes;
 	}
   

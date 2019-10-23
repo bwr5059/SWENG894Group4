@@ -118,7 +118,9 @@ public class UserServiceImpl implements UserService{
 	 * @param 
 	*/
 	public Ballot castVote(String type, Ballot ballot) {
-		questionConnDao.insertVote(type, ballot);
+		Ballot ballotReturn = new Ballot();
+		ballotReturn = connDao.insertVote(type, ballot);
+		return ballotReturn;
 	}
 
 }

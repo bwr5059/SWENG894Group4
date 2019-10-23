@@ -22,7 +22,7 @@ import javax.persistence.Entity;
 public class Ballot {  
       
   @Id  
-  private int voteID;  
+  private int ballotID;  
   
   private String userID;
   

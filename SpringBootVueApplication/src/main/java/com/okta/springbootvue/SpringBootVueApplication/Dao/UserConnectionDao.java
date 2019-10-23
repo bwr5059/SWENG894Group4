@@ -241,7 +241,7 @@ public class UserConnectionDao {
 	 * @param 
 	 * @return 
 	*/
-	public Ballot insertVote(Ballot ballot){
+	public Ballot insertVote(String type, Ballot ballot){
 		try {
 				Connection conn = connectionDao.RetrieveConnection();
 			
@@ -251,7 +251,11 @@ public class UserConnectionDao {
 				stmt.setInt(1,ballot.getVoteID());
 				stmt.setString(2,ballot.getUserID());
 				stmt.setInt(3,ballot.getElectionID());
-				stmt.setInt(4,ballot.getCanID());
+			        if(type.equals("cast")){
+				    stmt.setString(4,ballot.getCanID());
+				}else{
+				    stmt.setString(4,"Write");
+				}
 				stmt.setString(5,ballot.getFirst_name());
 				stmt.setString(6,ballot.getLast_name());
 

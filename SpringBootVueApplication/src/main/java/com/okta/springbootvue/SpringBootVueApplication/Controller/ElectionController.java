@@ -341,5 +341,21 @@ public class ElectionController {
 		electionService.modifyPolicy(policy);
 		return new ResponseEntity<Policy>(HttpStatus.OK);
 	}
+	
+	/**
+	 * getVotesByVoter () - 
+	 * @param 
+	 * @return 
+	**/
+	@GetMapping("/election/getVotesByVoter/{electionID}/{userID}")
+	public int getElection(@PathVariable("electionID") int electionID, @PathVariable("userID") String userID) {
+		int numVotes = 0;
+		Election election = electionService.findElectionById(electionID);
+		if (election == null) {
+			return numVotes;
+		}
+		numVotes = electionService.getVotesbyVoter(electionID, userID);
+		return numVotes;
+	}
   
 }

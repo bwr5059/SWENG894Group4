@@ -28,6 +28,28 @@ public class UserConnectionDao {
 	ConnectionDao connectionDao = new ConnectionDao();
 	
 	/**
+	 * getMaxID() - Gets current highest ballotID
+	 * @return int
+	 */
+	public int getMaxID(){
+		int maxID = 0;
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+			Statement stmt=conn.createStatement(); 
+			ResultSet rs=stmt.executeQuery("SELECT MAX(ballotID) FROM ballot"); 
+			while(rs.next())  {
+				maxID = rs.getInt(1);
+			}
+			connectionDao.ReleaseConnection(conn);
+		
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return maxID;
+		
+	}
+	
+	/**
 	 * getUserList() - Performs select MySQL statement to retrieve all users from user table.
 	 * @param conn
 	 * @return List<User>
@@ -245,10 +267,10 @@ public class UserConnectionDao {
 		try {
 				Connection conn = connectionDao.RetrieveConnection();
 			
-				String sql = "INSERT INTO ballot (voteID, userID, electionID, canID, first_name, last_name) VALUES (?,?,?,?,?,?)";
+				String sql = "INSERT INTO ballot (ballotID, userID, electionID, canID, first_name, last_name) VALUES (?,?,?,?,?,?)";
 				PreparedStatement stmt=conn.prepareStatement(sql);
 		
-				stmt.setInt(1,ballot.getVoteID());
+				stmt.setInt(1,getMaxID());
 				stmt.setString(2,ballot.getUserID());
 				stmt.setInt(3,ballot.getElectionID());
 			        if(type.equals("cast")){

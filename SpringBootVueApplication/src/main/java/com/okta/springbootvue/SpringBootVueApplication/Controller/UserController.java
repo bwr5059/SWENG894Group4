@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Question;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Ballot;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ConnectionDao;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.UserService;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.QuestionService;

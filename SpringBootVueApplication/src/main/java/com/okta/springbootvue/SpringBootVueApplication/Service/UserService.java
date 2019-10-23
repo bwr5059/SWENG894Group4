@@ -42,6 +42,6 @@ public interface UserService {
 	void addQuestion(Question question);
 	
 	//Casts a Candidate Selection Vote
-	Ballot castVote(Ballot ballot);
+	Ballot castVote(String type, Ballot ballot);
 	
 }

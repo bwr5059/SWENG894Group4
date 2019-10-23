@@ -531,5 +531,32 @@ public class ElectionConnectionDao {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * getVotesByVoter() - 
+	 * @param 
+	 * @return 
+	 */
+	public int getVotesByVoter(int electionID, String userID){
+		Election election = new Election();
+		 int result = 0;
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+			String sql = "SELECT COUNT(*) FROM ballot WHERE electionID=? AND userID=?"; 
+			PreparedStatement stmt=conn.prepareStatement(sql); 
+			stmt.setInt(1,electionID);
+			stmt.setString(2,userID);
+			 
+			ResultSet rs=stmt.executeQuery();
+			while(rs.next()) {
+				result = 1;
+			}
+			
+			connectionDao.ReleaseConnection(conn);
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		return result;
+	}
 }
 

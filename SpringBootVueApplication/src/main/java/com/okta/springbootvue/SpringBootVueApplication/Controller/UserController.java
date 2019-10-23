@@ -183,5 +183,20 @@ public class UserController {
 		userService.addQuestion(question);
 		return new ResponseEntity<Question>(question, HttpStatus.CREATED);
 	}
+	
+	/**
+	 * castVote() - 
+	 * @param 
+	 * @return 
+	 */
+	@PostMapping("/user/castVote")
+	public ResponseEntity<Ballot> castVote(@RequestBody Ballot ballot) {
+		/*if(questionService.findById(question.getQID())!=null) {
+			return new ResponseEntity<Question>(HttpStatus.CONFLICT); 
+		}*/
+		
+		userService.castVote(ballot);
+		return new ResponseEntity<Ballot>(ballot, HttpStatus.CREATED);
+	}
     
 }

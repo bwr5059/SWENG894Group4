@@ -180,5 +180,15 @@ public class ElectionServiceImpl implements ElectionService{
 		connDao.updatePolicy(policy);
 	}
 	
+	/**
+	 * getVotesByVoter() - 
+	 * @param electionID
+	 * @return
+	 */
+	public int getVotesByVoter(int electionID, String userID) {
+		int numVotes = connDao.getVotesByVoter(electionID, userID);
+		return numVotes;
+	}
+	
 
 }

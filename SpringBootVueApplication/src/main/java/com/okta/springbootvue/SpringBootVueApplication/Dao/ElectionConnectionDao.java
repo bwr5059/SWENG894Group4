@@ -549,7 +549,7 @@ public class ElectionConnectionDao {
 			 
 			ResultSet rs=stmt.executeQuery();
 			while(rs.next()) {
-				result = 1;
+				result = rs.getInt(1);
 			}
 			
 			connectionDao.ReleaseConnection(conn);

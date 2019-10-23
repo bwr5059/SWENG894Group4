@@ -190,13 +190,13 @@ public class UserController {
 	 * @param 
 	 * @return 
 	 */
-	@PostMapping("/user/castVote")
-	public ResponseEntity<Ballot> castVote(@RequestBody Ballot ballot) {
+	@PostMapping("/user/castVote/{type}")
+	public ResponseEntity<Ballot> castVote(@PathVariable("id") String type, @RequestBody Ballot ballot) {
 		/*if(questionService.findById(question.getQID())!=null) {
 			return new ResponseEntity<Question>(HttpStatus.CONFLICT); 
 		}*/
 		
-		userService.castVote(ballot);
+		userService.castVote(type, ballot);
 		return new ResponseEntity<Ballot>(ballot, HttpStatus.CREATED);
 	}
     

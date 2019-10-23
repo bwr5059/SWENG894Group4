@@ -264,13 +264,15 @@ public class UserConnectionDao {
 	 * @return 
 	*/
 	public Ballot insertVote(String type, Ballot ballot){
+		int newID = getMaxID() + 1;
+		ballot.setBallotID(newID);
 		try {
 				Connection conn = connectionDao.RetrieveConnection();
 			
 				String sql = "INSERT INTO ballot (ballotID, userID, electionID, canID, first_name, last_name) VALUES (?,?,?,?,?,?)";
 				PreparedStatement stmt=conn.prepareStatement(sql);
 		
-				stmt.setInt(1,getMaxID());
+				stmt.setInt(1,ballot.getBallotID());
 				stmt.setString(2,ballot.getUserID());
 				stmt.setInt(3,ballot.getElectionID());
 			        if(type.equals("cast")){
@@ -288,7 +290,7 @@ public class UserConnectionDao {
 				e.printStackTrace();
 			}
 			
-		return userList;
+		return ballot;
 	}
 
 }

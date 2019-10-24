@@ -73,30 +73,57 @@
         <b-modal id="modal-1" title="Set Voting Policy" v-model="showmodal">
             <b-card>
               <b-form>
-            <b-form-group id="input-group-1" label="Polling Type:" label-for="input-1">
-              <b-form-select
-                id="input-1"
-                v-model="form.policyPollingType"
-                :options="polling"
-              ></b-form-select>
-            </b-form-group> 
-            <b-form-group id="input-group-2" label="Frequency:" label-for="input-2">
-              <b-form-input
-                id="input-2"
-                v-model="form.policyFrequency"
-                placeholder="Enter numeric frequency"
-                type="number"
-              ></b-form-input>
-            </b-form-group> 
-            <b-form-group id="input-group-3" label="Number of Votes:" label-for="input-3">
-              <b-form-input
-                id="input-3"
-                v-model="form.policyMaxVotes"
-                placeholder="Enter number of max votes"
-                type="number"
-              ></b-form-input>
-            </b-form-group> 
-            
+                <b-form-group id="input-group-1" label="Polling Type:" label-for="input-1">
+                  <!-- <b-form-select
+                    id="input-1"
+                    v-model="form.policyPollingType"
+                    :options="polling"
+                  ></b-form-select> -->
+                  <b-form-select v-model='form.policyPollingType' size='sm' class='mr-1'>
+                    <option :value="null">Select an option</option>
+                    <option value="Minutes">Minutes</option>
+                    <option value="Hours">Hours</option>
+                    <option value="Days">Days</option>
+                  </b-form-select>
+                </b-form-group> 
+                <b-form-group id="input-group-2" label="Frequency:" label-for="input-2">
+                  <b-form-input
+                    id="input-2"
+                    v-model="form.policyFrequency"
+                    placeholder="Enter numeric frequency"
+                    type="number"
+                  ></b-form-input>
+                </b-form-group> 
+                <b-form-group id="input-group-3" label="Number of Votes:" label-for="input-3">
+                  <b-form-input
+                    id="input-3"
+                    v-model="form.policyMaxVotes"
+                    placeholder="Enter number of max votes"
+                    type="number"
+                  ></b-form-input>
+                </b-form-group> 
+                <b-form-group>
+                  <b-form-checkbox
+                    id="checkbox-1"
+                    v-model="form.policyAbstain"
+                    name="checkbox-1"
+                    value= 1
+                    unchecked-value= 0
+                  >
+                    Enable Abstain From Voting
+                  </b-form-checkbox>
+                </b-form-group>
+                <b-form-group>
+                  <b-form-checkbox
+                    id="checkbox-2"
+                    v-model="form.policyWrite"
+                    name="checkbox-2"
+                    value = 1
+                    unchecked-value= 0
+                  >
+                    Enable Write-In
+                  </b-form-checkbox>
+                </b-form-group>
             </b-form>
             </b-card>
           <template v-slot:modal-footer>
@@ -236,7 +263,7 @@
 <b-row>
 <b-button v-show="!editable&&!registered" class="ml-1" v-on:click="register">Register</b-button>
 <b-button v-show="!editable&&registered" class="ml-1" v-on:click="showmodal2=true">Withdraw</b-button>
-<b-button v-show="registered&&isSelected" class="ml-1" v-on:click="castVote">Vote</b-button>
+<b-button v-show="registered&&isSelected&&this.currentVotes<this.form.policyMaxVotes" class="ml-1" v-on:click="showmodal3=true">Vote</b-button>
 </b-row>
 </b-container>
 <b-modal id="modal-2" title="Withdraw" v-model="showmodal2">
@@ -264,6 +291,31 @@
               </div>
             </template>
         </b-modal>
+        <b-modal id="modal-3" title="CastVote" v-model="showmodal3">
+            <b-card>
+              Are you sure you want to cast your vote?
+            </b-card>
+          <template v-slot:modal-footer>
+              <div class="w-100">
+                <b-button
+                  variant="primary"
+                  size="sm"
+                  class="float-right"
+                  @click="castVote"
+                >
+                Yes
+                </b-button>
+                <b-button
+                  variant="primary"
+                  size="sm"
+                  class="float-right mr-2"
+                  @click="showmodal3=false"
+                >
+                No
+                </b-button>
+              </div>
+            </template>
+        </b-modal>
 </b-card>
 </div>
 
@@ -272,6 +324,7 @@
 <script>
 import api from '@/apis/electionApi'
 import api_candidate from '@/apis/candidateApi'
+import api_user from '@/apis/userApi'
 export default {
   name: 'electionDetails',
   props: {
@@ -279,8 +332,6 @@ export default {
   },
   data: () => {  
       return {  
-        //activeUser: null,
-        polling: [{text: 'Select One', value: null }, 'Minutes', 'Hours', 'Days'],
         currentElectionData: '',
         registrationData: '',
         registered: false,
@@ -296,9 +347,11 @@ export default {
           electionDescription: '',
           electionCloseDate: '',
           electionStartDate: '',
-          policyPollingType: '',
+          policyPollingType: null,
           policyFrequency: '',
-          policyMaxVotes: ''
+          policyMaxVotes: '',
+          policyAbstain: 0,
+          policyWrite: 0
         },
         fields: null,
         fields_election_candidates:null,
@@ -310,8 +363,12 @@ export default {
         isSelected: false,
         showmodal: false,
         showmodal2: false,
+        showmodal3: false,
         showmodalAssociateCandidate: false,
-        candidates: null
+        candidates: null,
+        currentVotes: null,
+        policySet: false
+        
       }  
     },  
 computed: {
@@ -356,7 +413,7 @@ methods: {
     //refreshData() function gets the current election data and sets it to the election ID from the routing
     //and then calls the getElection() function
     async refreshData () {  
-       this.$log.debug("Refreshing data:")
+      this.$log.debug("Refreshing data:")
       this.currentElectionData = this.$route.params.eID
       this.getElection(this.currentElectionData)
     },  
@@ -381,14 +438,13 @@ methods: {
       this.getAllCandidates()
       this.getRegistration()
       this.getPolicy()
+      this.getVotes()
     }).catch((error) => {  
       this.$log.debug(error);  
       this.error = "Failed to get election"  
-	});  
+	  });  
     },
     /**getRegistration() checks if a user has registered against an election.
-    *currently no endpoint.  This is a placeholder function
-    *@{id}: id of election
     **/
     getRegistration: function(){
       this.$log.debug("checking election registration...")
@@ -423,17 +479,16 @@ methods: {
       } else if(this.regType=="Admin"){
         this.show = true
       }
-      
     },
     /**edit() enables editing of election
     **/
     edit: function(){
-    this.editable=true
+      this.editable=true
     },
     /**cancel() disables editing of election
     **/
     cancel: function(){
-    this.editable=false
+      this.editable=false
     },
     /**updateElection() function calls the api to update the election data.  
      * gets the current form data for the electionDescription, ElectionStartDate
@@ -459,7 +514,7 @@ methods: {
           alert("Registration Successful")
           this.getElection(this.form.electionId)
         }).catch((error)=>
-        this.$log.debug(error))
+          this.$log.debug(error))
       }else if(this.regType=="Candidate"){
         this.show = false
         this.$log.debug("calling api: registerCandidate")
@@ -496,9 +551,23 @@ methods: {
         this.$log.debug(error))
       }
     },
+    /**
+     * castVote() calls the user API to cast a vote against the current election.
+     */
     castVote: function(){
+      this.showmodal3=false
+      this.show = false
       this.$log.debug("casting vote...")
+      //this.$log.debug(this.form.electionId, this.userObj.id, this.selecteditem[0].canID, "", "", this.userObj.type)
+      api_user.castVote(this.form.electionId, this.userObj.id, this.selecteditem[0].canID, "", "", this.userObj.type).then((response)=>{
+        this.$log.debug("vote cast: ", response)
+        alert("Your vote has been cast!")
+        this.getElection(this.form.electionId)
+      }).catch((error)=>
+      this.$log.debug(error))
     },
+    /**getCandidates() calls the api to get candidates for the current election and creates an array of the returned candidates
+     */
     getCandidates: function(){
       this.$log.debug("calling api: get candidates")
       api.getCandidates(this.form.electionId).then((response)=>{
@@ -508,19 +577,25 @@ methods: {
         this.candidates = response.data
         }).catch((error)=>
         this.$log.debug(error))
-      
-      
     },
-     getAllCandidates: function(){
+
+    /**getAllCandidates() calls the api to return all candidates from the system and creates
+    an array of the candidates
+     */
+    getAllCandidates: function(){
       this.$log.debug("calling api to: get all candidates ")
       api_candidate.getCandidates().then((response)=>{
           this.$log.debug("All Candidate returned:", response.data._embedded.candidates)
         this.eligibleCandidates = response.data._embedded.candidates
-        }).catch((error)=>
+      }).catch((error)=>
         this.$log.debug(error))
-      
-      
     },
+    /**
+     * enableVote() function adds the current selected item in the candidate table to a variable to be used
+     * when casting a vote.  Creates an array object of the current selected candidate and clears the array when
+     * nothing is selected
+     * @items - current selected item of candidate table
+     */
     enableVote(items){
       this.selecteditem = items
        if(this.selecteditem[0]){
@@ -529,25 +604,56 @@ methods: {
         this.isSelected = false
       }
     },
+    /**
+     * setPolicy() function triggers the election api to create or modify the policy details of the current election
+     */
     setPolicy: function(){
       this.$log.debug("calling api: setPolicy()")
-      api.createPolicy(this.form.electionId, this.form.policyPollingType, this.form.policyFrequency, this.form.policyMaxVotes) .then((response)=>{
+      //note: when adding abstain or write in, need to convert to number using Number(this.form.policyAbstain)
+      if(!this.policySet){
+        this.showmodal=false
+        this.show = false
+        api.createPolicy(this.form.electionId, this.form.policyPollingType, Number(this.form.policyFrequency), Number(this.form.policyMaxVotes)) .then((response)=>{
           this.$log.debug("Policy set", response)
           if(response.status==200){alert("Election Policy Set!!")}
-          this.showmodal=false
+          this.getElection(this.form.electionId)
         }).catch((error)=>
-        this.$log.debug(error))
+          this.$log.debug(error),
+          alert(error),
+          this.getElection(this.form.electionId))
+      }else{
+        this.showmodal=false
+        this.show = false
+        api.modifyPolicy(this.form.electionId, this.form.policyPollingType, Number(this.form.policyFrequency), Number(this.form.policyMaxVotes)) .then((response)=>{
+          this.$log.debug("Policy set", response)
+          if(response.status==200){alert("Election Policy Set!!")}
+          
+          this.getElection(this.form.electionId)
+        }).catch((error)=>
+        this.$log.debug(error),
+        alert(error),
+        this.getElection(this.form.electionId))
+      }
     },
+    /**
+     * getPolicy() function gets the current policy details for the loaded election
+     * sets the policy form attributes for type, frequency, maxVotes, abstain and write in
+     * also sets if the policy was set, which is used by the set policy function
+     */
     getPolicy: function(){
-      if(this.regType=="Admin"){
       this.$log.debug("calling api: getPolicy()")
       api.getPolicy(this.form.electionId) .then((response)=>{
           this.$log.debug("Policy returned", response)
-          
-        }).catch((error)=>
-        this.$log.debug(error))}
+          if(response.data.electionID!=0){
+            this.form.policyPollingType = response.data.type
+            this.form.policyFrequency = response.data.frequency
+            this.form.policyMaxVotes = response.data.num_votes
+            this.policySet = true
+          }
+      }).catch((error)=>
+        this.$log.debug(error))
     },
-       associateCandidate: function(){
+    associateCandidate: function(){
       this.$log.debug("calling api: associateCandidate()")
       api.registerCandidate(this.candidate_id,this.form.electionId) .then((response)=>{
           this.$log.debug("associate sCandidate set", response)
@@ -557,7 +663,7 @@ methods: {
         }).catch((error)=>
         this.$log.debug(error))
     },
- disassociateCandidate: function(candidateID){
+    disassociateCandidate: function(candidateID){
       this.$log.debug("calling api: associateCandidate()")
       api.withdrawCandidate(candidateID,this.form.electionId) .then((response)=>{
           this.$log.debug("disassociate sCandidate set", response)
@@ -575,12 +681,19 @@ methods: {
 if (r == true) {
    this.disassociateCandidate(can_id)
 }
-      
-     
-      
-     
-  
+    },
+
+    /**
+     * getVotes() gets the current num of votes by electionID and by current user
+     * @return number of votes
+     */
+    getVotes: function(){
+      api.getVotes(this.form.electionId, this.userObj.id) .then((response)=>{
+        this.$log.debug("got votes: ", response)
+        this.currentVotes = Number(response.data)
+      }).catch((error)=>
+          this.$log.debug(error))
     }
-}
+},
 }
 </script>

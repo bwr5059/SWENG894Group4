@@ -49,33 +49,31 @@ public class UserControllerTest {
 
 
 
-        @Before
+    @Before
     public void before() {
 
-            userConnectionDAO.setConnectionDao(connectionDao);
+        MockitoAnnotations.initMocks(this);
 
-            MockitoAnnotations.initMocks(this);
+        user.setId("test");
+        user.setType("Voter");
+        user.setAge(25);
+        user.setEthnicity("European");
+        user.setGender("F");
+        user.setAddress("160 Temp Drive");
+        user.setCity("Philadelphia");
+        user.setState("PA");
+        user.setZip("12345");
+        user.setFirst_name("Han");
+        user.setLast_name("Solo");
+        user.setProfile_complete(0);
+        user.setUser_name("sw1");
+        user.setRace("White");
 
-            user.setId("test");
-            user.setType("Voter");
-            user.setAge(25);
-            user.setEthnicity("European");
-            user.setGender("F");
-            user.setAddress("160 Temp Drive");
-            user.setCity("Philadelphia");
-            user.setState("PA");
-            user.setZip("12345");
-            user.setFirst_name("Han");
-            user.setLast_name("Solo");
-            user.setProfile_complete(0);
-            user.setUser_name("sw1");
-            user.setRace("White");
-
-            question.setQID(1);
-            question.setCanID("1");
-            question.setUserID("1");
-            question.setQuestion("test");
-            question.setAnswer("test");
+        question.setQID(1);
+        question.setCanID("1");
+        question.setUserID("1");
+        question.setQuestion("test");
+        question.setAnswer("test");
 
 
 

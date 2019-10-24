@@ -18,8 +18,7 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(locations = "classpath*:SpringBootVueApplication.class")
 //@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class SpringBootVueApplicationTests {
-
-	//Creation of Model objects to be tested
+	
 	public User user = new User();
 	public User user2 = new User();
 	public UserServiceImpl userService = new UserServiceImpl();
@@ -29,15 +28,7 @@ public class SpringBootVueApplicationTests {
 	public Candidate candidate = new Candidate();
 	public Candidate candidate2 = new Candidate();
 	public CandidateServiceImpl candidateService = new CandidateServiceImpl();
-	public Policy policy = new Policy();
-	public Policy policy2 = new Policy();
-	public Question question = new Question();
-	public Question question2 = new Question();
 
-	/**
-	 * TestSetUser() - Unit testing setters of User class
-	 * @throws Exception
-	 */
 	@Test
     public void TestSetUser() throws Exception {
     	user.setId("test");
@@ -199,54 +190,7 @@ public class SpringBootVueApplicationTests {
     	assertEquals("experience", candidate.getExperience());
     	assertEquals("contact", candidate.getContact());
     }
-
-	@Test
-	public void TestSetPolicy() throws Exception {
-
-		policy.setElectionID(12345);
-		policy.setFrequency(2);
-		policy.setNum_votes(1);
-		policy.setType("test");
-
-		policy2.setElectionID(12345);
-		policy2.setFrequency(2);
-		policy2.setNum_votes(1);
-		policy2.setType("test");
-
-		assertTrue(policy.equals(policy2));
-
-		assertEquals(12345,policy.getElectionID());
-		assertEquals(2,policy.getFrequency());
-		assertEquals(1,policy.getNum_votes());
-		assertEquals("test",policy.getType());
-
-	}
-
-	@Test
-	public void TestSetQuestion() throws Exception {
-
-		question.setQID(1);
-		question.setCanID("test");
-		question.setUserID("test");
-		question.setQuestion("test");
-		question.setAnswer("test");
-
-		question2.setQID(1);
-		question2.setCanID("test");
-		question2.setUserID("test");
-		question2.setQuestion("test");
-		question2.setAnswer("test");
-
-		assertTrue(question.equals(question2));
-
-		assertEquals(1,question.getQID());
-		assertEquals("test",question.getCanID());
-		assertEquals("test",question.getUserID());
-		assertEquals("test",question.getQuestion());
-		assertEquals("test",question.getAnswer());
-	}
-
-
+    
     @Test
     public void TestUserServices() throws Exception {
     	//Mockito.when(userService.findAllUsers()).thenReturn("Success");

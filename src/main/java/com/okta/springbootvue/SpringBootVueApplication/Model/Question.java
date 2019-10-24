@@ -22,7 +22,7 @@ import javax.persistence.Entity;
 public class Question {  
       
   @Id  
-  private int qID;
+  private int qID;  
   
   //Id for Candidate Profile
   //Candidate being asked a question

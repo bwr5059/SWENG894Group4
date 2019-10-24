@@ -1,88 +1,120 @@
 package com.okta.springbootvue.SpringBootVueApplication.Controller;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
-import java.util.List;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Policy;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
-import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Controller.ElectionController;
 
-import static org.junit.Assert.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
+import static org.junit.Assert.assertEquals;
 
+// @RunWith attaches a runner with the test class to initialize the test data
 @RunWith(SpringRunner.class)
+
 @ContextConfiguration(locations = "classpath*:SpringBootVueApplication.class")
+
 public class ElectionControllerTest {
+
+    @InjectMocks
+    src.main.java.com.okta.springbootvue.SpringBootVueApplication.Controller.ElectionController electionController;
+
+    @Mock
+    src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.ElectionService electionService;
+
+    @Mock
+    src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.UserService userService;
 
     Election election = new Election();
 
+    User user = new User();
+
+    Policy policy = new Policy();
+
+    @Before
     public void before() {
 
+        MockitoAnnotations.initMocks(this);
+
+        user.setId("test");
+        user.setType("Voter");
+        user.setAge(25);
+        user.setEthnicity("European");
+        user.setGender("F");
+        user.setAddress("160 Temp Drive");
+        user.setCity("Philadelphia");
+        user.setState("PA");
+        user.setZip("12345");
+        user.setFirst_name("Han");
+        user.setLast_name("Solo");
+        user.setProfile_complete(0);
+        user.setUser_name("sw1");
+        user.setRace("White");
 
         election.setElectionID(1);
-        election.setTitle("Test");
-        election.setClosed(1);
+        election.setTitle("test");
+        election.setClosed(0);
         election.setAdmin1(1);
         election.setAdmin2(2);
         election.setAdmin3(3);
         election.setAdmin4(4);
         election.setAdmin5(5);
         election.setAdmin6(6);
-        election.setChoice1("one");
-        election.setChoice2("two");
-        election.setChoice3("three");
-        election.setChoice4("four");
-        election.setChoice5("five");
-        election.setClose_date("10-20-2019");
-        election.setClose_time("5");
-        election.setNum_candidates(3);
+        election.setChoice1("1");
+        election.setChoice2("2");
+        election.setChoice3("3");
+        election.setChoice4("4");
+        election.setChoice5("5");
+        election.setClose_date("date");
+        election.setClose_time("time");
+        election.setNum_candidates(5);
         election.setNum_votes(1);
-        election.setStart_date("9-29-2019");
-        election.setStart_time("8");
-        election.setDescription("Description");
+        election.setStart_date("start");
+        election.setStart_time("start");
+        election.setDescription("test");
+
+        policy.setElectionID(1);
+        policy.setType("test");
+        policy.setFrequency(1);
+        policy.setNum_votes(1);
+
 
     }
-
-    User user = new User();
-
-
-
-    @InjectMocks
-    src.main.java.com.okta.springbootvue.SpringBootVueApplication.Controller.ElectionController electionController;
-
-    @Mock
-    src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.UserService userService;
-
-    @Mock
-    src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.ElectionService electionService;
 
     @Test
     public void listAllElections() {
 
-        electionService.addElection(election);
-
-        Election election2 = electionService.findElectionById(election.getElectionID());
-
-        assertEquals(election2.getElectionID(), 1);
-
-        List<Election> elections = electionService.findAllElections();
-
-        assertNotNull(elections);
+        List<Election> electionList1 = new ArrayList<Election>();
+        electionList1.add(election);
     }
+
 
     @Test
     public void getElection() {
 
         electionService.addElection(election);
 
-        Election election2 = electionService.findElectionById(election.getElectionID());
+        when(electionService.findElectionById(1)).thenReturn(election);
 
-        assertEquals(election.getElectionID(),election2.getElectionID());
+        Election election2 = electionService.findElectionById(1);
+
+        assertEquals(1,election2.getElectionID());
+        assertEquals("test",election2.getTitle());
+        assertEquals(0,election2.getClosed());
+
     }
 
     @Test
@@ -90,9 +122,8 @@ public class ElectionControllerTest {
 
         electionService.addElection(election);
 
-        Election election2 = electionService.findElectionById(election.getElectionID());
+        verify(electionService,times(1)).addElection(election);
 
-        assertEquals(election.getElectionID(), election2.getElectionID());
     }
 
     @Test
@@ -100,78 +131,177 @@ public class ElectionControllerTest {
 
         electionService.addElection(election);
 
+        when(electionService.findElectionById(1)).thenReturn(election);
 
-
-        election.setElectionID(123);
-        election.setTitle("Test2");
+        election.setElectionID(2);
+        election.setTitle("test2");
+        election.setClosed(1);
 
         electionService.updateElection(election);
 
-        Election election2 = electionService.findElectionById(123);
+        verify(electionService,times(1)).updateElection(election);
 
-        assertEquals(election2.getElectionID(), 123);
-        assertEquals(election2.getTitle(), "Test2");
     }
 
     @Test
     public void deleteElection() {
 
-
         electionService.addElection(election);
+
+        when(electionService.findElectionById(1)).thenReturn(election);
 
         electionService.deleteElectionById(1);
 
-        Election election2 = electionService.findElectionById(1);
-
-        assertNull(election2);
+        verify(electionService,times(1)).deleteElectionById(1);
     }
 
-    @Ignore
     @Test
     public void associateVoter() {
+
+        electionService.addElection(election);
+
+        when(electionService.findElectionById(1)).thenReturn(election);
+
+        userService.addUser(user,"Voter");
+
+        when(userService.findById("test")).thenReturn(user);
+
+        electionService.associateVoter(1,"test");
+
+        verify(electionService,times(1)).associateVoter(1,"test");
     }
 
-    @Ignore
     @Test
     public void removeVoter() {
+
+        electionService.addElection(election);
+
+        when(electionService.findElectionById(1)).thenReturn(election);
+
+        userService.addUser(user,"Voter");
+
+        when(userService.findById("test")).thenReturn(user);
+
+        electionService.withdrawVoter(1,"test");
+
+        verify(electionService,times(1)).withdrawVoter(1,"test");
+
+
     }
 
-    @Ignore
     @Test
     public void validateVoter() {
+
+        electionService.addElection(election);
+
+        when(electionService.findElectionById(1)).thenReturn(election);
+
+        userService.addUser(user,"Voter");
+
+        when(userService.findById("test")).thenReturn(user);
+
+
+        //Validate that voter is associated with an election
+        when(electionService.validateVoter(1,"test")).thenReturn("Found");
+
+        //Validate that voter is not associated with an election
+        when(electionService.validateVoter(1,"wrongID")).thenReturn("Missing");
     }
 
-    @Ignore
     @Test
     public void associateCandidate() {
+
+        electionService.addElection(election);
+
+        when(electionService.findElectionById(1)).thenReturn(election);
+
+        userService.addUser(user,"Voter");
+
+        when(userService.findById("test")).thenReturn(user);
+
+        electionService.associateCandidate(1,"test");
+
+        verify(electionService,times(1)).associateCandidate(1,"test");
+
+
     }
 
-    @Ignore
     @Test
     public void removeCandidate() {
+
+        electionService.addElection(election);
+
+        when(electionService.findElectionById(1)).thenReturn(election);
+
+        userService.addUser(user,"Voter");
+
+        when(userService.findById("test")).thenReturn(user);
+
+        electionService.withdrawCandidate(1,"test");
+
+        verify(electionService,times(1)).withdrawCandidate(1,"test");
     }
 
-    @Ignore
     @Test
     public void validateCandidate() {
+
+        electionService.addElection(election);
+
+        when(electionService.findElectionById(1)).thenReturn(election);
+
+        userService.addUser(user,"Voter");
+
+        when(userService.findById("test")).thenReturn(user);
+
+        when(electionService.validateCandidate(1,"test")).thenReturn("Found");
+
+        when(electionService.validateCandidate(1,"wrongID")).thenReturn("Missing");
+
     }
 
     @Ignore
     @Test
     public void viewCandidates() {
+
+        electionService.addElection(election);
+
+        when(electionService.findElectionById(1)).thenReturn(election);
+
+        userService.addUser(user,"Voter");
+
+        when(userService.findById("test")).thenReturn(user);
+
+        List<HashMap<String, String>> listofMaps = new ArrayList<HashMap<String, String>>();
+
+
+
+
     }
 
-    @Ignore
     @Test
     public void getPolicy() {
+
+        electionService.addElection(election);
+
+        when(electionService.findElectionById(1)).thenReturn(election);
+
+        electionService.createPolicy(policy);
+
+        when(electionService.getPolicy(1)).thenReturn(policy);
     }
 
-    @Ignore
     @Test
     public void createPolicy() {
+
+        electionService.addElection(election);
+
+        when(electionService.findElectionById(1)).thenReturn(election);
+
+        electionService.createPolicy(policy);
+
+
     }
 
-    @Ignore
     @Test
     public void modifyPolicy() {
     }

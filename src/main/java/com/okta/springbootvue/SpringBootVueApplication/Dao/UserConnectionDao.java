@@ -9,15 +9,15 @@
 
 package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao;
 
-import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
-import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ConnectionDao;
-
 import java.sql.Connection;
-import java.sql.PreparedStatement;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.PreparedStatement;
+
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 
 /**
  * ConnectionDao Class - Connects to MySQL database vision-database and performs queries through methods to update
@@ -25,11 +25,7 @@ import java.util.List;
  */
 public class UserConnectionDao {
 	ConnectionDao connectionDao = new ConnectionDao();
-
-	public void setConnectionDao(ConnectionDao connectionDao) {
-		this.connectionDao = connectionDao;
-	}
-
+	
 	/**
 	 * getUserList() - Performs select MySQL statement to retrieve all users from user table.
 	 * @param conn

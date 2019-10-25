@@ -108,29 +108,18 @@ public class ElectionController {
    * @return
    */
 	@PutMapping("/election/modifyElection/{electionID}")
-	public ResponseEntity<Election> modifyElection(@RequestBody Election election, @PathVariable int electionID) {
+	public ResponseEntity<Election> modifyElection(@PathVariable int electionID, @RequestBody Election election) {
 		
 		Election currentElection = electionService.findElectionById(electionID);
 	  
 		if (currentElection==null) {
 			return new ResponseEntity<Election>(HttpStatus.NOT_FOUND);
 		}  
-	  
+		
 		//Populate currentElection object from submitted object
-		currentElection.setElectionID(election.getElectionID());
+		currentElection.setElectionID(electionID);
 		currentElection.setTitle(election.getTitle());
 		currentElection.setClosed(election.getClosed());
-		currentElection.setAdmin1(election.getAdmin1());
-		currentElection.setAdmin2(election.getAdmin2());
-		currentElection.setAdmin3(election.getAdmin3());
-		currentElection.setAdmin4(election.getAdmin4());
-		currentElection.setAdmin5(election.getAdmin5());
-		currentElection.setAdmin6(election.getAdmin6());
-		currentElection.setChoice1(election.getChoice1());
-		currentElection.setChoice2(election.getChoice2());
-		currentElection.setChoice3(election.getChoice3());
-		currentElection.setChoice4(election.getChoice4());
-		currentElection.setChoice5(election.getChoice5());
 		currentElection.setClose_date(election.getClose_date());
 		currentElection.setClose_time(election.getClose_time());
 		currentElection.setNum_candidates(election.getNum_candidates());
@@ -138,6 +127,7 @@ public class ElectionController {
 		currentElection.setStart_date(election.getStart_date());
 		currentElection.setStart_time(election.getStart_time());
 		currentElection.setDescription(election.getDescription());
+		currentElection.setDescription(election.getElection_key());
        
 		electionService.updateElection(currentElection);
 		return new ResponseEntity<Election>(currentElection, HttpStatus.OK);

@@ -263,7 +263,7 @@
 <b-row>
 <b-button v-show="!editable&&!registered" class="ml-1" v-on:click="register">Register</b-button>
 <b-button v-show="!editable&&registered" class="ml-1" v-on:click="showmodal2=true">Withdraw</b-button>
-<b-button v-show="registered&&isSelected&&this.currentVotes<this.form.policyMaxVotes" class="ml-1" v-on:click="showmodal3=true">Vote</b-button>
+<b-button v-show="registered&&isSelected" class="ml-1" v-on:click="validateVote">Vote</b-button>
 </b-row>
 </b-container>
 <b-modal id="modal-2" title="Withdraw" v-model="showmodal2">
@@ -559,7 +559,7 @@ methods: {
       this.show = false
       this.$log.debug("casting vote...")
       //this.$log.debug(this.form.electionId, this.userObj.id, this.selecteditem[0].canID, "", "", this.userObj.type)
-      api_user.castVote(this.form.electionId, this.userObj.id, this.selecteditem[0].canID, "", "", this.userObj.type).then((response)=>{
+      api_user.castVote(this.form.electionId, this.userObj.id, this.selecteditem[0].canID, "", "", "cast").then((response)=>{
         this.$log.debug("vote cast: ", response)
         alert("Your vote has been cast!")
         this.getElection(this.form.electionId)
@@ -693,6 +693,14 @@ if (r == true) {
         this.currentVotes = Number(response.data)
       }).catch((error)=>
           this.$log.debug(error))
+    },
+
+    validateVote: function(){
+      if(this.currentVotes!=0){
+        alert("You have already cast a vote")
+      }else{
+        this.showmodal3=true
+      }
     }
 },
 }

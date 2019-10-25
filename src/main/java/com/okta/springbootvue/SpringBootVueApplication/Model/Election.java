@@ -55,11 +55,13 @@ public class Election {
   //Number of votes allowed per user
   private int num_votes;
   
-  //Election start date and time
+  //Election start date,time, and key
   private String start_date;
   
   private String start_time;
   
   private String description;
+
+  private String key;
       
 }

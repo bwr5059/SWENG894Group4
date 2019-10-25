@@ -89,6 +89,7 @@ public class ElectionConnectionDao {
 			election.setStart_date(rs.getString(19));
 			election.setStart_time(rs.getString(20));
 			election.setDescription(rs.getString(21));
+			election.setKey(rs.getString(22));
 			
 			electionList.add(election);
 		}
@@ -137,6 +138,7 @@ public class ElectionConnectionDao {
 				election.setStart_date(rs.getString(19));
 				election.setStart_time(rs.getString(20));
 				election.setDescription(rs.getString(21));
+				election.setKey(rs.getString(22));
 			}
 			
 			connectionDao.ReleaseConnection(conn);
@@ -160,8 +162,8 @@ public class ElectionConnectionDao {
 		try {
 			Connection conn = connectionDao.RetrieveConnection();
 		String sql = "INSERT INTO election (electionID, title, closed, admin1, admin2, admin3, admin4, admin5, admin6, choice1, choice2, " +
-				"choice3, choice4, choice5, close_date, close_time, num_candidates, num_votes, start_date, start_time, description) " + 
-				"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				"choice3, choice4, choice5, close_date, close_time, num_candidates, num_votes, start_date, start_time, description, electionKey) " +
+				"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		PreparedStatement stmt=conn.prepareStatement(sql);
 		
 		stmt.setInt(1,election.getElectionID());
@@ -185,6 +187,7 @@ public class ElectionConnectionDao {
 		stmt.setString(19,election.getStart_date());
 		stmt.setString(20,election.getStart_time());
 		stmt.setString(21,election.getDescription());
+		stmt.setString(22,election.getKey());
 		stmt.executeUpdate();  
 		connectionDao.ReleaseConnection(conn);
 		
@@ -230,7 +233,7 @@ public class ElectionConnectionDao {
 		stmt.setString(19,election.getStart_date());
 		stmt.setString(20,election.getStart_time());
 		stmt.setString(21,election.getDescription());
-		stmt.setInt(22,election.getElectionID());
+		stmt.setString(22,election.getKey());
 		stmt.executeUpdate(); 
 		connectionDao.ReleaseConnection(conn);
 		

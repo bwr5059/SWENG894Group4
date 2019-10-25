@@ -85,6 +85,7 @@ public class ElectionControllerTest {
         election.setStart_date("start");
         election.setStart_time("start");
         election.setDescription("test");
+        election.setKey("12345");
 
         policy.setElectionID(1);
         policy.setType("test");
@@ -299,10 +300,28 @@ public class ElectionControllerTest {
 
         electionService.createPolicy(policy);
 
+        when(electionService.getPolicy(1)).thenReturn(policy);
+
 
     }
 
     @Test
     public void modifyPolicy() {
+
+        electionService.addElection(election);
+
+        when(electionService.findElectionById(1)).thenReturn(election);
+
+        electionService.createPolicy(policy);
+
+        when(electionService.getPolicy(1)).thenReturn(policy);
+
+        policy.setType("test2");
+        policy.setFrequency(2);
+
+        electionService.modifyPolicy(policy);
+
+        verify(electionService,times(1)).modifyPolicy(policy);
+
     }
 }

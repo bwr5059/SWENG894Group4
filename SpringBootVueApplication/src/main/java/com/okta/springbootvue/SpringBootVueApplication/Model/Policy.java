@@ -29,5 +29,9 @@ public class Policy {
   private int frequency;
   
   private int num_votes;
+  
+  private int write_in;
+
+  private int abstain;
       
 }

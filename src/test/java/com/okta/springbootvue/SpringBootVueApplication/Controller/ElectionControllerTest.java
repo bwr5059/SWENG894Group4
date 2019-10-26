@@ -100,6 +100,12 @@ public class ElectionControllerTest {
 
         List<Election> electionList1 = new ArrayList<Election>();
         electionList1.add(election);
+
+        electionService.addElection(election);
+
+        when(electionService.findElectionById(1)).thenReturn(election);
+
+        when(electionService.findAllElections()).thenReturn(electionList1);
     }
 
 

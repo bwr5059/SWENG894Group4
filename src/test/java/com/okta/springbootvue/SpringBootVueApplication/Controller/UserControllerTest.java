@@ -16,8 +16,7 @@ import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Quest
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 
@@ -75,9 +74,6 @@ public class UserControllerTest {
         question.setQuestion("test");
         question.setAnswer("test");
 
-
-
-
     }
 
     @Test()
@@ -85,6 +81,7 @@ public class UserControllerTest {
 
         List<User> userList1 = new ArrayList<User>();
         userList1.add(user);
+
 
         when(userService.findAllUsers()).thenReturn(userList1);
 
@@ -97,9 +94,15 @@ public class UserControllerTest {
     @Test
     public void getUser() {
 
+        userService.addUser(user,"Voter");
+
+        //userService.addUser(user,"Candidate");
+
         when(userService.findById("test")).thenReturn(user);
 
         User user2 = userService.findById("test");
+
+        //assertNotNull(userService.findById("test"));
 
         assertEquals(25,user2.getAge());
         assertEquals("F",user2.getGender());

@@ -78,6 +78,8 @@ public class QuestionControllerTest {
 
         questionList.add(question);
 
+
+
         when(questionService.viewQuestionsByCandidate("test")).thenReturn(questionList);
 
     }

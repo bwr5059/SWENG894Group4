@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Question;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Ballot;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ConnectionDao;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.UserService;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.QuestionService;
@@ -182,6 +183,21 @@ public class UserController {
 		
 		userService.addQuestion(question);
 		return new ResponseEntity<Question>(question, HttpStatus.CREATED);
+	}
+	
+	/**
+	 * castVote() - 
+	 * @param 
+	 * @return 
+	 */
+	@PostMapping("/user/castVote/{type}")
+	public ResponseEntity<Ballot> castVote(@PathVariable("type") String type, @RequestBody Ballot ballot) {
+		/*if(questionService.findById(question.getQID())!=null) {
+			return new ResponseEntity<Question>(HttpStatus.CONFLICT); 
+		}*/
+		
+		userService.castVote(type, ballot);
+		return new ResponseEntity<Ballot>(ballot, HttpStatus.CREATED);
 	}
     
 }

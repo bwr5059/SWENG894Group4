@@ -25,6 +25,7 @@ import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.UserCon
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.QuestionConnectionDao;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Question;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Ballot;
 
 /**
  * UserServiceImpl Class - Implements UserService interface. Connects UserService class methods to database by
@@ -110,6 +111,16 @@ public class UserServiceImpl implements UserService{
 	*/
 	public void addQuestion(Question question) {
 		questionConnDao.insertQuestion(question);
+	}
+	
+	/**
+	 * castVote() - 
+	 * @param 
+	*/
+	public Ballot castVote(String type, Ballot ballot) {
+		Ballot ballotReturn = new Ballot();
+		ballotReturn = connDao.insertVote(type, ballot);
+		return ballotReturn;
 	}
 
 }

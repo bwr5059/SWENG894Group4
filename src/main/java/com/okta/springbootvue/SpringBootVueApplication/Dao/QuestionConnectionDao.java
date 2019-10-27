@@ -38,7 +38,7 @@ public class QuestionConnectionDao {
 		try {
 			Connection conn = connectionDao.RetrieveConnection();
 			Statement stmt=conn.createStatement(); 
-			ResultSet rs=stmt.executeQuery("SELECT MAX(qID) FROM candidateQuestion"); 
+			ResultSet rs=stmt.executeQuery("SELECT MAX(qID) FROM question"); 
 			while(rs.next())  {
 				maxID = rs.getInt(1);
 			}
@@ -60,7 +60,7 @@ public class QuestionConnectionDao {
 		Question question = new Question();
 		try {
 			Connection conn = connectionDao.RetrieveConnection();
-			String sql = "SELECT * FROM candidateQuestion WHERE qID=?"; 
+			String sql = "SELECT * FROM question WHERE qID=?"; 
 			PreparedStatement stmt=conn.prepareStatement(sql); 
 			stmt.setInt(1,qID);
 			
@@ -90,7 +90,7 @@ public class QuestionConnectionDao {
 		
 		try {
 			Connection conn = connectionDao.RetrieveConnection();
-			String sql = "SELECT * FROM candidateQuestion WHERE canID=?"; 
+			String sql = "SELECT * FROM question WHERE canID=?"; 
 			PreparedStatement stmt=conn.prepareStatement(sql); 
 			stmt.setString(1,canID);
 			 
@@ -124,7 +124,7 @@ public class QuestionConnectionDao {
 		
 		try {
 			Connection conn = connectionDao.RetrieveConnection();
-			String sql = "INSERT INTO candidateQuestion(qID, canID, userID, question, answer) VALUES (?,?,?,?,?)"; 
+			String sql = "INSERT INTO question(qID, canID, userID, question, answer) VALUES (?,?,?,?,?)"; 
 			PreparedStatement stmt=conn.prepareStatement(sql); 
 			
 			stmt.setInt(1, question.getQID());
@@ -149,7 +149,7 @@ public class QuestionConnectionDao {
 	public void insertAnswer(Question question, int qID){
 		try {
 			Connection conn = connectionDao.RetrieveConnection();
-		String sql = "UPDATE candidateQuestion SET answer=? WHERE qID=?";
+		String sql = "UPDATE question SET answer=? WHERE qID=?";
 		PreparedStatement stmt=conn.prepareStatement(sql);
 		
 		stmt.setString(1,question.getAnswer());

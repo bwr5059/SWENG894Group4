@@ -18,6 +18,7 @@ import java.util.List;
 import java.sql.PreparedStatement;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Ballot;
 
 /**
  * ConnectionDao Class - Connects to MySQL database vision-database and performs queries through methods to update
@@ -25,6 +26,28 @@ import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
  */
 public class UserConnectionDao {
 	ConnectionDao connectionDao = new ConnectionDao();
+	
+	/**
+	 * getMaxID() - Gets current highest ballotID
+	 * @return int
+	 */
+	public int getMaxID(){
+		int maxID = 0;
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+			Statement stmt=conn.createStatement(); 
+			ResultSet rs=stmt.executeQuery("SELECT MAX(ballotID) FROM ballot"); 
+			while(rs.next())  {
+				maxID = rs.getInt(1);
+			}
+			connectionDao.ReleaseConnection(conn);
+		
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return maxID;
+		
+	}
 	
 	/**
 	 * getUserList() - Performs select MySQL statement to retrieve all users from user table.
@@ -233,6 +256,41 @@ public class UserConnectionDao {
 		}
 		
 		return userList;
+	}
+	
+	/**
+	 * insertVote() - 
+	 * @param 
+	 * @return 
+	*/
+	public Ballot insertVote(String type, Ballot ballot){
+		int newID = getMaxID() + 1;
+		ballot.setBallotID(newID);
+		try {
+				Connection conn = connectionDao.RetrieveConnection();
+			
+				String sql = "INSERT INTO ballot (ballotID, userID, electionID, canID, first_name, last_name) VALUES (?,?,?,?,?,?)";
+				PreparedStatement stmt=conn.prepareStatement(sql);
+		
+				stmt.setInt(1,ballot.getBallotID());
+				stmt.setString(2,ballot.getUserID());
+				stmt.setInt(3,ballot.getElectionID());
+			        if(type.equals("cast")){
+				    stmt.setString(4,ballot.getCanID());
+				}else{
+				    stmt.setString(4,"Write");
+				}
+				stmt.setString(5,ballot.getFirst_name());
+				stmt.setString(6,ballot.getLast_name());
+
+				stmt.executeUpdate();  
+				connectionDao.ReleaseConnection(conn); 
+		
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+			
+		return ballot;
 	}
 
 }

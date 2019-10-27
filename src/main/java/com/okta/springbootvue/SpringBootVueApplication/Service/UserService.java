@@ -13,6 +13,7 @@ import java.util.List;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Question;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Ballot;
 
 /**
  * UserService Class - Interface for UserService.
@@ -39,5 +40,8 @@ public interface UserService {
 	
 	//Adds a question to a candidate
 	void addQuestion(Question question);
+	
+	//Casts a Candidate Selection Vote
+	Ballot castVote(String type, Ballot ballot);
 	
 }

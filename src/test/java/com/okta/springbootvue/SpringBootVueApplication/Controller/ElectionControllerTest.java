@@ -67,17 +67,6 @@ public class ElectionControllerTest {
         election.setElectionID(1);
         election.setTitle("test");
         election.setClosed(0);
-        election.setAdmin1(1);
-        election.setAdmin2(2);
-        election.setAdmin3(3);
-        election.setAdmin4(4);
-        election.setAdmin5(5);
-        election.setAdmin6(6);
-        election.setChoice1("1");
-        election.setChoice2("2");
-        election.setChoice3("3");
-        election.setChoice4("4");
-        election.setChoice5("5");
         election.setClose_date("date");
         election.setClose_time("time");
         election.setNum_candidates(5);
@@ -85,12 +74,14 @@ public class ElectionControllerTest {
         election.setStart_date("start");
         election.setStart_time("start");
         election.setDescription("test");
-        election.setKey("12345");
+        election.setElection_key("12345");
 
         policy.setElectionID(1);
         policy.setType("test");
         policy.setFrequency(1);
         policy.setNum_votes(1);
+        policy.setWrite_in(0);
+        policy.setAbstain(0);
 
 
     }

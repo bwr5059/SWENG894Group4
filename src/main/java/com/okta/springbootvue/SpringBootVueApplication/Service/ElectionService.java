@@ -64,5 +64,8 @@ public interface ElectionService {
 	
 	//Modify Existing Election Policy
 	void modifyPolicy(Policy policy);
+	
+	//Return number of votes cast by user in election
+	int getVotesByVoter(int electionID, String userID);
 		
 }

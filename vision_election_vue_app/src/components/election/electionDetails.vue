@@ -29,6 +29,17 @@
             ></b-form-input>
           </b-form-group>
           </b-col>
+             <b-col>
+          <b-form-group id="input-group-3" label="Election Key:" label-for="input-3">
+            <b-form-input
+              id="input-3"
+              v-model='form.electionKey'
+              required
+              :disabled="!editable"
+              
+            ></b-form-input>
+          </b-form-group>
+          </b-col>
           <b-col>
           <b-form-group id="input-group-4" label="Description:" label-for="input-4">
             <b-form-input
@@ -261,9 +272,10 @@
 </b-row>
 <br>
 <b-row>
-<b-button v-show="!editable&&!registered" class="ml-1" v-on:click="register">Register</b-button>
+<b-button v-show="!editable&&!registered" class="ml-1" v-on:click="showRegisterDialog=true">Register</b-button>
 <b-button v-show="!editable&&registered" class="ml-1" v-on:click="showmodal2=true">Withdraw</b-button>
 <b-button v-show="registered&&isSelected" class="ml-1" v-on:click="validateVote">Vote</b-button>
+<b-button v-show="this.userObj.type=='Voter'&&registered&!hasVoted" v-on:click="showWriteInCandidate=true" class="ml-1 pull-right">Write In Candidate</b-button>
 </b-row>
 </b-container>
 <b-modal id="modal-2" title="Withdraw" v-model="showmodal2">
@@ -316,6 +328,130 @@
               </div>
             </template>
         </b-modal>
+
+           <!-- Show the Table of Candidates Written in by votwe Under this election -->
+<!-- <b-card v-show="this.userObj.type=='Voter'">
+   <div> -->
+     <b-modal name="associateCandidateModal2" id="modal-2" title="Write in Candidate" v-model="showWriteInCandidate">
+            <b-card>
+              <b-form>
+            <!-- <b-form-group id="input-group-1" label="Candidate Name:" label-for="input-1">
+              <b-form-select
+                id="input-1"
+               v-model="candidate_id"                
+                :options="eligibleCandidates"
+                 class="mb-3"
+                 value-field="userID"
+                  text-field="last_name"
+              >
+              </b-form-select>
+            </b-form-group>  -->
+ <b-form-group id="input-group-1" label="Candidate Info:" label-for="input-1">
+           
+       <b-form-input
+              id="input-2"
+              v-model='write_in.firstname'
+             required
+             placeholder="First name"
+            ></b-form-input>
+            <b-form-input
+              id="input-2"
+              v-model='write_in.lastname'
+              required
+              placeholder="Last name"
+            ></b-form-input>
+ </b-form-group> 
+            </b-form>
+            </b-card>
+          <template v-slot:modal-footer>
+              <div class="w-100">
+                <b-button
+                  variant="primary"
+                  size="sm"
+                  class="float-right"
+                  @click="writeCandidate"
+                >
+                Write In
+                </b-button>
+                <b-button
+                  variant="primary"
+                  size="sm"
+                  class="float-right mr-2"
+                  @click="showWriteInCandidate=false"
+                >
+                Cancel
+                </b-button>
+              </div>
+            </template>
+        </b-modal>
+<!--     
+  </div>
+</b-card> -->
+<b-modal id="modal-4" title="CastVote" v-model="showmodal4">
+            <b-card>
+              Are you sure you want to write in candidate and cast your vote?
+            </b-card>
+          <template v-slot:modal-footer>
+              <div class="w-100">
+                <b-button
+                  variant="primary"
+                  size="sm"
+                  class="float-right"
+                  @click="writeCandidate"
+                >
+                Yes
+                </b-button>
+                <b-button
+                  variant="primary"
+                  size="sm"
+                  class="float-right mr-2"
+                  @click="showmodal4=false"
+                >
+                No
+                </b-button>
+              </div>
+            </template>
+        </b-modal>
+
+<!-- <b-card> -->
+    <b-modal name="ElectionRegistrationModal" id="modal-2" title="Register for Election" v-model="showRegisterDialog">
+            <b-card>
+              <b-form>
+           
+ <b-form-group id="input-group-1" label="Election Registration Verification" label-for="input-1">
+           
+       <b-form-input
+              id="input-2"
+              v-model='election_key'
+             required
+             placeholder="Input Key"
+            ></b-form-input>           
+ </b-form-group> 
+            </b-form>
+            </b-card>
+          <template v-slot:modal-footer>
+              <div class="w-100">
+                <b-button
+                  variant="primary"
+                  size="sm"
+                  class="float-right"
+                  @click="VerifyElectionKey"
+                >
+               Verify Election Key
+                </b-button>
+                <b-button
+                  variant="primary"
+                  size="sm"
+                  class="float-right mr-2"
+                  @click="showRegisterDialog=false"
+                >
+                Cancel
+                </b-button>
+              </div>
+            </template>
+        </b-modal>
+<!-- </b-card> -->
+
 </b-card>
 </div>
 
@@ -335,12 +471,17 @@ export default {
         currentElectionData: '',
         registrationData: '',
         registered: false,
+        hasVoted:true,
         data: '',
         error: '',
         userObj: null,
         show: false,
         editable: false,
         regType: '',
+        write_in:{
+          firstname:'',
+          lastname:''
+        },
         form: {
           electionId: '',
           electionTitle: '',
@@ -351,7 +492,8 @@ export default {
           policyFrequency: '',
           policyMaxVotes: '',
           policyAbstain: 0,
-          policyWrite: 0
+          policyWrite: 0,
+          electionKey:''
         },
         fields: null,
         fields_election_candidates:null,
@@ -365,6 +507,9 @@ export default {
         showmodal2: false,
         showmodal3: false,
         showmodalAssociateCandidate: false,
+        showWriteInCandidate:false,
+        showRegisterDialog:false,
+        election_key:'',
         candidates: null,
         currentVotes: null,
         policySet: false
@@ -434,6 +579,7 @@ methods: {
       this.form.electionDescription = this.data.data.description
       this.form.electionCloseDate = this.data.data.close_date
       this.form.electionStartDate = this.data.data.start_date
+      this.form.electionKey = this.data.data.election_key
       this.getCandidates()
       this.getAllCandidates()
       this.getRegistration()
@@ -441,8 +587,8 @@ methods: {
       this.getVotes()
     }).catch((error) => {  
       this.$log.debug(error);  
-      this.error = "Failed to get election"  
-	  });  
+      this.error="Failed to get election"  
+	  });
     },
     /**getRegistration() checks if a user has registered against an election.
     **/
@@ -495,12 +641,21 @@ methods: {
      * and electionCloseDate.  If successful redirects to the home page.
      */
     updateElection: function(){
-      api.updateElection(this.form.electionTitle, this.form.electionDescription, this.form.electionStartDate, this.form.electionCloseDate, this.form.electionId).then((response)=>{
+      api.updateElection(this.form.electionTitle, this.form.electionDescription, this.form.electionStartDate, this.form.electionCloseDate, this.form.electionId,this.form.electionKey).then((response)=>{
         this.$log.debug("Updated election", response)
       }).catch((error)=>{
         this.$log.debug(error)
       }).then(this.$router.push({ path: '/app/user/home' }))
       
+    },
+    VerifyElectionKey:function(){
+if(this.election_key==this.form.electionKey){
+  alert('Election Key Authenticated')
+  this.showRegisterDialog=false
+  this.register();
+}else{
+  alert('Invalid Key Supplied')
+}
     },
     /**register() gets the current registration type and submits to the relevant API to register the current
     *user to an election
@@ -578,7 +733,6 @@ methods: {
         }).catch((error)=>
         this.$log.debug(error))
     },
-
     /**getAllCandidates() calls the api to return all candidates from the system and creates
     an array of the candidates
      */
@@ -657,9 +811,12 @@ methods: {
       this.$log.debug("calling api: associateCandidate()")
       api.registerCandidate(this.candidate_id,this.form.electionId) .then((response)=>{
           this.$log.debug("associate sCandidate set", response)
-          if(response.status==200){alert("Candidate Added to Election!!")}
+          if(response.status==200){
+              alert("Candidate Added to Election!!")
+              this.getCandidates()
+              }
           this.showmodalAssociateCandidate=false
-        this.$router.push({path: `/app/home/elections`})
+        //this.$router.push({path: `/app/home/elections`})
         }).catch((error)=>
         this.$log.debug(error))
     },
@@ -667,9 +824,12 @@ methods: {
       this.$log.debug("calling api: associateCandidate()")
       api.withdrawCandidate(candidateID,this.form.electionId) .then((response)=>{
           this.$log.debug("disassociate sCandidate set", response)
-          if(response.status==200){alert("Candidate Removed from Election!!")}
+          if(response.status==200){
+              alert("Candidate Removed from Election!!")
+              this.getCandidates()
+              }
           this.showmodalAssociateCandidate=false
-             this.$router.push({path: `/app/home/elections`})
+             //this.$router.push({path: `/app/home/elections`})
         }).catch((error)=>
         this.$log.debug(error))
     },
@@ -682,7 +842,20 @@ if (r == true) {
    this.disassociateCandidate(can_id)
 }
     },
-
+    writeCandidate: function(){
+       var r = confirm("Are you sure you want to write in candidate and cast your vote?");
+if (r == true) {
+      this.$log.debug("calling api: writeCandidate()")
+       api_user.castVote(this.form.electionId, this.userObj.id, "", this.write_in.firstname, this.write_in.lastname, "cast").then((response)=>{
+        this.$log.debug("write in cast: ", response)
+        alert("Vote casted and Candidate Written in")
+      this.showWriteInCandidate=false
+      this.getElection(this.form.electionId)
+      this.hasVoted=true;
+      }).catch((error)=>
+          this.$log.debug(error))
+}
+    },
     /**
      * getVotes() gets the current num of votes by electionID and by current user
      * @return number of votes
@@ -691,10 +864,13 @@ if (r == true) {
       api.getVotes(this.form.electionId, this.userObj.id) .then((response)=>{
         this.$log.debug("got votes: ", response)
         this.currentVotes = Number(response.data)
+        if(this.currentVotes==0){
+          //show the writeIn Button
+          this.hasVoted=false;
+        }
       }).catch((error)=>
           this.$log.debug(error))
     },
-
     validateVote: function(){
       if(this.currentVotes!=0){
         alert("You have already cast a vote")

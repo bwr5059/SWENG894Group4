@@ -40,6 +40,18 @@
           v-model='form.electionDescription'
         ></b-form-input>
       </b-form-group>
+
+        
+      <b-form-group id="input-group-2" label="Election Key:" label-for="input-2">
+        <b-form-input
+          id="input-2"
+          
+          required
+          placeholder="Enter Election key"
+          v-model='form.electionKey'
+        ></b-form-input>
+      </b-form-group>
+
       <b-row>
           <b-col>
           <b-form-group id="input-group-5" label="Start Date:" label-for="input-5">
@@ -74,7 +86,6 @@
 
 
 <script>
-
 import api from '@/apis/electionApi'
 export default {
   name: 'createElection',
@@ -90,6 +101,7 @@ export default {
     form: {
     electionTitle: '',
     electionDescription: '',
+    electionKey:'',
     electionStartDate: '',
     electionEndDate: '',
     },
@@ -98,16 +110,12 @@ export default {
     show: false
       }
   },
-
   mounted: function(){
       this.createElection();
-
   },
-
   created(){
      
   },
-
   methods: {
       createElection: function(){
       
@@ -123,9 +131,8 @@ export default {
   }); 
   
       },
-
       updateElection: function(){
-        api.updateElection(this.form.electionTitle, this.form.electionDescription, this.form.electionStartDate, this.form.electionEndDate, this.electionId).then( (response) => {  
+        api.updateElection(this.form.electionTitle, this.form.electionDescription, this.form.electionStartDate, this.form.electionEndDate, this.electionId,this.form.electionKey).then( (response) => {  
       this.$log.debug("Election updated:", response);  
       this.electionObj = response
     }).catch((error) => {  
@@ -134,7 +141,6 @@ export default {
       });
       this.$router.push({ path: '/app/user/home' }) 
       },
-
       deleteElection: function(){
         api.removeElection(this.electionObj.data.electionID).then((response)=> {
           this.$log.debug("Election deleted:", response);

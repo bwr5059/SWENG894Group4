@@ -34,8 +34,8 @@ export default {
     }]  
   }),  
   // (U)pdate  
-  updateElection: (electionTitle, electionDescription, startDate, closeDate, id)=> instance.put('/election/modifyElection/'+id, {electionID: id, title: electionTitle,  
-    start_date: startDate, close_date: closeDate, description: electionDescription, transformResponse: [function (data) {  
+  updateElection: (electionTitle, electionDescription, startDate, closeDate, id,electionKey)=> instance.put('/election/modifyElection/'+id, {electionID: id, title: electionTitle,  
+    start_date: startDate, close_date: closeDate, description: electionDescription, election_key:electionKey, transformResponse: [function (data) {  
       return data? JSON.parse(data) : data;  
     }]  
   }),

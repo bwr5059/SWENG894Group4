@@ -44,4 +44,7 @@ public interface UserService {
 	//Casts a Candidate Selection Vote
 	Ballot castVote(String type, Ballot ballot);
 	
+	//Updates an existing Vote
+	Ballot updateVote(int, electionID, String userID, Ballot ballot);
+	
 }

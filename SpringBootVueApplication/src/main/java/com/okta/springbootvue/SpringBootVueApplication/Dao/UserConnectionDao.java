@@ -294,5 +294,38 @@ public class UserConnectionDao {
 			
 		return ballot;
 	}
+	
+	/**
+	 * updateVote() - 
+	 * @param 
+	 * @param 
+	 * @param 
+	 * @return 
+	*/
+	public Ballot updateVote(int electionID, String userID, Ballot ballot){
+		try {
+				Connection conn = connectionDao.RetrieveConnection();
+			
+				String sql = "UPDATE user SET ballotID=?, userID=?, electionID=?, " +
+					"canID=?, first_name=?, last_name=? WHERE userID=? AND electionID=?";
+				PreparedStatement stmt=conn.prepareStatement(sql);
+		
+				stmt.setString(1,ballot.getBallotID());
+				stmt.setString(2,userID);
+				stmt.setString(3,electionID);
+				stmt.setInt(4,ballot.getCanID());
+				stmt.setString(5,ballot.getFirst_name());
+				stmt.setString(6,ballot.getLast_name);
+				stmt.setString(7,userID);
+				stmt.setString(8,electionID);
+
+				stmt.executeUpdate();  
+				connectionDao.ReleaseConnection(conn);
+		
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		return ballot;
+	}
 
 }

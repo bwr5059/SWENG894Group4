@@ -277,8 +277,10 @@ public class UserConnectionDao {
 				stmt.setInt(3,ballot.getElectionID());
 			        if(type.equals("cast")){
 				    stmt.setString(4,ballot.getCanID());
-				}else{
+				}else if(type.equals("write")){
 				    stmt.setString(4,"Write");
+				}else{
+				    stmt.setString(4,"Abstain");
 				}
 				stmt.setString(5,ballot.getFirst_name());
 				stmt.setString(6,ballot.getLast_name());

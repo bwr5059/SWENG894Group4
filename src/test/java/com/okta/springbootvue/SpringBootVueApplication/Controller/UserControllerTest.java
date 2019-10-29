@@ -1,21 +1,23 @@
 package com.okta.springbootvue.SpringBootVueApplication.Controller;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ConnectionDao;
-import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Question;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -28,7 +30,7 @@ import static org.mockito.Mockito.*;
 public class UserControllerTest {
 
     @InjectMocks
-    src.main.java.com.okta.springbootvue.SpringBootVueApplication.Controller.UserController UserController;
+    src.main.java.com.okta.springbootvue.SpringBootVueApplication.Controller.UserController userController;
 
     @Mock
     src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.UserConnectionDao userConnectionDAO;
@@ -94,28 +96,47 @@ public class UserControllerTest {
     @Test
     public void getUser() {
 
-        userService.addUser(user,"Voter");
+
+        //UserService UserService;
+
+        ResponseEntity<User> addUserResponse = userController.newUser(user,"voter");
+
+        //Check to see that method executed successfully
+        assertThat(addUserResponse.getStatusCodeValue()).isEqualTo(201);
+
+        ResponseEntity<User> getUserResponse = userController.getUser("test");
+
+        assertThat(getUserResponse.getStatusCodeValue()).isEqualTo(404);
+
+        //assertNotNull(getUserResponse);
+
+        //userService.addUser(user,"Voter");
 
         //userService.addUser(user,"Candidate");
 
-        when(userService.findById("test")).thenReturn(user);
+        //when(userService.findById("test")).thenReturn(user);
 
-        User user2 = userService.findById("test");
+        //User user2 = userService.findById("test");
 
         //assertNotNull(userService.findById("test"));
 
-        assertEquals(25,user2.getAge());
-        assertEquals("F",user2.getGender());
-        assertEquals("PA",user2.getState());
+        //assertEquals(25,user2.getAge());
+        //assertEquals("F",user2.getGender());
+        //assertEquals("PA",user2.getState());
 
     }
 
     @Test
     public void newUser() {
 
-        userService.addUser(user,"Voter");
+        ResponseEntity<User> addUserResponse = userController.newUser(user,"voter");
 
-        verify(userService, times(1)).addUser(user,"Voter");
+        //Check to see that method executed successfully
+        assertThat(addUserResponse.getStatusCodeValue()).isEqualTo(201);
+
+        //userService.addUser(user,"Voter");
+
+        //verify(userService, times(1)).addUser(user,"Voter");
 
     }
 
@@ -169,10 +190,16 @@ public class UserControllerTest {
     @Test
     public void askQuestion() {
 
-        userService.addQuestion(question);
+        ResponseEntity<Question> addQuestionResponse = userController.askQuestion(question);
 
-        verify(userService, times(1)).addQuestion(question);
+        //Check to see that method executed successfully
+        assertThat(addQuestionResponse.getStatusCodeValue()).isEqualTo(201);
 
 
+        //userService.addQuestion(question);
+
+        //verify(userService, times(1)).addQuestion(question);
     }
+
+
 }

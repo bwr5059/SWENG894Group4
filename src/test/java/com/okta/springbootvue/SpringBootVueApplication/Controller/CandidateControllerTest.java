@@ -105,6 +105,16 @@ public class CandidateControllerTest {
 
     @Test
     public void getCandidate() {
+        //Response from calling newCandidate method
+        //ResponseEntity<Candidate> newAddResponse = candidateController.newCandidate(candidate);
+
+        //Check to see that method executed successfully
+        //assertThat(newAddResponse.getStatusCodeValue()).isEqualTo(201);
+
+        //ResponseEntity<Candidate> newGetResponse = candidateController.getCandidate("test");
+
+        //Check to see that method executed successfully
+        //assertThat(newGetResponse.getStatusCodeValue()).isEqualTo(201);
 
         candidateService.addCandidate(candidate);
 

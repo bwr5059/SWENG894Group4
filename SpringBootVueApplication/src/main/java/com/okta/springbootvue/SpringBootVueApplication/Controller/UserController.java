@@ -223,7 +223,7 @@ public class UserController {
 		currentUser.setEthnicity(user.getEthnicity());
 		currentUser.setGender(user.getGender());*/
        
-		userService.updateVote(ballot);
+		userService.updateVote(electionID, userID, ballot);
 		return new ResponseEntity<Ballot>(ballot, HttpStatus.OK);
 	    
 	}

@@ -273,9 +273,10 @@
 <br>
 <b-row>
 <b-button v-show="!editable&&!registered" class="ml-1" v-on:click="showRegisterDialog=true">Register</b-button>
-<b-button v-show="!editable&&registered" class="ml-1" v-on:click="showmodal2=true">Withdraw</b-button>
-<b-button v-show="registered&&isSelected" class="ml-1" v-on:click="validateVote">Vote</b-button>
+<b-button v-show="!editable&&registered&&!hasVoted" class="ml-1" v-on:click="showmodal2=true">Withdraw</b-button>
+<b-button v-show="registered&&isSelected&&!hasVoted" class="ml-1" v-on:click="validateVote">Vote</b-button>
 <b-button v-show="this.userObj.type=='Voter'&&registered&!hasVoted" v-on:click="showWriteInCandidate=true" class="ml-1 pull-right">Write In Candidate</b-button>
+<b-button v-show="hasVoted&&isSelected&&today!=this.form.electionCloseDate" v-on:click="showChangeVote=true" class="ml-1 pull-right">Change Vote</b-button>
 </b-row>
 </b-container>
 <b-modal id="modal-2" title="Withdraw" v-model="showmodal2">
@@ -380,6 +381,31 @@
                   @click="showWriteInCandidate=false"
                 >
                 Cancel
+                </b-button>
+              </div>
+            </template>
+        </b-modal>
+        <b-modal id="modal-4" title="Change Vote" v-model="showChangeVote">
+            <b-card>
+              Are you sure you want to change your vote?
+            </b-card>
+          <template v-slot:modal-footer>
+              <div class="w-100">
+                <b-button
+                  variant="primary"
+                  size="sm"
+                  class="float-right"
+                  @click="changeVote"
+                >
+                Yes
+                </b-button>
+                <b-button
+                  variant="primary"
+                  size="sm"
+                  class="float-right mr-2"
+                  @click="showChangeVote=false"
+                >
+                No
                 </b-button>
               </div>
             </template>
@@ -506,13 +532,16 @@ export default {
         showmodal: false,
         showmodal2: false,
         showmodal3: false,
+        showmodal4: false,
         showmodalAssociateCandidate: false,
         showWriteInCandidate:false,
         showRegisterDialog:false,
         election_key:'',
         candidates: null,
         currentVotes: null,
-        policySet: false
+        policySet: false,
+        showChangeVote: false,
+        today: null
         
       }  
     },  
@@ -585,10 +614,11 @@ methods: {
       this.getRegistration()
       this.getPolicy()
       this.getVotes()
+      this.calculateCurrentDay()
     }).catch((error) => {  
       this.$log.debug(error);  
       this.error="Failed to get election"  
-	  });
+    });
     },
     /**getRegistration() checks if a user has registered against an election.
     **/
@@ -773,7 +803,7 @@ if(this.election_key==this.form.electionKey){
           this.getElection(this.form.electionId)
         }).catch((error)=>
           this.$log.debug(error),
-          alert(error),
+          //alert(error),
           this.getElection(this.form.electionId))
       }else{
         this.showmodal=false
@@ -785,7 +815,7 @@ if(this.election_key==this.form.electionKey){
           this.getElection(this.form.electionId)
         }).catch((error)=>
         this.$log.debug(error),
-        alert(error),
+        //alert(error),
         this.getElection(this.form.electionId))
       }
     },
@@ -877,6 +907,21 @@ if (r == true) {
       }else{
         this.showmodal3=true
       }
+    },
+
+    calculateCurrentDay: function(){
+      this.today = new Date();
+      var dd = String(this.today.getDate()).padStart(2, '0');
+      var mm = String(this.today.getMonth() + 1).padStart(2, '0'); //January is 0!
+      var yyyy = this.today.getFullYear();
+      this.today = mm + '-' + dd + '-' + yyyy;
+    },
+
+    changeVote: function(){
+      this.showChangeVote= false,
+      this.show=false
+      this.$log.debug("Changing vote")
+      this.getElection(this.form.electionId)
     }
 },
 }

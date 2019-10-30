@@ -302,7 +302,7 @@ public class UserConnectionDao {
 	 * @param 
 	 * @return 
 	*/
-	public Ballot updateVote(int ballotID, Ballot ballot){
+	public Ballot updateVote(Ballot ballot){
 		try {
 				Connection conn = connectionDao.RetrieveConnection();
 			
@@ -310,7 +310,7 @@ public class UserConnectionDao {
 					"canID=?, first_name=?, last_name=? WHERE userID=? AND electionID=?";
 				PreparedStatement stmt=conn.prepareStatement(sql);
 		
-				stmt.setInt(1,ballotID);
+				stmt.setInt(1,ballot.getBallotID());
 				stmt.setString(2,ballot.getUserID());
 				stmt.setInt(3,ballot.getElectionID());
 				stmt.setString(4,ballot.getCanID());

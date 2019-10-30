@@ -310,12 +310,12 @@ public class UserConnectionDao {
 					"canID=?, first_name=?, last_name=? WHERE userID=? AND electionID=?";
 				PreparedStatement stmt=conn.prepareStatement(sql);
 		
-				stmt.setString(1,ballot.getBallotID());
+				stmt.setInt(1,ballot.getBallotID());
 				stmt.setString(2,userID);
-				stmt.setString(3,electionID);
-				stmt.setInt(4,ballot.getCanID());
+				stmt.setInt(3,electionID);
+				stmt.setString(4,ballot.getCanID());
 				stmt.setString(5,ballot.getFirst_name());
-				stmt.setString(6,ballot.getLast_name);
+				stmt.setString(6,ballot.getLast_name());
 				stmt.setString(7,userID);
 				stmt.setInt(8,electionID);
 

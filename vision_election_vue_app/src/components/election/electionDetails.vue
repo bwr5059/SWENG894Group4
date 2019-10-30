@@ -275,9 +275,37 @@
 <b-button v-show="!editable&&!registered" class="ml-1" v-on:click="showRegisterDialog=true">Register</b-button>
 <b-button v-show="!editable&&registered" class="ml-1" v-on:click="showmodal2=true">Withdraw</b-button>
 <b-button v-show="registered&&isSelected" class="ml-1" v-on:click="validateVote">Vote</b-button>
+<b-button v-show="registered&&!hasVoted" class="ml-1" v-on:click="showmodal5=true">Abstain from Voting</b-button>
 <b-button v-show="this.$parent.$parent.isVoter&&registered&!hasVoted" v-on:click="showWriteInCandidate=true" class="ml-1 pull-right">Write In Candidate</b-button>
 </b-row>
 </b-container>
+   <b-modal id="modal-3" title="Abstain From Voting" v-model="showmodal5">
+            <b-card>
+              Are you sure you want to abstain from voting in this election?
+            </b-card>
+          <template v-slot:modal-footer>
+              <div class="w-100">
+                <b-button
+                  variant="primary"
+                  size="sm"
+                  class="float-right"
+                  @click="abstainFromVoting"
+                >
+                Yes
+                </b-button>
+                <b-button
+                  variant="primary"
+                  size="sm"
+                  class="float-right mr-2"
+                  @click="showmodal5=false"
+                >
+                No
+                </b-button>
+              </div>
+            </template>
+        </b-modal>
+
+
 <b-modal id="modal-2" title="Withdraw" v-model="showmodal2">
             <b-card>
               Are you sure you want to withdraw?
@@ -330,6 +358,30 @@
         </b-modal>
 
            <!-- Show the Table of Candidates Written in by votwe Under this election -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <b-card v-show="this.$parent.$parent.isVoter">
    <div>
      <b-modal name="associateCandidateModal2" id="modal-2" title="Write in Candidate" v-model="showWriteInCandidate">
@@ -506,6 +558,8 @@ export default {
         showmodal: false,
         showmodal2: false,
         showmodal3: false,
+        showmodal4: false,
+        showmodal5: false,
         showmodalAssociateCandidate: false,
         showWriteInCandidate:false,
         showRegisterDialog:false,
@@ -722,6 +776,18 @@ if(this.election_key==this.form.electionKey){
       }).catch((error)=>
       this.$log.debug(error))
     },
+
+    abstainFromVoting : function(){
+      this.showmodal5=false
+      this.$log.debug("abstaining from casting vote...")
+      api_user.castVote(this.form.electionId, this.userObj.id, "", "", "", "abstain").then((response)=>{
+        this.$log.debug("vote cast: ", response)
+        this.hasVoted=true;
+        alert("You have successfully abstained from voting!")
+        this.getElection(this.form.electionId)
+      }).catch((error)=>
+      this.$log.debug(error))
+    },
     /**getCandidates() calls the api to get candidates for the current election and creates an array of the returned candidates
      */
     getCandidates: function(){
@@ -851,7 +917,7 @@ if (r == true) {
 
 
       this.$log.debug("calling api: writeCandidate()")
-       api_user.castVote(this.form.electionId, this.userObj.id, "", this.write_in.firstname, this.write_in.lastname, "cast").then((response)=>{
+       api_user.castVote(this.form.electionId, this.userObj.id, "", this.write_in.firstname, this.write_in.lastname, "write").then((response)=>{
         this.$log.debug("write in cast: ", response)
         alert("Vote casted and Candidate Written in")
       this.showWriteInCandidate=false
@@ -883,6 +949,14 @@ if (r == true) {
         alert("You have already cast a vote")
       }else{
         this.showmodal3=true
+      }
+    },
+
+    abstainFromVote:function(){
+       if(this.currentVotes!=0){
+        alert("You have already cast a vote")
+      }else{
+        this.showmodal5=true
       }
     }
 },

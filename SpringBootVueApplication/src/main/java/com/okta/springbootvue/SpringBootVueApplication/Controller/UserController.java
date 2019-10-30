@@ -206,26 +206,13 @@ public class UserController {
 	 * @param 
 	 * @return
 	 */
-	@PutMapping("/user/modifyVote/{electionID}/{userID}")
-	public ResponseEntity<Ballot> modifyUser(@PathVariable("electionID") int electionID, @PathVariable("userID") String userID, @RequestBody Ballot ballot) {
-	  
-		//User currentUser = userService.findById(id);
-	  
-		/*if (currentUser==null) {
-			return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
-		}*/ 
-	  
-		//Populate currentUser with submitted user
-		/*currentUser.setId(user.getId());
-		currentUser.setEmail(user.getEmail());
-		currentUser.setType(user.getType());
-		currentUser.setAge(user.getAge());
-		currentUser.setEthnicity(user.getEthnicity());
-		currentUser.setGender(user.getGender());*/
+	@PutMapping("/user/modifyVote/{ballotID}")
+	public ResponseEntity<Ballot> modifyUser(@PathVariable("ballotID") int ballotID, @RequestBody Ballot ballot) {
        
-		userService.updateVote(electionID, userID, ballot);
+		userService.updateVote(ballotID, ballot);
 		return new ResponseEntity<Ballot>(ballot, HttpStatus.OK);
 	    
 	}
+    
     
 }

@@ -317,7 +317,7 @@ public class UserConnectionDao {
 				stmt.setString(5,ballot.getFirst_name());
 				stmt.setString(6,ballot.getLast_name);
 				stmt.setString(7,userID);
-				stmt.setString(8,electionID);
+				stmt.setInt(8,electionID);
 
 				stmt.executeUpdate();  
 				connectionDao.ReleaseConnection(conn);

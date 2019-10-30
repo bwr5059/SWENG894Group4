@@ -127,8 +127,8 @@ public class UserServiceImpl implements UserService{
 	 * updateVote() - 
 	 * @param 
 	*/
-	public Ballot updateVote(int ballotID, Ballot ballot) {
-		Ballot ballotReturn = connDao.updateVote(ballotID, ballot);
+	public Ballot updateVote(Ballot ballot) {
+		Ballot ballotReturn = connDao.updateVote(ballot);
 		return ballotReturn;
 	}
 

@@ -206,10 +206,10 @@ public class UserController {
 	 * @param 
 	 * @return
 	 */
-	@PutMapping("/user/modifyVote/{ballotID}")
-	public ResponseEntity<Ballot> modifyUser(@PathVariable("ballotID") int ballotID, @RequestBody Ballot ballot) {
+	@PutMapping("/user/modifyVote")
+	public ResponseEntity<Ballot> modifyUser(@RequestBody Ballot ballot) {
        
-		userService.updateVote(ballotID, ballot);
+		userService.updateVote(ballot);
 		return new ResponseEntity<Ballot>(ballot, HttpStatus.OK);
 	    
 	}

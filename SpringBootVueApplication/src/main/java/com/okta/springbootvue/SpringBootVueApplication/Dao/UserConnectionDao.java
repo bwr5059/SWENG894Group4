@@ -306,7 +306,7 @@ public class UserConnectionDao {
 		try {
 				Connection conn = connectionDao.RetrieveConnection();
 			
-				String sql = "UPDATE user SET ballotID=?, userID=?, electionID=?, " +
+				String sql = "UPDATE ballot SET ballotID=?, userID=?, electionID=?, " +
 					"canID=?, first_name=?, last_name=? WHERE userID=? AND electionID=?";
 				PreparedStatement stmt=conn.prepareStatement(sql);
 		

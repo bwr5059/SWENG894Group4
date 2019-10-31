@@ -1,5 +1,6 @@
 package com.okta.springbootvue.SpringBootVueApplication.Controller;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -7,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
@@ -37,6 +40,9 @@ public class ElectionControllerTest {
 
     @Mock
     src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.UserService userService;
+
+    @Mock
+    src.main.java.com.okta.springbootvue.SpringBootVueApplication.Controller.UserController userController;
 
     Election election = new Election();
 
@@ -89,86 +95,118 @@ public class ElectionControllerTest {
     @Test
     public void listAllElections() {
 
-        List<Election> electionList1 = new ArrayList<Election>();
-        electionList1.add(election);
+        List<Election> electionList = new ArrayList<Election>();
+        electionList.add(election);
 
-        electionService.addElection(election);
+        ResponseEntity<Election> addElectionResponse = electionController.newElection(election);
 
-        when(electionService.findElectionById(1)).thenReturn(election);
+        electionController.newElection(election);
 
-        when(electionService.findAllElections()).thenReturn(electionList1);
+        //Check to see that method executed successfully by returned status code
+        Assertions.assertThat(addElectionResponse.getStatusCodeValue()).isEqualTo(201);
+
+        ResponseEntity<List<Election>> listElectionsResponse = electionController.listAllElections();
+
+        List<Election> allElectionsList = listElectionsResponse.getBody();
+
+        when(electionService.findAllElections()).thenReturn(allElectionsList);
     }
 
 
     @Test
     public void getElection() {
 
-        electionService.addElection(election);
+        ResponseEntity<Election> addElectionResponse = electionController.newElection(election);
 
-        when(electionService.findElectionById(1)).thenReturn(election);
+        //Check to see that method executed successfully by returned status code
+        Assertions.assertThat(addElectionResponse.getStatusCodeValue()).isEqualTo(201);
 
-        Election election2 = electionService.findElectionById(1);
+        electionController.newElection(election);
 
-        assertEquals(1,election2.getElectionID());
-        assertEquals("test",election2.getTitle());
-        assertEquals(0,election2.getClosed());
+        ResponseEntity<Election> getElectionResponse = electionController.getElection(1);
 
+        Election electionAfterAdd = getElectionResponse.getBody();
+
+        when(electionService.findElectionById(1)).thenReturn(electionAfterAdd);
     }
 
     @Test
     public void newElection() {
 
-        electionService.addElection(election);
+        ResponseEntity<Election> addElectionResponse = electionController.newElection(election);
 
-        verify(electionService,times(1)).addElection(election);
-
+        //Check to see that method executed successfully by returned status code
+        assertThat(addElectionResponse.getStatusCodeValue()).isEqualTo(201);
     }
 
     @Test
     public void modifyElection() {
 
-        electionService.addElection(election);
+        ResponseEntity<Election> addElectionResponse = electionController.newElection(election);
 
-        when(electionService.findElectionById(1)).thenReturn(election);
+        //Check to see that method executed successfully by returned status code
+        assertThat(addElectionResponse.getStatusCodeValue()).isEqualTo(201);
+
+        electionController.newElection(election);
+
+        //when(electionService.findElectionById(1)).thenReturn(election);
 
         election.setElectionID(2);
         election.setTitle("test2");
         election.setClosed(1);
 
-        electionService.updateElection(election);
+        ResponseEntity<Election> modifyElectionResponse = electionController.modifyElection(1,election);
 
-        verify(electionService,times(1)).updateElection(election);
+        Election electionAfterModify = modifyElectionResponse.getBody();
 
+        when(electionService.findElectionById(1)).thenReturn(electionAfterModify);
     }
 
     @Test
     public void deleteElection() {
 
-        electionService.addElection(election);
+        ResponseEntity<Election> addElectionResponse = electionController.newElection(election);
 
-        when(electionService.findElectionById(1)).thenReturn(election);
+        //Check to see that method executed successfully by returned status code
+        assertThat(addElectionResponse.getStatusCodeValue()).isEqualTo(201);
 
-        electionService.deleteElectionById(1);
+        electionController.newElection(election);
 
-        verify(electionService,times(1)).deleteElectionById(1);
+        ResponseEntity<Election> deleteElectionResponse = electionController.deleteElection(1);
+
+        assertThat(deleteElectionResponse.getStatusCodeValue()).isEqualTo(404);
     }
 
+    @Ignore
     @Test
     public void associateVoter() {
 
-        electionService.addElection(election);
+        ResponseEntity<Election> addElectionResponse = electionController.newElection(election);
 
-        when(electionService.findElectionById(1)).thenReturn(election);
+        //Check to see that method executed successfully by returned status code
+        assertThat(addElectionResponse.getStatusCodeValue()).isEqualTo(201);
 
-        userService.addUser(user,"Voter");
+        electionController.newElection(election);
 
-        when(userService.findById("test")).thenReturn(user);
+        userService.addUser(user,"voter");
 
-        electionService.associateVoter(1,"test");
+        verify(userService,times(1)).addUser(user,"voter");
 
-        verify(electionService,times(1)).associateVoter(1,"test");
+        ResponseEntity<Election> associateVoterResponse = electionController.associateVoter(1,"test");
+
+        assertThat(associateVoterResponse.getStatusCodeValue()).isEqualTo(200);
+        //when(electionService.findElectionById(1)).thenReturn(election);
+
+        //userService.addUser(user,"Voter");
+
+        //when(userService.findById("test")).thenReturn(user);
+
+        //electionService.associateVoter(1,"test");
+
+        //verify(electionService,times(1)).associateVoter(1,"test");
     }
 
+    @Ignore
     @Test
     public void removeVoter() {
 
@@ -187,6 +225,7 @@ public class ElectionControllerTest {
 
     }
 
+    @Ignore
     @Test
     public void validateVoter() {
 
@@ -206,6 +245,7 @@ public class ElectionControllerTest {
         when(electionService.validateVoter(1,"wrongID")).thenReturn("Missing");
     }
 
+    @Ignore
     @Test
     public void associateCandidate() {
 
@@ -224,6 +264,7 @@ public class ElectionControllerTest {
 
     }
 
+    @Ignore
     @Test
     public void removeCandidate() {
 
@@ -240,6 +281,7 @@ public class ElectionControllerTest {
         verify(electionService,times(1)).withdrawCandidate(1,"test");
     }
 
+    @Ignore
     @Test
     public void validateCandidate() {
 
@@ -271,11 +313,9 @@ public class ElectionControllerTest {
 
         List<HashMap<String, String>> listofMaps = new ArrayList<HashMap<String, String>>();
 
-
-
-
     }
 
+    @Ignore
     @Test
     public void getPolicy() {
 
@@ -288,20 +328,35 @@ public class ElectionControllerTest {
         when(electionService.getPolicy(1)).thenReturn(policy);
     }
 
+    @Ignore
     @Test
     public void createPolicy() {
 
-        electionService.addElection(election);
+        ResponseEntity<Election> addElectionResponse = electionController.newElection(election);
 
-        when(electionService.findElectionById(1)).thenReturn(election);
+        //Check to see that method executed successfully by returned status code
+        assertThat(addElectionResponse.getStatusCodeValue()).isEqualTo(201);
 
-        electionService.createPolicy(policy);
+        electionController.newElection(election);
 
-        when(electionService.getPolicy(1)).thenReturn(policy);
+        ResponseEntity<Policy> addPolicyResponse = electionController.createPolicy(policy);
+
+        electionController.createPolicy(policy);
+
+        assertThat(addPolicyResponse.getStatusCodeValue()).isEqualTo(200);
+
+        //electionService.addElection(election);
+
+        //when(electionService.findElectionById(1)).thenReturn(election);
+
+        //electionService.createPolicy(policy);
+
+        //when(electionService.getPolicy(1)).thenReturn(policy);
 
 
     }
 
+    @Ignore
     @Test
     public void modifyPolicy() {
 

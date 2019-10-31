@@ -11,24 +11,16 @@
 
 package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service;
 
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.CandidateConnectionDao;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.QuestionConnectionDao;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
-import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
-import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Question;
 
+import java.util.List;
+
 @Service("candidateService")
-public class CandidateServiceImpl implements CandidateService{
+public class CandidateServiceImpl implements src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.CandidateService {
 	
 	CandidateConnectionDao connDao = new CandidateConnectionDao();
 	QuestionConnectionDao questionConnDao = new QuestionConnectionDao();

@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ConnectionDao;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Question;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
-import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.UserService;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Ballot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,23 +33,22 @@ public class UserControllerTest {
     src.main.java.com.okta.springbootvue.SpringBootVueApplication.Controller.UserController userController;
 
     @Mock
-    src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.UserConnectionDao userConnectionDAO;
+    src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.QuestionService questionService;
 
 
     @Mock
     src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.UserService userService;
 
-
+    //New User Object
     User user = new User();
 
+    //New Question Object
     Question question = new Question();
 
-    ConnectionDao connectionDao = new ConnectionDao();
+    //New Ballot Object
+    Ballot ballot = new Ballot();
 
-
-
-
-
+    //Set Object Variable values before each test case
     @Before
     public void before() {
 
@@ -76,6 +75,12 @@ public class UserControllerTest {
         question.setQuestion("test");
         question.setAnswer("test");
 
+        ballot.setBallotID(1234);
+        ballot.setUserID("test");
+        ballot.setElectionID(1234);
+        ballot.setCanID("test");
+        ballot.setFirst_name("test");
+        ballot.setLast_name("test");
     }
 
     @Test()
@@ -84,45 +89,38 @@ public class UserControllerTest {
         List<User> userList1 = new ArrayList<User>();
         userList1.add(user);
 
+        ResponseEntity<User> addUserResponse = userController.newUser(user,"voter");
 
-        when(userService.findAllUsers()).thenReturn(userList1);
+        userController.newUser(user,"voter");
 
-        List<User> userList2 = userService.findAllUsers();
+        //Check to see that method executed successfully by returned status code
+        assertThat(addUserResponse.getStatusCodeValue()).isEqualTo(201);
 
-        assertEquals(1, userList2.size());
+        ResponseEntity<List<User>> listUsersResponse = userController.listAllUsers();
+
+        List<User> allUsersList = listUsersResponse.getBody();
+
+        when(userService.findAllUsers()).thenReturn(allUsersList);
 
     }
 
     @Test
     public void getUser() {
 
-
         //UserService UserService;
 
         ResponseEntity<User> addUserResponse = userController.newUser(user,"voter");
 
-        //Check to see that method executed successfully
+        userController.newUser(user,"voter");
+
+        //Check to see that method executed successfully by returned status code
         assertThat(addUserResponse.getStatusCodeValue()).isEqualTo(201);
 
         ResponseEntity<User> getUserResponse = userController.getUser("test");
 
-        assertThat(getUserResponse.getStatusCodeValue()).isEqualTo(404);
+        User userAfterAdd = getUserResponse.getBody();
 
-        //assertNotNull(getUserResponse);
-
-        //userService.addUser(user,"Voter");
-
-        //userService.addUser(user,"Candidate");
-
-        //when(userService.findById("test")).thenReturn(user);
-
-        //User user2 = userService.findById("test");
-
-        //assertNotNull(userService.findById("test"));
-
-        //assertEquals(25,user2.getAge());
-        //assertEquals("F",user2.getGender());
-        //assertEquals("PA",user2.getState());
+        when(userService.findById("test")).thenReturn(userAfterAdd);
 
     }
 
@@ -131,59 +129,65 @@ public class UserControllerTest {
 
         ResponseEntity<User> addUserResponse = userController.newUser(user,"voter");
 
-        //Check to see that method executed successfully
+        //Check to see that method executed successfully by returned status code
         assertThat(addUserResponse.getStatusCodeValue()).isEqualTo(201);
 
-        //userService.addUser(user,"Voter");
-
-        //verify(userService, times(1)).addUser(user,"Voter");
-
     }
-
 
 
     @Test
     public void modifyUser() {
 
-        userService.addUser(user,"Voter");
+        ResponseEntity<User> addUserResponse = userController.newUser(user,"voter");
 
-        when(userService.findById("test")).thenReturn(user);
+        userController.newUser(user,"voter");
+
+        //Check to see that method executed successfully by returned status code
+        assertThat(addUserResponse.getStatusCodeValue()).isEqualTo(201);
 
         user.setId("111");
         user.setType("Candidate");
         user.setAge(26);
 
-        userService.updateUser(user);
+        ResponseEntity<User> modifyUserResponse = userController.modifyUser(user,"test");
 
-        verify(userService, times(1)).updateUser(user);
+        User userAfterModify = modifyUserResponse.getBody();
 
-
+        when(userService.findById("test")).thenReturn(userAfterModify);
     }
 
     @Test
     public void modifyUserType() {
 
-        userService.addUser(user, "Voter");
+        ResponseEntity<User> addUserResponse = userController.newUser(user,"voter");
 
-        String type = "Candidate";
+        userController.newUser(user,"voter");
 
-        userService.updateUserType(user.getId(),type);
+        //Check to see that method executed successfully by returned status code
+        assertThat(addUserResponse.getStatusCodeValue()).isEqualTo(201);
 
-        //verify(userService).updateUserType(user.getId(),type);
-        verify(userService, times(1)).updateUserType(user.getId(),type);
+        user.setType("candidate");
 
+        ResponseEntity<User> modifyUserType = userController.modifyUserType("test","candidate");
+
+        User userAfterModify = modifyUserType.getBody();
+
+        when(userService.findById("test")).thenReturn(userAfterModify);
     }
 
     @Test
     public void deleteUser() {
 
-        userService.addUser(user, "Voter");
+        ResponseEntity<User> addUserResponse = userController.newUser(user,"voter");
 
-        userService.deleteUserById(user.getId());
+        userController.newUser(user,"voter");
 
-        assertNull(userService.findById(user.getId()));
+        //Check to see that method executed successfully by returned status code
+        assertThat(addUserResponse.getStatusCodeValue()).isEqualTo(201);
 
-        //verify(userService, times(1)).deleteUserById("test");
+        ResponseEntity<User> deleteUserResponse = userController.deleteUser("test");
+
+        assertThat(deleteUserResponse.getStatusCodeValue()).isEqualTo(404);
     }
 
 
@@ -192,14 +196,18 @@ public class UserControllerTest {
 
         ResponseEntity<Question> addQuestionResponse = userController.askQuestion(question);
 
-        //Check to see that method executed successfully
+        //Check to see that method executed successfully by returned status code
         assertThat(addQuestionResponse.getStatusCodeValue()).isEqualTo(201);
 
-
-        //userService.addQuestion(question);
-
-        //verify(userService, times(1)).addQuestion(question);
     }
 
 
+    @Test
+    public void castVote() {
+
+        ResponseEntity<Ballot> castVoteResponse = userController.castVote("test", ballot);
+
+        //Check to see that method executed successfully by returned status code
+        assertThat(castVoteResponse.getStatusCodeValue()).isEqualTo(201);
+    }
 }

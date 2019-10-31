@@ -133,6 +133,10 @@ public class CandidateControllerTest {
 
     @Test
     public void newCandidate() {
+
+        ResponseEntity<Candidate> newCandidateResponse = candidateController.newCandidate(candidate);
+
+        assertThat(newCandidateResponse.getStatusCodeValue()).isEqualTo(201);
     }
 
     @Test
@@ -141,5 +145,9 @@ public class CandidateControllerTest {
 
     @Test
     public void answerQuestion() {
+
+        ResponseEntity<Question> newQuestionResponse = candidateController.answerQuestion(question,1234);
+
+        assertThat(newQuestionResponse.getStatusCodeValue()).isEqualTo(200);
     }
 }

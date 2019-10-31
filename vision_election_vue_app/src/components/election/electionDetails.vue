@@ -275,10 +275,36 @@
 <b-button v-show="!editable&&!registered" class="ml-1" v-on:click="showRegisterDialog=true">Register</b-button>
 <b-button v-show="!editable&&registered&&!hasVoted" class="ml-1" v-on:click="showmodal2=true">Withdraw</b-button>
 <b-button v-show="registered&&isSelected&&!hasVoted" class="ml-1" v-on:click="validateVote">Vote</b-button>
+<b-button v-show="registered&&!hasVoted" class="ml-1" v-on:click="showmodal5=true">Abstain from Voting</b-button>
 <b-button v-show="this.userObj.type=='Voter'&&registered&!hasVoted" v-on:click="showWriteInCandidate=true" class="ml-1 pull-right">Write In Candidate</b-button>
-<b-button v-show="hasVoted&&isSelected&&today!=this.form.electionCloseDate" v-on:click="showChangeVote=true" class="ml-1 pull-right">Change Vote</b-button>
+<b-button v-show="hasVoted&&isSelected&&today<=this.form.electionCloseDate" v-on:click="showChangeVote=true" class="ml-1 pull-right">Change Vote</b-button>
 </b-row>
 </b-container>
+<b-modal id="modal-3" title="Abstain From Voting" v-model="showmodal5">
+            <b-card>
+              Are you sure you want to abstain from voting in this election?
+            </b-card>
+          <template v-slot:modal-footer>
+              <div class="w-100">
+                <b-button
+                  variant="primary"
+                  size="sm"
+                  class="float-right"
+                  @click="abstainFromVoting"
+                >
+                Yes
+                </b-button>
+                <b-button
+                  variant="primary"
+                  size="sm"
+                  class="float-right mr-2"
+                  @click="showmodal5=false"
+                >
+                No
+                </b-button>
+              </div>
+            </template>
+        </b-modal>
 <b-modal id="modal-2" title="Withdraw" v-model="showmodal2">
             <b-card>
               Are you sure you want to withdraw?
@@ -533,6 +559,7 @@ export default {
         showmodal2: false,
         showmodal3: false,
         showmodal4: false,
+        showmodal5: false,
         showmodalAssociateCandidate: false,
         showWriteInCandidate:false,
         showRegisterDialog:false,
@@ -748,6 +775,7 @@ if(this.election_key==this.form.electionKey){
         this.$log.debug("vote cast: ", response)
         alert("Your vote has been cast!")
         this.getElection(this.form.electionId)
+        this.hasVoted=true;
       }).catch((error)=>
       this.$log.debug(error))
     },
@@ -914,15 +942,32 @@ if (r == true) {
       var dd = String(this.today.getDate()).padStart(2, '0');
       var mm = String(this.today.getMonth() + 1).padStart(2, '0'); //January is 0!
       var yyyy = this.today.getFullYear();
-      this.today = mm + '-' + dd + '-' + yyyy;
+      //this.today = mm + '-' + dd + '-' + yyyy;
+      this.today = yyyy + '-' + mm + '-' + dd;
     },
 
     changeVote: function(){
       this.showChangeVote= false,
       this.show=false
-      this.$log.debug("Changing vote")
-      this.getElection(this.form.electionId)
-    }
+      api_user.castVote(this.form.electionId, this.userObj.id, this.selecteditem[0].canID, "", "").then((response)=>{
+        this.$log.debug("vote changed: ", response)
+        alert("Your vote has been changed!")
+        this.getElection(this.form.electionId)
+      }).catch((error)=>
+      this.$log.debug(error))
+    },
+
+    abstainFromVoting : function(){
+      this.showmodal5=false
+      this.$log.debug("abstaining from casting vote...")
+      api_user.castVote(this.form.electionId, this.userObj.id, "", "", "", "abstain").then((response)=>{
+        this.$log.debug("vote cast: ", response)
+        this.hasVoted=true;
+        alert("You have successfully abstained from voting!")
+        this.getElection(this.form.electionId)
+      }).catch((error)=>
+      this.$log.debug(error))
+    },
 },
 }
 </script>

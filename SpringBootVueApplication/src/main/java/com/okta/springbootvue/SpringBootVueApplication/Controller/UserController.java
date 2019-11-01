@@ -5,7 +5,7 @@
 |  
 |  Methods: listAllUsers, getUser, newUser, modifyUser, deleteUser
 |
-|  Version: Sprint 1
+|  Version: Sprint 2
 |  
 *-------------------------------------------------------------------*/
 
@@ -186,9 +186,10 @@ public class UserController {
 	}
 	
 	/**
-	 * castVote() - 
-	 * @param 
-	 * @return 
+	 * castVote() - Cast Vote for an election
+	 * @param type
+	 * @param Ballot
+	 * @return ResponseEntity<Ballot>
 	 */
 	@PostMapping("/user/castVote/{type}")
 	public ResponseEntity<Ballot> castVote(@PathVariable("type") String type, @RequestBody Ballot ballot) {
@@ -201,10 +202,9 @@ public class UserController {
 	}
 	
 	/**
-	 * modifyVote() - 
-	 * @param 
-	 * @param 
-	 * @return
+	 * modifyVote() - Modify existing vote that has already been cast
+	 * @param Ballot
+	 * @return ResponseEntity<Ballot>
 	 */
 	@PutMapping("/user/modifyVote")
 	public ResponseEntity<Ballot> modifyUser(@RequestBody Ballot ballot) {

@@ -6,7 +6,7 @@
 |  Methods: findAllUsers, findById, addUser, updateUser, updateUserType,
 |           deleteUserById
 |
-|  Version: Sprint 1
+|  Version: Sprint 2
 |  
 *-------------------------------------------------------------------*/
 
@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	/**
-	 * deleteUserByID() -
+	 * deleteUserByID() - Remove user
 	 * @param id
 	*/
 	public void deleteUserById(String id) {
@@ -114,8 +114,9 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	/**
-	 * castVote() - 
-	 * @param 
+	 * castVote() - Cast vote for an election
+	 * @param type
+	 * @param Ballot
 	*/
 	public Ballot castVote(String type, Ballot ballot) {
 		Ballot ballotReturn = new Ballot();
@@ -124,8 +125,8 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	/**
-	 * updateVote() - 
-	 * @param 
+	 * updateVote() - Update vote already cast for an election
+	 * @param Ballot
 	*/
 	public Ballot updateVote(Ballot ballot) {
 		Ballot ballotReturn = connDao.updateVote(ballot);

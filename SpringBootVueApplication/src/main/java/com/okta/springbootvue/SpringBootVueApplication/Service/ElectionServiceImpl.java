@@ -7,7 +7,7 @@
 |           deleteElectionById, associateVoter, associateCandidate, 
 |           withdrawCandidate
 |
-|  Version: Sprint 1
+|  Version: Sprint 2
 |  
 *-------------------------------------------------------------------*/
 
@@ -108,7 +108,7 @@ public class ElectionServiceImpl implements ElectionService{
 	}
 	
 	/**
-	 * validateVoter() - 
+	 * validateVoter() - Confirm voter is registered for election
 	 * @param electionID
 	 * @param id
 	 */
@@ -135,7 +135,7 @@ public class ElectionServiceImpl implements ElectionService{
 	}
 	
 	/**
-	 * validateCandidate() - 
+	 * validateCandidate() - Confirm candidate if registered for an election
 	 * @param electionID
 	 * @param id
 	 */
@@ -144,7 +144,7 @@ public class ElectionServiceImpl implements ElectionService{
 	}
 	
 	/**
-	 * viewCandidates() -
+	 * viewCandidates() - View candidates for an election
 	 * @param electionID
 	*/
 	public List<HashMap<String, String>> viewCandidates(int electionID) {
@@ -155,9 +155,9 @@ public class ElectionServiceImpl implements ElectionService{
 	}
 	
 	/**
-	 * getPolicy() - 
+	 * getPolicy() - View poilcy of an election
 	 * @param electionID
-	 * @return
+	 * @return Policy
 	 */
 	public Policy getPolicy(int electionID) {
 		Policy policy = connDao.getPolicy(electionID);
@@ -181,9 +181,9 @@ public class ElectionServiceImpl implements ElectionService{
 	}
 	
 	/**
-	 * getVotesByVoter() - 
+	 * getVotesByVoter() - Return number of votes a user has submitted for an election
 	 * @param electionID
-	 * @return
+	 * @return int number of votes
 	 */
 	public int getVotesByVoter(int electionID, String userID) {
 		int numVotes = connDao.getVotesByVoter(electionID, userID);

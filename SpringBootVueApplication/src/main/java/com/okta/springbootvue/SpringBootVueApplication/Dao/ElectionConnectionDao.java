@@ -7,7 +7,7 @@
 |           deleteElection, insertVoteAuth, insertElectionCandidate,
 |           removeElectionCandidate, getCandidatesByElection
 |
-|  Version: Sprint 1
+|  Version: Sprint 2
 |  
 *-------------------------------------------------------------------*/
 
@@ -249,9 +249,7 @@ public class ElectionConnectionDao {
 	}
 	
 	/**
-	 * removeVoteAuth() - 
-	 * table.
-	 * @param conn
+	 * removeVoteAuth() - Remove user from election
 	 * @param electionID
 	 * @param id
 	 */
@@ -273,9 +271,10 @@ public class ElectionConnectionDao {
 	}
 	
 	/**
-	 * getVoteAuth() - 
-	 * @param 
-	 * @return 
+	 * getVoteAuth() - Confirm voter is authorized to vote in election
+	 * @param electionID
+	 * @param userID
+	 * @return String
 	 */
 	public String getVoteAuth(int electionID, String userID){
 		Election election = new Election();
@@ -348,9 +347,10 @@ public class ElectionConnectionDao {
 	}
 	
 	/**
-	 * getElectionCandidate() - 
-	 * @param 
-	 * @return 
+	 * getElectionCandidate() - Determine if a candidate is registered for an election
+	 * @param electionID
+	 * @param userID
+	 * @return String
 	 */
 	public String getElectionCandidate(int electionID, String userID){
 		Election election = new Election();
@@ -376,7 +376,7 @@ public class ElectionConnectionDao {
 	
 	/**
 	 * getCandidatesByElection() - Performs select MySQL statement to retrieve single candidate from candidate table.
-	 * @param conn
+	 * @param electionID
 	 * @return Candidate
 	 */
 	public List<HashMap<String, String>> getCandidatesByElection(int electionID){
@@ -469,7 +469,7 @@ public class ElectionConnectionDao {
 	}
 	
 	/**
-	 * updatePolicy() - 
+	 * updatePolicy() - Update existing policy
 	 * @param 
 	 * @param 
 	 * @param 
@@ -498,7 +498,7 @@ public class ElectionConnectionDao {
 	}
 	
 	/**
-	 * getVotesByVoter() - 
+	 * getVotesByVoter() - Determine number of votes cast by user against election
 	 * @param 
 	 * @return 
 	 */

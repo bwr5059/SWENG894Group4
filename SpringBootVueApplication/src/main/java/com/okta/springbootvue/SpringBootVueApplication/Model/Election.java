@@ -3,7 +3,7 @@
 |
 |  Purpose: Set up attributes for Election Objects 
 |
-|  Version: Sprint 1
+|  Version: Sprint 2
 |  
 *-------------------------------------------------------------------*/
 

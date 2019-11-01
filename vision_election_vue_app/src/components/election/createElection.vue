@@ -1,5 +1,11 @@
 <template>
-    <b-container>
+  <div>
+    <div>
+        <div class="d-flex justify-content-center mb-3">
+          <b-spinner v-if="!show" label="Loading..."></b-spinner>
+        </div>
+      </div>
+    <b-container v-if="show">
     <b-row class ='d-flex justify-content-center'>
     Create an election
     </b-row>
@@ -9,9 +15,9 @@
         <b-form-input
           id="input-1"
           
-          required
-          v-model="this.electionObj.data.electionId"
           readonly
+          v-model="electionId"
+          
         ></b-form-input>
       </b-form-group>
       
@@ -21,7 +27,7 @@
           
           required
           placeholder="Enter title"
-          v-model='electionTitle'
+          v-model='form.electionTitle'
         ></b-form-input>
       </b-form-group>
     
@@ -31,21 +37,55 @@
           
           required
           placeholder="Enter Description"
-          v-model='electionDescription'
+          v-model='form.electionDescription'
         ></b-form-input>
       </b-form-group>
-    
+
+        
+      <b-form-group id="input-group-2" label="Election Key:" label-for="input-2">
+        <b-form-input
+          id="input-2"
+          
+          required
+          placeholder="Enter Election key"
+          v-model='form.electionKey'
+        ></b-form-input>
+      </b-form-group>
+
+      <b-row>
+          <b-col>
+          <b-form-group id="input-group-5" label="Start Date:" label-for="input-5">
+            <b-form-input
+              id="input-4"
+              type="date"
+              required
+              v-model='form.electionStartDate'
+              
+            ></b-form-input>
+          </b-form-group>
+          </b-col>
+          <b-col>
+          <b-form-group id="input-group-6" label="Close Date:" label-for="input-6">
+            <b-form-input
+              id="input-4"
+              type="date"
+              required
+              v-model='form.electionEndDate'
+            ></b-form-input>
+          </b-form-group>
+          </b-col>
+        </b-row>
   
       <b-button v-on:click="updateElection" class="mr-1">Create</b-button>
       <b-button v-on:click="deleteElection">Cancel</b-button>
 
     </b-form>
     </b-container>
+  </div>
 </template>
 
 
 <script>
-
 import api from '@/apis/electionApi'
 export default {
   name: 'createElection',
@@ -57,49 +97,52 @@ export default {
    data: () => {  
       return {
     electionObj: null,
+    electionId: '',
+    form: {
     electionTitle: '',
     electionDescription: '',
+    electionKey:'',
+    electionStartDate: '',
+    electionEndDate: '',
+    },
     error: '',
-    authorized: false
+    authorized: false,
+    show: false
       }
   },
-
   mounted: function(){
       this.createElection();
-
   },
-
   created(){
      
   },
-
   methods: {
       createElection: function(){
       
   
-    api.createNew(this.electionTitle, this.electionDescription, ).then( (response) => {  
-      this.$log.debug("New item created:", response);  
+    api.createNew().then( (response) => {  
+      this.$log.debug("New election created:", response);  
       this.electionObj = response
+      this.electionId = this.electionObj.data.electionID
+      this.show=true
     }).catch((error) => {  
       this.$log.debug(error);  
       this.error = "Failed to add todo"  
   }); 
   
       },
-
       updateElection: function(){
-        api.updateElection(this.electionTitle, this.electionDescription, this.electionObj.data.electionId).then( (response) => {  
-      this.$log.debug("New item created:", response);  
+        api.updateElection(this.form.electionTitle, this.form.electionDescription, this.form.electionStartDate, this.form.electionEndDate, this.electionId,this.form.electionKey).then( (response) => {  
+      this.$log.debug("Election updated:", response);  
       this.electionObj = response
     }).catch((error) => {  
       this.$log.debug(error);  
-      this.error = "Failed to add todo"  
+      this.error = "Failed update election"  
       });
       this.$router.push({ path: '/app/user/home' }) 
       },
-
       deleteElection: function(){
-        api.removeElection(this.electionObj.data.electionId).then((response)=> {
+        api.removeElection(this.electionObj.data.electionID).then((response)=> {
           this.$log.debug("Election deleted:", response);
           
         })

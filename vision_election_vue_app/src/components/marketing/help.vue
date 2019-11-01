@@ -1,19 +1,26 @@
 <template>
     <div>
+    
     <b-container>
         <b-card title="Vision Election Help - Contents" sub-title="Select a category to view">
-<b-list-group>
-  <b-list-group-item>
-    <router-link to="/help/applicationHelp" class="navbar-text" id='appHelp'> Application Help </router-link>
-  </b-list-group-item>
-  <b-list-group-item href="/help/registration">Registration</b-list-group-item>
-  <b-list-group-item href="/help/Elections">Elections</b-list-group-item>
-  <b-list-group-item href="/help/candidates">Candidates</b-list-group-item>
-  <b-list-group-item href="/help/voters">Voters</b-list-group-item>
-</b-list-group>
+<div>
+ 
+  <b-nav tabs>
+    <b-nav-item ><router-link to="/help/account">Account</router-link></b-nav-item>
+    <b-nav-item ><router-link to="/help/election">Election</router-link></b-nav-item>
+    <b-nav-item ><router-link to="/help/electionSettings">Election Settings</router-link></b-nav-item>
+    <b-nav-item ><router-link to="/help/registration">Registration</router-link></b-nav-item>
+    <b-nav-item ><router-link to="/help/voters" >Voters</router-link></b-nav-item>
+    <b-nav-item ><router-link to="/help/candidates">Candidates</router-link></b-nav-item>
+    <b-nav-item ><router-link to="/help/ballot">Ballot</router-link></b-nav-item>
+  </b-nav> 
+    
+</div>
         </b-card>
     </b-container>
+      <router-view></router-view>
     </div>
+    
 </template>
 
 

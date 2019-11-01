@@ -949,7 +949,7 @@ if (r == true) {
     changeVote: function(){
       this.showChangeVote= false,
       this.show=false
-      api_user.castVote(this.form.electionId, this.userObj.id, this.selecteditem[0].canID, "", "").then((response)=>{
+      api_user.changeVote(this.form.electionId, this.userObj.id, this.selecteditem[0].canID, "", "").then((response)=>{
         this.$log.debug("vote changed: ", response)
         alert("Your vote has been changed!")
         this.getElection(this.form.electionId)

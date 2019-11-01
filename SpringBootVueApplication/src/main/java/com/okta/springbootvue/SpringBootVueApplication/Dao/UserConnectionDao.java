@@ -3,7 +3,7 @@
 |
 |  Purpose: User Database Queries
 |
-|  Version: Sprint 1
+|  Version: Sprint 2
 |  
 *-------------------------------------------------------------------*/
 
@@ -259,7 +259,7 @@ public class UserConnectionDao {
 	}
 	
 	/**
-	 * insertVote() - 
+	 * insertVote() - cast new vote
 	 * @param 
 	 * @return 
 	*/
@@ -296,7 +296,7 @@ public class UserConnectionDao {
 	}
 	
 	/**
-	 * updateVote() - 
+	 * updateVote() - change existing vote
 	 * @param 
 	 * @param 
 	 * @param 

@@ -171,10 +171,10 @@ public class ElectionController {
 	}
 	
 	/**
-	 * removeVoter() - 
-	 * @param 
-	 * @param 
-	 * @return
+	 * removeVoter() - withdraw voter from registered election
+	 * @param electionID
+	 * @param userID
+	 * @return ResponseEntity <Election>
 	 */
 	@DeleteMapping("/election/withdrawVoter/{electionID}/{id}")
 	public ResponseEntity<Election> removeVoter(@PathVariable("electionID") int electionID, @PathVariable("id") String id){
@@ -190,9 +190,10 @@ public class ElectionController {
 	}
 	
 	/**
-	 * validateVoter () - 
-	 * @param 
-	 * @return =
+	 * validateVoter () - Confirm voter is registed for election
+	 * @param electionID
+	 * @param userID
+	 * @return String
 	**/
 	@GetMapping("/election/validateVoter/{electionID}/{id}")
 	public String validateVoter(@PathVariable("electionID") int electionID, @PathVariable("id") String id) {
@@ -207,11 +208,10 @@ public class ElectionController {
 	}
   
 	/**
-	 * getElectionType() - Takes an electionID and userID as parameters. If both are found in database, uses associateCandidate
-	 * method of the electionService class to add userID and electionID to candidate database table.
+	 * associateCandidate() - register candidate for an election 
 	 * @param electionID
 	 * @param id
-	 * @return
+	 * @return ResponseEntity<Election>
 	 */
 	@PostMapping("/election/associateCandidate/{electionID}/{id}")
 	public ResponseEntity<Election> associateCandidate(@PathVariable("electionID") int electionID, @PathVariable("id") String id){
@@ -247,9 +247,10 @@ public class ElectionController {
 	}
 	
 	/**
-	 * validateCandidate() - 
-	 * @param 
-	 * @return =
+	 * validateCandidate() - Confirm candidate is registered for an election
+	 * @param electionID
+	 * @param userID
+	 * @return String
 	**/
 	@GetMapping("/election/validateCandidate/{electionID}/{id}")
 	public String validateCandidate(@PathVariable("electionID") int electionID, @PathVariable("id") String id) {
@@ -282,9 +283,9 @@ public class ElectionController {
 	}
 	
 	/**
-	 * getPolicy () - 
-	 * @param 
-	 * @return 
+	 * getPolicy () - View policy of an election
+	 * @param electionID
+	 * @return ResponseEntity<Policy>
 	**/
 	@GetMapping("/election/getPolicy/{electionID}")
 	public ResponseEntity<Policy> getPolicy(@PathVariable("electionID") int electionID) {
@@ -297,10 +298,9 @@ public class ElectionController {
 	}
 	
 	/**
-	 * createPolicy() - 
-	 * @param 
-	 * @param 
-	 * @return
+	 * createPolicy() - Add a new policy for an election
+	 * @param Policy
+	 * @return ResponseEntity<Policy>
 	 */
 	@PostMapping("/election/createPolicy")
 	public ResponseEntity<Policy> createPolicy(@RequestBody Policy policy){
@@ -315,10 +315,9 @@ public class ElectionController {
 	}
 	
 	/**
-	 * modifyPolicy() - 
-	 * @param 
-	 * @param 
-	 * @return
+	 * modifyPolicy() - Modify an existing policy of an election
+	 * @param Policy
+	 * @return ResponseEntity<Policy>
 	 */
 	@PutMapping("/election/modifyPolicy")
 	public ResponseEntity<Policy> modifyPolicy(@RequestBody Policy policy){
@@ -333,9 +332,10 @@ public class ElectionController {
 	}
 	
 	/**
-	 * getVotesByVoter () - 
-	 * @param 
-	 * @return 
+	 * getVotesByVoter () - View Number of votes by user for an election
+	 * @param electionID
+	 * @param userID
+	 * @return int number of votes
 	**/
 	@GetMapping("/election/getVotesByVoter/{electionID}/{userID}")
 	public int getVotesByVoter(@PathVariable("electionID") int electionID, @PathVariable("userID") String userID) {

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 // @RunWith attaches a runner with the test class to initialize the test data
@@ -29,6 +29,9 @@ public class CandidateServiceImplTest {
 
     @Mock
     src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.CandidateConnectionDao connDao;
+
+    @Mock
+    src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.QuestionConnectionDao questionConnectionDao;
 
     @Mock
     src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.QuestionService questionService;
@@ -114,5 +117,9 @@ public class CandidateServiceImplTest {
 
     @Test
     public void answerQuestion() {
+        candidateService.answerQuestion(question,1);
+
+        verify(questionConnectionDao,times(1)).insertAnswer(question,1);
+
     }
 }

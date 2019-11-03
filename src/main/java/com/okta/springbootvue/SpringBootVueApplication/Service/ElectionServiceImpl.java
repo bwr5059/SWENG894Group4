@@ -13,28 +13,22 @@
 
 package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service;
 
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.HashMap;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ElectionConnectionDao;
-import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
-import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Policy;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * ElectionServiceImpl Class - Implements ElectionService interface. Connects ElectionService class methods to database by
  * calling the connDao RetrieveConnection method and associated methods to execute statements.
  */
 @Service("electionService")
-public class ElectionServiceImpl implements ElectionService{
+public class ElectionServiceImpl implements src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.ElectionService {
 	
 	//Complete List of Existing Elections
 	private static List<Election> elections;

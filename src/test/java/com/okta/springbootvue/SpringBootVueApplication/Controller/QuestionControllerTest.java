@@ -6,11 +6,13 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Question;
 
+import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +25,7 @@ import static org.mockito.Mockito.when;
 public class QuestionControllerTest {
 
     @InjectMocks
-    src.main.java.com.okta.springbootvue.SpringBootVueApplication.Controller.QuestionController QuestionController;
+    src.main.java.com.okta.springbootvue.SpringBootVueApplication.Controller.QuestionController questionController;
 
     @Mock
     src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.CandidateService candidateService;
@@ -66,21 +68,20 @@ public class QuestionControllerTest {
     @Test
     public void listQuestionsByCandidate() {
 
+        //Add a candidate
         candidateService.addCandidate(candidate);
-
         when(candidateService.findById("test")).thenReturn(candidate);
 
+        //Add a question
         userService.addQuestion(question);
-
         when(questionService.findById(1234)).thenReturn(question);
 
-        List<Question> questionList = new ArrayList<>();
+        //Call the listQuestionByCandidate method to get a response
+        ResponseEntity<List<Question>> responseQuestionListAdd = questionController.listQuestionsByCandidate("test");
 
-        questionList.add(question);
+        //Get body of response
+        List<Question> questionListFromResponse = responseQuestionListAdd.getBody();
 
-
-
-        when(questionService.viewQuestionsByCandidate("test")).thenReturn(questionList);
-
+        when(questionService.viewQuestionsByCandidate("test")).thenReturn(questionListFromResponse);
     }
 }

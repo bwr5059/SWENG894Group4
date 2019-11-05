@@ -541,8 +541,8 @@ public class ElectionConnectionDao {
 		String sql = "SELECT * FROM ballot WHERE electionID=? AND canID<>? AND canID<>?"; 
 		PreparedStatement stmt=conn.prepareStatement(sql); 
 		stmt.setInt(1,electionID);
-		stmt.setInt(2,'Write');
-		stmt.setInt(3,'Abstain');
+		stmt.setInt(2,"Write");
+		stmt.setInt(3,"Abstain");
 		 
 		ResultSet rs=stmt.executeQuery();
 		while(rs.next()) {
@@ -550,10 +550,10 @@ public class ElectionConnectionDao {
 		    name = rs.getString(5) + " " + rs.getString(6);
 		    //If Candidate exists increment vote count
 		    //Otherwise add new entry
-		    if(map.keySet().contains(name)){
-		        map.put(name, map.get(name) + 1); 
+		    if(map.keySet().contains(can)){
+		        map.put(can, map.get(can) + 1); 
 		    }else{
-		        map.put(name, 1);
+		        map.put(can, 1);
 		    }
 		}	
 		connectionDao.ReleaseConnection(conn);
@@ -579,7 +579,7 @@ public class ElectionConnectionDao {
 		String sql = "SELECT * FROM ballot WHERE electionID=? AND canID=?"; 
 		PreparedStatement stmt=conn.prepareStatement(sql); 
 		stmt.setInt(1,electionID);
-		stmt.setString(2,'Write');
+		stmt.setString(2,"Write");
 		 
 		ResultSet rs=stmt.executeQuery();
 		while(rs.next()) {
@@ -612,7 +612,7 @@ public class ElectionConnectionDao {
 		String sql = "SELECT * FROM ballot WHERE electionID=? AND canID=?"; 
 		PreparedStatement stmt=conn.prepareStatement(sql); 
 		stmt.setInt(1,electionID);
-		stmt.setString(2,'Abstain');
+		stmt.setString(2,"Abstain");
 		 
 		ResultSet rs=stmt.executeQuery();
 		while(rs.next()) {

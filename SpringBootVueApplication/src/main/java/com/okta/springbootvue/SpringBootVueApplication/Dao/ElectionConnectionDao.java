@@ -523,5 +523,45 @@ public class ElectionConnectionDao {
 			}
 		return result;
 	}
+	
+	/**
+	 * tallyVotes() - 
+	 * @param 
+	 * @return 
+	 */
+	public Map<String, Integer> tallyVotes(int electionID){
+	    //Display Votes in a Hash Map
+	    Map<String,Integer> map = 
+                new HashMap<String, Integer>(); 
+	    String can = "";
+	    String name = "";
+		
+	    try {
+		Connection conn = connectionDao.RetrieveConnection();
+		String sql = "SELECT * FROM ballot WHERE electionID=?"; 
+		PreparedStatement stmt=conn.prepareStatement(sql); 
+		stmt.setInt(1,electionID);
+		 
+		ResultSet rs=stmt.executeQuery();
+		while(rs.next()) {
+			can = rs.getString(4);
+			//Check Candidate ID Value
+			if(!can.equals("Abstain")){
+			    name = rs.getString(5) + " " + rs.getString(6);
+			    //If Candidate exists increment vote count
+			    //Otherwise add new entry
+			    if(map.keySet().contains(name)){
+		    	        map.put(name, map.get(name) + 1); 
+			    }else{
+		                map.put(name, 1);
+			    }
+			}
+		}	
+		connectionDao.ReleaseConnection(conn);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	    return map;	
+	}
 }
 

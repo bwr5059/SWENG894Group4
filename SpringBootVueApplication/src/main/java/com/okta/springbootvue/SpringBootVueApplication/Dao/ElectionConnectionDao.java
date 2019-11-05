@@ -598,5 +598,31 @@ public class ElectionConnectionDao {
 		}
 	    return map;	
 	}
+	
+	/**
+	 * tallyAbstains() - Resturn list of users who abstained from given election
+	 * @param 
+	 * @return 
+	 */
+	public ArrayList<User> tallyAbstains(int electionID){
+	    ArrayList<User> users = new ArrayList<User>();
+		
+	    try {
+		Connection conn = connectionDao.RetrieveConnection();
+		String sql = "SELECT * FROM ballot WHERE electionID=? AND canID=?"; 
+		PreparedStatement stmt=conn.prepareStatement(sql); 
+		stmt.setInt(1,electionID);
+		stmt.setString(2,'Abstain');
+		 
+		ResultSet rs=stmt.executeQuery();
+		while(rs.next()) {
+			users.add(rs.getString(2));
+		}	
+		connectionDao.ReleaseConnection(conn);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	    return users;	
+	}
 }
 

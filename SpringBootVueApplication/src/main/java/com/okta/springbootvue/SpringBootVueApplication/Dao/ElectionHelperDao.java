@@ -48,11 +48,10 @@ public class ElectionHelperDao {
 		
 	    try {
 		Connection conn = connectionDao.RetrieveConnection();
-		String sql = "SELECT * FROM ballot WHERE electionID=? AND canID<>? AND canID<>?"; 
+		String sql = "SELECT * FROM ballot WHERE electionID=? AND canID<>?"; 
 		PreparedStatement stmt=conn.prepareStatement(sql); 
 		stmt.setInt(1,electionID);
-		stmt.setInt(2,'Write');
-		stmt.setInt(3,'Abstain');
+		stmt.setInt(2,'Abstain');
 		 
 		ResultSet rs=stmt.executeQuery();
 		while(rs.next()) {
@@ -74,47 +73,11 @@ public class ElectionHelperDao {
 	}
 	
 	/**
-	 * tallyWriteVotes() - 
+	 * tallyType() - Resturn list of users who abstained or wrote in for given election
 	 * @param 
 	 * @return 
 	 */
-	public Map<String, Integer> tallyWriteVotes(int electionID){
-	    //Display Votes in a Hash Map
-	    Map<String,Integer> map = 
-                new HashMap<String, Integer>(); 
-	    String name = "";
-		
-	    try {
-		Connection conn = connectionDao.RetrieveConnection();
-		String sql = "SELECT * FROM ballot WHERE electionID=? AND canID=?"; 
-		PreparedStatement stmt=conn.prepareStatement(sql); 
-		stmt.setInt(1,electionID);
-		stmt.setString(2,'Write');
-		 
-		ResultSet rs=stmt.executeQuery();
-		while(rs.next()) {
-			name = rs.getString(5) + " " + rs.getString(6);
-			//If Candidate exists increment vote count
-			//Otherwise add new entry
-			if(map.keySet().contains(name)){
-		    	    map.put(name, map.get(name) + 1); 
-			}else{
-		            map.put(name, 1);
-			}
-		}	
-		connectionDao.ReleaseConnection(conn);
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-	    return map;	
-	}
-	
-	/**
-	 * tallyAbstains() - Resturn list of users who abstained from given election
-	 * @param 
-	 * @return 
-	 */
-	public ArrayList<User> tallyAbstains(int electionID){
+	public ArrayList<User> tallyAbstains(int electionID, String type){
 	    ArrayList<User> users = new ArrayList<User>();
 		
 	    try {
@@ -122,7 +85,7 @@ public class ElectionHelperDao {
 		String sql = "SELECT * FROM ballot WHERE electionID=? AND canID=?"; 
 		PreparedStatement stmt=conn.prepareStatement(sql); 
 		stmt.setInt(1,electionID);
-		stmt.setString(2,'Abstain');
+		stmt.setString(2,type);
 		 
 		ResultSet rs=stmt.executeQuery();
 		while(rs.next()) {

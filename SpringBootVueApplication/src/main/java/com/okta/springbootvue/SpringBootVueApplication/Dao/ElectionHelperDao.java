@@ -1,13 +1,11 @@
 /*---------------------------------------------------------------------
-|  Class ElectionConnectionDao
+|  Class ElectionHelperDao
 |
 |  Purpose: Election Database Queries
 |
-|  Methods: getElectionList, getElectionByID, insertElection, updateElection,
-|           deleteElection, insertVoteAuth, insertElectionCandidate,
-|           removeElectionCandidate, getCandidatesByElection
+|  Methods: 
 |
-|  Version: Sprint 2
+|  Version: Sprint 3
 |  
 *-------------------------------------------------------------------*/
 
@@ -24,6 +22,7 @@ import java.util.HashMap;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.UserConnection;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Policy;
 
@@ -110,12 +109,13 @@ public class ElectionHelperDao {
 	}
 	
 	/**
-	 * tallyType() - Resturn list of user IDs who abstained or wrote in for given election
+	 * tallyType() - Resturn list of users who abstained or wrote in for given election
+	 * Can also returns users who voted for given candidate
 	 * @param 
 	 * @return 
 	 */
-	public ArrayList<String> tallyAbstains(int electionID, String type){
-	    ArrayList<String> users = new ArrayList<String>();
+	public ArrayList<User> tallyType(int electionID, String type){
+	    ArrayList<User> users = new ArrayList<User>();
 		
 	    try {
 		Connection conn = connectionDao.RetrieveConnection();
@@ -125,13 +125,95 @@ public class ElectionHelperDao {
 		stmt.setString(2,type);
 		 
 		ResultSet rs=stmt.executeQuery();
+		UserConnection userCon = new UserConnection();
+		User user = new user();
+		//Loop through Users Returned
 		while(rs.next()) {
-			users.add(rs.getString(2));
+			//Gather user data by userID
+			user = userCon.getUserById(rs.getString(2));
+			//Add user object to list to be returned
+			users.add(user);
 		}	
 		connectionDao.ReleaseConnection(conn);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 	    return users;	
+	}
+	
+	/**
+	 * getDemographics() - Returns HashMap of User Demographics
+	 * @param 
+	 * @return 
+	 */
+	public Map<String, Integer> getDemographics(ArrayList<User> users){
+	    Map<String, Integer> demo = 
+                new HashMap<String, Integer>(); 
+	    int total = users.size();
+	
+	    //Demographic Counts
+	    //Gender
+            int male = 0, female = 0, notDisclosed = 0;
+	    //Race
+	    int nativeA = 0, asian = 0, black = 0, nativeH = 0, white = 0;
+	    //Ethnicity
+	    int hispanic = 0, notHispanic = 0;
+	    User curUser = new user();
+            //Loop through ArrayList of Users
+	    for(Integer i : users){
+		  curUser = users.get(i);
+		  //Gender
+		  switch(curUser.gender){
+			  case "Male":
+				  male++;
+			  case "Female":
+				  female++;
+			  default:
+				  notDisclosed++;
+		  }
+	          
+		  //Race
+		    switch(curUser.race){
+			    case "American Indian or Alaska Native":
+				    nativeA++;
+			    case "Asian":
+				    asian++;
+			    case "Black or African American"
+				    black++;
+			    case "Native Hawaiin or Other Pacific Islander"
+				    nativeH++;
+			    case "White":
+				    white++
+			    default:
+				    System.out.println("No Race");
+		    }
+		  //Ethnicity
+		    switch(curUser.ethnicity){
+			    case "Hispanic or Latino or Spanish Origin":
+				    hispanic++;
+			    case "Not Hispanic or Latino or Spanish Origin":
+				    notHispanic++;
+			    default:
+				    System.out.println("No Ethnicity");
+		    }
+	    }
+	    //Calculate Results
+	    if(total>0){
+		//Gender
+	        demo.put("Male", (male/total));
+	        demo.put("Female", (female/total));
+	        demo.put("NA", (notDisclosed/total));
+		//Race
+		demo.put("NativeAmerican", (nativeA/total));
+	        demo.put("Asian", (asian/total));
+	        demo.put("Black", (black/total));
+		demo.put("NativeHawaiian", (nativeH/total));
+	        demo.put("White", (white/total));
+		//Ethnicity
+		demo.put("Hispanic", (hispanic/total));
+	        demo.put("NotHispanic", (notHispanic/total));
+	    }	
+		
+	    return demo;	
 	}
 }

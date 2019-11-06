@@ -73,12 +73,49 @@ public class ElectionHelperDao {
 	}
 	
 	/**
-	 * tallyType() - Resturn list of users who abstained or wrote in for given election
+	 * calculateLead() - 
 	 * @param 
 	 * @return 
 	 */
-	public ArrayList<User> tallyAbstains(int electionID, String type){
-	    ArrayList<User> users = new ArrayList<User>();
+	public ArrayList<String> calculateLead(int electionID){
+	    //Return Array in case of Tie
+	    ArrayList<String> winners = new ArrayList<String>();
+	    //Returned List of Candidate Counts
+	    Map<String,Integer> candidates = 
+                new HashMap<String, Integer>(); 
+	    candidates = tallyVotes(electionID);
+		
+	    //Loop through HashMap to Calculate Lead
+	    int leadNum = 0;
+	    String winner = "";
+	    for(HashMap.Entry<String,Integer> entry : winners.entrySet())
+	    {
+                String key = entry.getKey();
+		Integer val = entry.getValue();
+		//If new largest number of votes found
+		//Clear current list of winners and start new list
+		if(val > leadNum)
+		{
+		    winners.clear();
+		    leadNum = val;
+		    winner = key;
+		    winners.add(winner);
+		}else if(val == leadNum){
+		    //If number of total votes match current lead
+		    //Add to winner ArrayList
+		    winners.add(winner);
+		}
+	    }
+	    return winners;
+	}
+	
+	/**
+	 * tallyType() - Resturn list of user IDs who abstained or wrote in for given election
+	 * @param 
+	 * @return 
+	 */
+	public ArrayList<String> tallyAbstains(int electionID, String type){
+	    ArrayList<String> users = new ArrayList<String>();
 		
 	    try {
 		Connection conn = connectionDao.RetrieveConnection();

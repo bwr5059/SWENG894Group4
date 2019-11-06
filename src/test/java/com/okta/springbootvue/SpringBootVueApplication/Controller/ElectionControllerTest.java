@@ -171,6 +171,7 @@ public class ElectionControllerTest {
         election.setElectionID(2);
         election.setTitle("test2");
         election.setClosed(1);
+        election.setClose_date("date");
 
         ResponseEntity<Election> modifyElectionResponse = electionController.modifyElection(1,election);
 
@@ -225,21 +226,20 @@ public class ElectionControllerTest {
         //assertEquals("Found",test);
     }
 
-    @Ignore
     @Test
     public void removeVoter() {
 
-        electionService.addElection(election);
+        electionController.newElection(election);
 
         when(electionService.findElectionById(1)).thenReturn(election);
 
-        userService.addUser(user,"Voter");
+        userController.newUser(user,"voter");
 
         when(userService.findById("test")).thenReturn(user);
 
-        electionService.withdrawVoter(1,"test");
+        electionController.removeVoter(1,"test");
 
-        verify(electionService,times(1)).withdrawVoter(1,"test");
+        when(electionController.validateVoter(1,"test")).thenReturn("Missing");
 
 
     }
@@ -248,14 +248,15 @@ public class ElectionControllerTest {
     @Test
     public void validateVoter() {
 
-        electionService.addElection(election);
+        electionController.newElection(election);
 
         when(electionService.findElectionById(1)).thenReturn(election);
 
-        userService.addUser(user,"Voter");
+        userController.newUser(user,"voter");
 
         when(userService.findById("test")).thenReturn(user);
 
+        electionController.associateVoter(1,"test");
 
         //Validate that voter is associated with an election
         when(electionService.validateVoter(1,"test")).thenReturn("Found");
@@ -264,19 +265,20 @@ public class ElectionControllerTest {
         when(electionService.validateVoter(1,"wrongID")).thenReturn("Missing");
     }
 
-    @Ignore
     @Test
     public void associateCandidate() {
 
-        electionService.addElection(election);
+        electionController.newElection(election);
 
         when(electionService.findElectionById(1)).thenReturn(election);
 
         userService.addUser(user,"Voter");
 
+        userController.newUser(user,"voter");
+
         when(userService.findById("test")).thenReturn(user);
 
-        electionService.associateCandidate(1,"test");
+        electionController.associateCandidate(1,"test");
 
         verify(electionService,times(1)).associateCandidate(1,"test");
 

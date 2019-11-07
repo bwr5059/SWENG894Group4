@@ -22,7 +22,7 @@ import java.util.HashMap;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
-import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.UserConnection;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.UserConnectionDao;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Policy;
 
@@ -38,9 +38,9 @@ public class ElectionHelperDao {
 	 * @param 
 	 * @return 
 	 */
-	public Map<String, Integer> tallyVotes(int electionID){
+	public HashMap<String, Integer> tallyVotes(int electionID){
 	    //Display Votes in a Hash Map
-	    Map<String,Integer> map = 
+	    HashMap<String,Integer> map = 
                 new HashMap<String, Integer>(); 
 	    String can = "";
 	    String name = "";
@@ -50,7 +50,7 @@ public class ElectionHelperDao {
 		String sql = "SELECT * FROM ballot WHERE electionID=? AND canID<>?"; 
 		PreparedStatement stmt=conn.prepareStatement(sql); 
 		stmt.setInt(1,electionID);
-		stmt.setInt(2,'Abstain');
+		stmt.setString(2,"Abstain");
 		 
 		ResultSet rs=stmt.executeQuery();
 		while(rs.next()) {
@@ -80,14 +80,14 @@ public class ElectionHelperDao {
 	    //Return Array in case of Tie
 	    ArrayList<String> winners = new ArrayList<String>();
 	    //Returned List of Candidate Counts
-	    Map<String,Integer> candidates = 
+	    HashMap<String,Integer> candidates = 
                 new HashMap<String, Integer>(); 
 	    candidates = tallyVotes(electionID);
 		
 	    //Loop through HashMap to Calculate Lead
 	    int leadNum = 0;
 	    String winner = "";
-	    for(HashMap.Entry<String,Integer> entry : winners.entrySet())
+	    for(HashMap.Entry<String,Integer> entry : candidates.entrySet())
 	    {
                 String key = entry.getKey();
 		Integer val = entry.getValue();
@@ -125,8 +125,8 @@ public class ElectionHelperDao {
 		stmt.setString(2,type);
 		 
 		ResultSet rs=stmt.executeQuery();
-		UserConnection userCon = new UserConnection();
-		User user = new user();
+		UserConnectionDao userCon = new UserConnectionDao();
+		User user = new User();
 		//Loop through Users Returned
 		while(rs.next()) {
 			//Gather user data by userID
@@ -146,8 +146,8 @@ public class ElectionHelperDao {
 	 * @param 
 	 * @return 
 	 */
-	public Map<String, Integer> getDemographics(ArrayList<User> users){
-	    Map<String, Integer> demo = 
+	public HashMap<String, Integer> getDemographics(ArrayList<User> users){
+	    HashMap<String, Integer> demo = 
                 new HashMap<String, Integer>(); 
 	    int total = users.size();
 	
@@ -158,12 +158,14 @@ public class ElectionHelperDao {
 	    int nativeA = 0, asian = 0, black = 0, nativeH = 0, white = 0;
 	    //Ethnicity
 	    int hispanic = 0, notHispanic = 0;
-	    User curUser = new user();
+	    User curUser = new User();
+	    int i = 0;
             //Loop through ArrayList of Users
-	    for(Integer i : users){
+	    for(User user : users){
 		  curUser = users.get(i);
+		  i++;
 		  //Gender
-		  switch(curUser.gender){
+		  switch(curUser.getGender()){
 			  case "Male":
 				  male++;
 			  case "Female":
@@ -173,22 +175,22 @@ public class ElectionHelperDao {
 		  }
 	          
 		  //Race
-		    switch(curUser.race){
+		    switch(curUser.getRace()){
 			    case "American Indian or Alaska Native":
 				    nativeA++;
 			    case "Asian":
 				    asian++;
-			    case "Black or African American"
+			    case "Black or African American":
 				    black++;
-			    case "Native Hawaiin or Other Pacific Islander"
+			    case "Native Hawaiin or Other Pacific Islander":
 				    nativeH++;
 			    case "White":
-				    white++
+				    white++;
 			    default:
 				    System.out.println("No Race");
 		    }
 		  //Ethnicity
-		    switch(curUser.ethnicity){
+		    switch(curUser.getEthnicity()){
 			    case "Hispanic or Latino or Spanish Origin":
 				    hispanic++;
 			    case "Not Hispanic or Latino or Spanish Origin":

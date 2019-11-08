@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ElectionConnectionDao;
+//import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.String;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
@@ -188,6 +189,17 @@ public class ElectionServiceImpl implements ElectionService{
 	public int getVotesByVoter(int electionID, String userID) {
 		int numVotes = connDao.getVotesByVoter(electionID, userID);
 		return numVotes;
+	}
+	
+	/**
+	 * getLead() - 
+	 * @param electionID
+	 * @return 
+	 */
+	public ArrayList<String> getLead(int electionID) {
+		ArrayList<String> leads = new ArrayList<String>(); 
+		leads = connDao.getLead(electionID);
+		return leads;
 	}
 	
 

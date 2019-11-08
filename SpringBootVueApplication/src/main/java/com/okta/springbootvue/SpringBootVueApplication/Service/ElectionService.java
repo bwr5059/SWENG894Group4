@@ -11,8 +11,11 @@ package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service;
 
 import java.util.List;
 import java.util.HashMap;
+import java.util.ArrayList;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
+//import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ArrayList;
+//import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.String;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Policy;
 
@@ -67,5 +70,8 @@ public interface ElectionService {
 	
 	//Return number of votes cast by user in election
 	int getVotesByVoter(int electionID, String userID);
+	
+	//Return lead candidate in election
+	ArrayList<String> getLead(int electionID);
 		
 }

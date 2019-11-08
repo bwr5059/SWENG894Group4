@@ -39,7 +39,10 @@ import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Elect
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Policy;
+//import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ArrayList;
+import java.util.ArrayList;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ElectionConnectionDao;
+//import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.String;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.ElectionService;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.UserService;
 
@@ -346,6 +349,22 @@ public class ElectionController {
 		}
 		numVotes = electionService.getVotesByVoter(electionID, userID);
 		return numVotes;
+	}
+	
+	/**
+	 * getLead () - 
+	 * @param electionID
+	 * @return 
+	**/
+	@GetMapping("/election/calculateLead/{electionID}")
+	public ArrayList<String> getVotesByVoter(@PathVariable("electionID") int electionID) {
+		ArrayList<String> leads = new ArrayList<String>();
+		Election election = electionService.findElectionById(electionID);
+		if (election == null) {
+			return null;
+		}
+		leads = electionService.getLead(electionID);
+		return leads;
 	}
   
 }

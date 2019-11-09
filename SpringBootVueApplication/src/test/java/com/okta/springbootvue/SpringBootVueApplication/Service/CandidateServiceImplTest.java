@@ -37,10 +37,10 @@ public class CandidateServiceImplTest {
     src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.QuestionService questionService;
 
     //New User Object
-      Candidate candidate = new Candidate();
+    Candidate candidate = new Candidate();
 
     //New Question Object
-     Question question = new Question();
+    Question question = new Question();
 
     //Set Object Variable values before each test case
     @Before

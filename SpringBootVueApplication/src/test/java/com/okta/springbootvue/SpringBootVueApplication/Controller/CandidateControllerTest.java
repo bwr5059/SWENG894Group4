@@ -1,6 +1,7 @@
 package com.okta.springbootvue.SpringBootVueApplication.Controller;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -9,8 +10,10 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Question;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import org.springframework.http.ResponseEntity;
 import static org.junit.Assert.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,12 +39,23 @@ public class CandidateControllerTest {
     @Mock
     src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.CandidateServiceImpl candidateService;
 
+    @Mock
+    src.main.java.com.okta.springbootvue.SpringBootVueApplication.Controller.ElectionController electionController;
+
+    @Mock
+    src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.ElectionServiceImpl electionService;
+
+    @Mock
+    src.main.java.com.okta.springbootvue.SpringBootVueApplication.Controller.UserController userController;
+
 
     Candidate candidate = new Candidate();
 
-    Candidate candidate2 = new Candidate();
-
     Question question = new Question();
+
+    Election election = new Election();
+
+    User user = new User();
 
     @Before
     public void before() {
@@ -66,6 +80,33 @@ public class CandidateControllerTest {
         question.setQuestion("test");
         question.setAnswer("test");
 
+        election.setElectionID(1);
+        election.setTitle("test");
+        election.setClosed(0);
+        election.setClose_date("date");
+        election.setClose_time("time");
+        election.setNum_candidates(5);
+        election.setNum_votes(1);
+        election.setStart_date("start");
+        election.setStart_time("start");
+        election.setDescription("test");
+        election.setElection_key("12345");
+
+        user.setId("test");
+        user.setType("Voter");
+        user.setAge(25);
+        user.setEthnicity("European");
+        user.setGender("F");
+        user.setAddress("160 Temp Drive");
+        user.setCity("Philadelphia");
+        user.setState("PA");
+        user.setZip("12345");
+        user.setFirst_name("Han");
+        user.setLast_name("Solo");
+        user.setProfile_complete(0);
+        user.setUser_name("sw1");
+        user.setRace("White");
+
     }
 
 
@@ -85,46 +126,31 @@ public class CandidateControllerTest {
 
         assertThat(canListResponse.getStatusCodeValue()).isNotEqualTo(201);
 
-        //List<Candidate> canListResponse2 = canListResponse.getBody();
-
-        //assertNotNull(canListResponse2);
-
-
-        //candidateService.addCandidate(candidate);
-
-        //when(candidateService.findById("test")).thenReturn(candidate);
-
-        //List<Candidate> candidateList = new ArrayList<Candidate>();
-        //candidateList.add(candidate);
-
-        //when(candidateService.findAllCandidates()).thenReturn(candidateList);
-
-        //assertEquals(canListResponse2,candidateList);
-
     }
 
+    @Ignore
     @Test
     public void getCandidate() {
+
+        userController.newUser(user,"candidate");
+
+        electionController.newElection(election);
+
         //Response from calling newCandidate method
-        //ResponseEntity<Candidate> newAddResponse = candidateController.newCandidate(candidate);
+        ResponseEntity<Candidate> newAddResponse = candidateController.newCandidate(candidate);
+
+        candidateController.newCandidate(candidate);
 
         //Check to see that method executed successfully
-        //assertThat(newAddResponse.getStatusCodeValue()).isEqualTo(201);
+        assertThat(newAddResponse.getStatusCodeValue()).isEqualTo(201);
 
-        //ResponseEntity<Candidate> newGetResponse = candidateController.getCandidate("test");
+        ResponseEntity<Candidate> getCandidateResponse = candidateController.getCandidate("test");
 
-        //Check to see that method executed successfully
-        //assertThat(newGetResponse.getStatusCodeValue()).isEqualTo(201);
+        Candidate candidateAfterAdd = getCandidateResponse.getBody();
 
-        candidateService.addCandidate(candidate);
+        when(candidateService.findById("test")).thenReturn(candidateAfterAdd);
 
-        when(candidateService.findById("test")).thenReturn(candidate);
 
-        candidate2 = candidateService.findById("test");
-
-        assertEquals("test", candidate2.getUserID());
-        assertEquals("test", candidate2.getFirst_name());
-        assertEquals("test", candidate2.getLast_name());
     }
 
     @Test

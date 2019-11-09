@@ -12,6 +12,10 @@ import org.springframework.web.filter.CorsFilter;
 import java.util.Collections;
 import java.util.stream.Stream;
 
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+
 @SpringBootApplication  
 public class SpringBootVueApplication {  
   
@@ -33,7 +37,7 @@ public class SpringBootVueApplication {
     }  */
     
   //Add test data into the in-memory database - ELECTIONS
-   @Bean  
+   /*@Bean  
     ApplicationRunner init(ElectionRepository repository) {  
         return args -> {  
             Stream.of("ONE", "TWO", "THREE", "FOUR").forEach(title -> {  
@@ -43,7 +47,7 @@ public class SpringBootVueApplication {
             });  
             repository.findAll().forEach(System.out::println);  
         };  
-    } 
+    }*/ 
 
     // Fix the CORS errors
     @Bean

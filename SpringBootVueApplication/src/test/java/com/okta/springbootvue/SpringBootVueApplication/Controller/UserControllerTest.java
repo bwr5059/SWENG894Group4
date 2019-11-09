@@ -122,6 +122,15 @@ public class UserControllerTest {
 
         when(userService.findById("test")).thenReturn(userAfterAdd);
 
+        //Bad getUser request
+        //ResponseEntity<User> badGetUserResponse = userController.getUser("test2");
+
+        //assertEquals(404,badGetUserResponse.getStatusCodeValue());
+
+        //when(userService.findById("test2")).thenReturn(badGetUserResponse.getBody());
+
+
+
     }
 
     @Test

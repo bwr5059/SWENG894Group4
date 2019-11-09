@@ -11,9 +11,20 @@ import createElection from './components/election/createElection.vue'
 import viewElection from './components/election/viewElection.vue'
 import electionDetails from './components/election/electionDetails.vue'
 import help from './components/marketing/help.vue'
+import accountHelp from './components/help/accountHelp.vue'
 import elections from './components/election/elections.vue'
-import applicationHelp from './components/help/applicationHelp.vue'
+import electionHelp from './components/help/electionHelp.vue'
 import addElectionAdmin from './components/election/addElectionAdmin.vue'
+import electionSettingsHelp from './components/help/electionSettingsHelp.vue'
+import registrationHelp from './components/help/registrationHelp.vue'
+import votersHelp from './components/help/votersHelp.vue'
+import candidatesHelp from './components/help/candidatesHelp.vue'
+import ballotHelp from './components/help/ballotHelp.vue'
+import candidates from './components/candidate/candidates.vue'
+import candidateProfile_main from './components/candidate/CandidateProfile_main.vue'
+import candidateProfile_general from './components/candidate/candidateProfile_general.vue'
+import viewCandidate from './components/candidate/viewCandidate.vue'
+import contactPage from './components/contact/contact.vue'
   
 Vue.use(Auth, {  
   issuer: 'https://dev-208412.okta.com/oauth2/default',  
@@ -38,13 +49,48 @@ let router = new Router({
         path: '/login',
         component: login},
     {
-        path: '/help',
-        component: help},
-
-    {
-        path: '/help/applicationHelp',
-        component: applicationHelp
+      path:'/contact',
+      component:contactPage
     },
+    {
+        path: '/help',
+        component: help,
+        children: [{
+          
+            path: '/help/account',
+            component: accountHelp
+        },
+        {
+            path: '/help/election',
+            component: electionHelp
+        },
+        {
+            path: '/help/electionSettings',
+            component: electionSettingsHelp
+        },
+        {
+            path: '/help/registration',
+            component: registrationHelp
+        },
+        {
+            path: '/help/voters',
+            component: votersHelp
+        },
+        {
+            path: '/help/candidates',
+            component: candidatesHelp
+        },
+        {
+            path: '/help/ballot',
+            component: ballotHelp
+        }
+      
+      ],
+
+      },
+
+  
+    
 
     {
         path: '/app/:id',
@@ -71,13 +117,31 @@ let router = new Router({
           component: elections
         },
         {
+          path: 'candidates',
+          component: candidates
+        },
+        {
+          path: 'Candidate/:cID',
+          component: viewCandidate,
+          children: [{
+            path:'details',
+            component: candidateProfile_general
+          }
+         ],
+        },
+        {
           path: 'addAdmin',
           component: addElectionAdmin
         }
       
       ],
         meta: {
-            requiresAuth: true}}, 
+            requiresAuth: true}},
+            {
+              path: '/candidate',
+              component: candidateProfile_main,
+              meta: {
+                requiresAuth: true}},
     {
       path: '/profile',
       component: profile,

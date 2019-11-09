@@ -1,9 +1,9 @@
 /*---------------------------------------------------------------------
 |  Class Question
 |
-|  Purpose: Set up attributes for Question Objects 
+|  Purpose: Set up attributes for Node Objects 
 |
-|  Version: Sprint 2
+|  Version: Sprint 3
 |  
 *-------------------------------------------------------------------*/
 

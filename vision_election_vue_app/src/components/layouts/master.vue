@@ -21,7 +21,8 @@
         <b-navbar-nav class="ml-auto">
         <router-link v-if='authenticated' to="/profile" class="navbar-text mr-1" id='profile-button'> {{userEmail}} </router-link>
         <!-- <b-nav-item v-if='authenticated' href="/profile">{{userEmail}} </b-nav-item> -->
-        <router-link to="/help" class="navbar-text mr-1" id='home-button'> Help </router-link>
+        <router-link to="/contact" class="navbar-text mr-1" id='home-button'> Contact </router-link>
+         <router-link to="/help" class="navbar-text mr-1" id='home-button'> Help </router-link>
         
         <!-- <router-link v-if='authenticated' to="/" v-on:click='logout' class="btn btn-outline-success my-2 my-sm-0 mr-1" tag="button" id='home-button'> Logout </router-link> -->
         <router-link v-show="!authenticated" to="/app/user/home" class="btn btn-info my-2 my-sm-0 mr-1" tag="button" id='home-button'> Login </router-link>
@@ -61,23 +62,29 @@ export default {
       },
     },
   created () {
-    this.isAuthenticated()
+    this.$log.debug("Master created")
+    this.isAuthenticated("created")
     
   },
+  
 
   mounted () {
-    this.getEmail()
+    this.$log.debug("Master mounted")
+    //this.getEmail()
     
   },
   watch: {
     // Everytime the route changes, check for auth status
     '$route': 'isAuthenticated',
-    'authenticated': 'getEmail'
+    //'authenticated': 'getEmail'
   },
   
   methods: {
-    async isAuthenticated () {
+    async isAuthenticated (input) {
+      this.$log.debug("authenticating from: "+input)
       this.authenticated = await this.$auth.isAuthenticated()
+       this.activeUser = await this.$auth.getUser()  
+      // this.$log.debug("Got user in master: "+this.activeUser)
       
     },
     login () {
@@ -90,7 +97,9 @@ export default {
       this.$router.push({ path: '/' })
     },
     async getEmail (){
-      this.activeUser = await this.$auth.getUser()  
+      this.$log.debug("Getting user after authenticated")
+      // this.activeUser = await this.$auth.getUser()  
+      // this.$log.debug("Got user in master: "+this.activeUser)
     }
   }
   

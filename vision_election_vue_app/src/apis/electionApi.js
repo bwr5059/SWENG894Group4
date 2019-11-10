@@ -27,6 +27,12 @@ export default {
     return data? JSON.parse(data) : data;  
   }]  
 }),  
+
+  duplicateElection: (electionTitle, electionDescription, startDate, closeDate, id, electionKey)=> instance.post('/election/addElection/', {title: electionTitle,  
+    start_date: startDate, close_date: closeDate, description: electionDescription, election_key:electionKey, transformResponse: [function (data) {  
+      return data? JSON.parse(data) : data;  
+    }]  
+  }),
   // (R)ead  ("/election/{electionId}"
   getElection: (eID) => instance.get('/election/'+eID, {
     transformResponse: [function (data) {  

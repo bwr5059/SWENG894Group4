@@ -62,7 +62,8 @@ export default {
       }]  
     }), 
 
-    changeVote: (electionID, voterID, candidateID, first_name, last_name, type)=>instance.put('/user/modifyVote', {electionID: electionID, userID: voterID, canID: candidateID, first_name: first_name, last_name: last_name, 
+    changeVote: (electionID, voterID, candidateID, first_name, last_name)=>instance.put('/user/modifyVote', {electionID: electionID, userID: 
+      voterID, canID: candidateID, first_name: first_name, last_name: last_name, 
       transformResponse: [function (data) {  
         return data? JSON.parse(data) : data;  
       }]  

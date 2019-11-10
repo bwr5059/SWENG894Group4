@@ -1,3 +1,17 @@
+/*---------------------------------------------------------------------
+|  Class ElectionServiceImplTest
+|
+|  Purpose: Test the ElectionService implementation.
+|
+|  Methods: findAllElections, findElectionById, addElection, updateElection,
+|           deleteElectionById, associateVoter, withdrawVoter, validateVoter,
+|           associateCandidate, withdrawCandidate, validateCandidate, viewCandidates,
+|           getPolicy, createPolicy, modifyPolicy, getVotesByVoter
+|
+|  Version: Sprint 3
+|
+*-------------------------------------------------------------------*/
+
 package com.okta.springbootvue.SpringBootVueApplication.Service;
 
 import org.junit.Before;
@@ -8,24 +22,23 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
-import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Policy;
-import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
-import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
-import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Ballot;
-
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
 // @RunWith attaches a runner with the test class to initialize the test data
 @RunWith(SpringRunner.class)
-
 @ContextConfiguration(locations = "classpath*:SpringBootVueApplication.class")
 
+/**
+ * ElectionServiceImplTest - Tests methods of the ElectionServiceImpl Class.
+ */
 public class ElectionServiceImplTest {
 
+    //Inject Mocks for class dependencies
     @InjectMocks
     src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.ElectionServiceImpl electionService;
 
@@ -60,6 +73,7 @@ public class ElectionServiceImplTest {
     //New Ballot Object
     Ballot ballot = new Ballot();
 
+    //Set Object Variable values before each test case
     @Before
     public void before() {
 
@@ -117,15 +131,13 @@ public class ElectionServiceImplTest {
         ballot.setCanID("test");
         ballot.setFirst_name("test");
         ballot.setLast_name("test");
-
     }
 
-
+    /**
+     * findAllElections() - Adds an election then calls findAllElections() to confirm added election is in the system.
+     */
     @Test
     public void findAllElections() {
-        List<Election> electionList = new ArrayList<Election>();
-        electionList.add(election);
-
         electionService.addElection(election);
 
         List<Election> allElections = electionService.findAllElections();
@@ -133,6 +145,10 @@ public class ElectionServiceImplTest {
         when(connDao.getElectionList()).thenReturn(allElections);
     }
 
+    /**
+     * findElectionById() - Adds an election to the system then calls findElectionById to confirm election has been added
+     * to the system.
+     */
     @Test
     public void findElectionById() {
 
@@ -141,6 +157,10 @@ public class ElectionServiceImplTest {
         when(electionService.findElectionById(1)).thenReturn(election);
     }
 
+    /**
+     * addElection() - Adds an election to the system then calls findElectionById to confirm election has been added
+     * to the system.
+     */
     @Test
     public void addElection() {
         electionService.addElection(election);
@@ -148,6 +168,11 @@ public class ElectionServiceImplTest {
         when(electionService.findElectionById(1)).thenReturn(election);
     }
 
+    /**
+     * updateElection() - Adds an election to the system. Sets the title and election_key fields of local Election object.
+     * Calls the updateElection() method to update with new values and confirms changes by using findElectionById() method to
+     * retrieve election and confirm.
+     */
     @Test
     public void updateElection() {
         electionService.addElection(election);
@@ -161,10 +186,12 @@ public class ElectionServiceImplTest {
 
     }
 
+    /**
+     * deleteElectionById() - Adds election to the system, calls deleteElectionById() to delete election, confirms that
+     * searching for election returns null.
+     */
     @Test
     public void deleteElectionById() {
-
-        List<Election> electionList = new ArrayList<Election>();
 
         Election election2 = new Election();
 
@@ -175,6 +202,10 @@ public class ElectionServiceImplTest {
         when(connDao.getElectionById(1)).thenReturn(election2);
     }
 
+    /**
+     * associateVoter() - Adds an election and user with type "voter" to the system. Calls associateVoter() method to add user
+     * as a voter in the election. Calls the validateVoter() method to confirm that voter is a valid election voter.
+     */
     @Test
     public void associateVoter() {
         electionService.addElection(election);
@@ -185,10 +216,16 @@ public class ElectionServiceImplTest {
 
         electionService.associateVoter(1,"test");
 
+        //Confirm that voter is a valid election voter
         when(electionService.validateVoter(1,"test")).thenReturn("Found");
 
     }
 
+    /**
+     * withdrawVoter() - Adds an election and user with type "voter" to the system. Calls associateVoter() method to add user
+     * as a voter in the election. Calls the validateVoter() method to confirm that voter is a valid election voter. Withdraws
+     * voter and then confirms that voter is not a valid election voter.
+     */
     @Test
     public void withdrawVoter() {
         electionService.addElection(election);
@@ -199,14 +236,21 @@ public class ElectionServiceImplTest {
 
         electionService.associateVoter(1,"test");
 
+        //Confirm that voter is a valid election voter
         when(electionService.validateVoter(1,"test")).thenReturn("Found");
 
+        //Remove voter from election
         electionService.withdrawVoter(1,"test");
 
+        //Confirm that voter is not a valid election voter
         when(electionService.validateVoter(1,"test")).thenReturn("Missing");
 
     }
 
+    /**
+     * validateVoter() - Adds an election and user to the system with type "voter". Calls the associateVoter() method to
+     * add user as a voter in election. Calls validateVoter() to confirm that voter can vote in election.
+     */
     @Test
     public void validateVoter() {
         electionService.addElection(election);
@@ -220,6 +264,11 @@ public class ElectionServiceImplTest {
         when(electionService.validateVoter(1,"test")).thenReturn("Found");
     }
 
+    /**
+     * associateCandidate() - Adds an election and a candidate to the system. Calls the associateCandidate() method to
+     * add the candidate as a candidate in the election. Calls the validateCandidate() method to confirm that candidate
+     * is a candidate in the election.
+     */
     @Test
     public void associateCandidate() {
         electionService.addElection(election);
@@ -233,6 +282,12 @@ public class ElectionServiceImplTest {
         when(electionService.validateCandidate(1,"test")).thenReturn("Found");
     }
 
+    /**
+     * withdrawCandidate() - Adds an election and a candidate to the system. Calls the associateCandidate() method to
+     * add the candidate as a candidate in the election. Calls the validateCandidate() method to confirm that candidate
+     * is a candidate in the election. Calls the withdrawCandidate() method to remove candidate association to election.
+     * Calls the validateCandidate() method to confirm candidate is no longer associated to election.
+     */
     @Test
     public void withdrawCandidate() {
         electionService.addElection(election);
@@ -243,13 +298,20 @@ public class ElectionServiceImplTest {
 
         electionService.associateCandidate(1,"test");
 
+        //Confirm candidate associated with election
         when(electionService.validateCandidate(1,"test")).thenReturn("Found");
 
+        //Remove candidate association to election
         electionService.withdrawCandidate(1,"test");
 
+        //Confirm candidate no longer associated with election
         when(electionService.validateCandidate(1,"test")).thenReturn("Missing");
     }
 
+    /**
+     * validateCandidate() - Adds election and candidate to the system. Calls associateCandidate() method to add candidate
+     * as a candidate in election. Calls validateCandidate() to confirm candidate association to election.
+     */
     @Test
     public void validateCandidate() {
         electionService.addElection(election);
@@ -263,8 +325,22 @@ public class ElectionServiceImplTest {
         when(electionService.validateCandidate(1,"test")).thenReturn("Found");
     }
 
+    /**
+     * viewCandidates() -
+     */
     @Test
     public void viewCandidates() {
+        electionService.addElection(election);
+
+        candidateService.addCandidate(candidate);
+
+        electionService.associateCandidate(1,"test");
+
+        List<HashMap<String, String>> candidates = new ArrayList<HashMap<String, String>>();
+
+        candidates = electionService.viewCandidates(1);
+
+        assertNotNull(candidates);
     }
 
     @Test

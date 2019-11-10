@@ -15,12 +15,15 @@ import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Elect
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Policy;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Ballot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
@@ -54,6 +57,8 @@ public class ElectionControllerTest {
     Policy policy = new Policy();
 
     Candidate candidate = new Candidate();
+
+    Ballot ballot = new Ballot();
 
     @Before
     public void before() {
@@ -106,7 +111,12 @@ public class ElectionControllerTest {
         policy.setWrite_in(0);
         policy.setAbstain(0);
 
-
+        ballot.setBallotID(1234);
+        ballot.setUserID("test");
+        ballot.setElectionID(1234);
+        ballot.setCanID("test");
+        ballot.setFirst_name("test");
+        ballot.setLast_name("test");
     }
 
     @Test
@@ -159,25 +169,27 @@ public class ElectionControllerTest {
     @Test
     public void modifyElection() {
 
-        ResponseEntity<Election> addElectionResponse = electionController.newElection(election);
-
-        //Check to see that method executed successfully by returned status code
-        assertThat(addElectionResponse.getStatusCodeValue()).isEqualTo(201);
-
         electionController.newElection(election);
 
         //when(electionService.findElectionById(1)).thenReturn(election);
 
-        election.setElectionID(2);
         election.setTitle("test2");
         election.setClosed(1);
         election.setClose_date("date");
+
+        electionController.modifyElection(1,election);
 
         ResponseEntity<Election> modifyElectionResponse = electionController.modifyElection(1,election);
 
         Election electionAfterModify = modifyElectionResponse.getBody();
 
+        //assertThat(modifyElectionResponse.getStatusCode()).isEqualTo(200);
+
+        //assertEquals(electionAfterModify.getTitle(),"test2");
+
         when(electionService.findElectionById(1)).thenReturn(electionAfterModify);
+
+
     }
 
     @Test
@@ -193,6 +205,10 @@ public class ElectionControllerTest {
         ResponseEntity<Election> deleteElectionResponse = electionController.deleteElection(1);
 
         assertThat(deleteElectionResponse.getStatusCodeValue()).isEqualTo(404);
+
+        //Missing Election
+        ResponseEntity<Election> deleteElectionResponseNull = electionController.deleteElection(2);
+        assertThat(deleteElectionResponseNull.getStatusCodeValue()).isEqualTo(404);
     }
 
     @Test
@@ -244,7 +260,7 @@ public class ElectionControllerTest {
 
     }
 
-    @Ignore
+
     @Test
     public void validateVoter() {
 
@@ -285,21 +301,23 @@ public class ElectionControllerTest {
 
     }
 
-    @Ignore
     @Test
     public void removeCandidate() {
 
-        electionService.addElection(election);
+        electionController.newElection(election);
 
-        when(electionService.findElectionById(1)).thenReturn(election);
+        candidateController.newCandidate(candidate);
 
-        userService.addUser(user,"Voter");
+        electionController.associateCandidate(1,"test");
 
-        when(userService.findById("test")).thenReturn(user);
+        electionController.validateCandidate(1,"test");
 
-        electionService.withdrawCandidate(1,"test");
+        when(electionService.validateCandidate(1,"test")).thenReturn("Found");
 
-        verify(electionService,times(1)).withdrawCandidate(1,"test");
+        electionController.removeCandidate(1,"test");
+
+        when(electionService.validateCandidate(1,"test")).thenReturn("Missing");
+
     }
 
     @Test
@@ -319,20 +337,20 @@ public class ElectionControllerTest {
 
     }
 
-    @Ignore
     @Test
     public void viewCandidates() {
 
-        electionService.addElection(election);
+        electionController.newElection(election);
 
-        when(electionService.findElectionById(1)).thenReturn(election);
+        candidateController.newCandidate(candidate);
 
-        userService.addUser(user,"Voter");
+        electionController.associateCandidate(1,"test");
 
-        when(userService.findById("test")).thenReturn(user);
+        List<HashMap<String, String>> candidates = new ArrayList<HashMap<String, String>>();
 
-        List<HashMap<String, String>> listofMaps = new ArrayList<HashMap<String, String>>();
+        candidates = electionController.viewCandidates(1);
 
+        assertNotNull(candidates);
     }
 
     @Test
@@ -390,5 +408,27 @@ public class ElectionControllerTest {
         electionController.modifyPolicy(policy);
 
         when(electionService.getPolicy(1)).thenReturn(policyafterAdd);
+    }
+
+    public void getVotesByVoter() {
+        userController.newUser(user,"voter");
+
+        electionController.newElection(election);
+
+        electionController.associateVoter(1,"test");
+
+        candidateController.newCandidate(candidate);
+
+        electionController.associateCandidate(1,"test");
+
+        userController.castVote("cast",ballot);
+
+        int Votes = electionController.getVotesByVoter(1,"test");
+
+        electionController.getVotesByVoter(1,"test");
+
+        when(electionController.getVotesByVoter(1,"test")).thenReturn(Votes);
+
+        assertEquals(Votes,1);
     }
 }

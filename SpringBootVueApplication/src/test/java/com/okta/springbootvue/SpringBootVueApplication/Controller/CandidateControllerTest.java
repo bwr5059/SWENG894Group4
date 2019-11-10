@@ -29,8 +29,6 @@ import static org.mockito.Mockito.when;
 
 @ContextConfiguration(locations = "classpath*:SpringBootVueApplication.class")
 
-
-
 public class CandidateControllerTest {
 
     @InjectMocks
@@ -138,11 +136,12 @@ public class CandidateControllerTest {
 
         //Response from calling newCandidate method
         ResponseEntity<Candidate> newAddResponse = candidateController.newCandidate(candidate);
+        //Check to see that method executed successfully
+        assertThat(newAddResponse.getStatusCodeValue()).isEqualTo(201);
 
         candidateController.newCandidate(candidate);
 
-        //Check to see that method executed successfully
-        assertThat(newAddResponse.getStatusCodeValue()).isEqualTo(201);
+        electionController.associateCandidate(1,"test");
 
         ResponseEntity<Candidate> getCandidateResponse = candidateController.getCandidate("test");
 
@@ -153,8 +152,27 @@ public class CandidateControllerTest {
 
     }
 
+    @Ignore
     @Test
     public void getCandidateName() {
+
+        userController.newUser(user,"candidate");
+
+        electionController.newElection(election);
+
+        //Response from calling newCandidate method
+        ResponseEntity<Candidate> newAddResponse = candidateController.newCandidate(candidate);
+
+        //Check to see that method executed successfully
+        assertThat(newAddResponse.getStatusCodeValue()).isEqualTo(201);
+
+        candidateController.newCandidate(candidate);
+
+        ResponseEntity<Candidate> getCanNameResponse = candidateController.getCandidateName("test");
+
+        Candidate candidateAfterGet = getCanNameResponse.getBody();
+
+        when(candidateService.findById("test")).thenReturn(candidateAfterGet);
     }
 
     @Test

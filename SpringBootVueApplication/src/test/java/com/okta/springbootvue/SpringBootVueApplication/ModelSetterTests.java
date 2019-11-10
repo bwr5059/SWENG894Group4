@@ -1,3 +1,14 @@
+/*---------------------------------------------------------------------
+|  Class ModelSetterTests
+|
+|  Purpose: Test setting of Model class variables.
+|
+|  Methods: TestSetUser, TestSetElection, TestSetCandidate, TestSetQuestion,
+|           TestSetPolicy, TestSetBallot
+|
+|  Version: Sprint 3
+|
+*-------------------------------------------------------------------*/
 package com.okta.springbootvue.SpringBootVueApplication;
 
 import org.junit.Test;
@@ -9,11 +20,9 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import static org.junit.Assert.*;
-
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.*;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.*;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.SpringBootVueApplication;
-
 import org.springframework.test.context.ContextConfiguration;
 
 @RunWith(SpringRunner.class)
@@ -24,6 +33,8 @@ import org.springframework.test.context.ContextConfiguration;
  * ModelSetterTests() - This class tests the setters for each of the Model object classes.
  */
 public class ModelSetterTests {
+
+    //Creation of Model class objects
 
     public User user = new User();
     public User user2 = new User();
@@ -41,8 +52,13 @@ public class ModelSetterTests {
     public Ballot ballot = new Ballot();
     public Ballot ballot2 = new Ballot();
 
+    /**
+     * TestSetUser() - Tests the setting of User Model object variables. Sets variables and checks for equivalency.
+     * @throws Exception
+     */
     @Test
     public void TestSetUser() throws Exception {
+        //Set values of variables for user and user2 User objects
         user.setId("test");
         user.setType("Voter");
         user.setAge(25);
@@ -73,8 +89,10 @@ public class ModelSetterTests {
         user2.setUser_name("sw1");
         user2.setRace("White");
 
+        //Test that user is equivalent to user2
         assertTrue(user.equals(user2));
 
+        //Test the value of each of the variables of the user User object.
         assertEquals("test", user.getId());
         assertEquals("Voter", user.getType());
         assertEquals(25, user.getAge());
@@ -91,8 +109,13 @@ public class ModelSetterTests {
         assertEquals("White", user.getRace());
     }
 
+    /**
+     * TestSetElection() - Tests the setting of Election Model object variables. Sets variables and checks for equivalency.
+     * @throws Exception
+     */
     @Test
     public void TestSetElection() throws Exception {
+        //Set values of variables for election and election2 User objects
         election.setElectionID(1);
         election.setTitle("Test");
         election.setClosed(1);
@@ -117,8 +140,10 @@ public class ModelSetterTests {
         election2.setDescription("Description");
         election2.setElection_key("1234");
 
+        //Test that election is equivalent to election2
         assertTrue(election.equals(election2));
 
+        //Test the value of each of the variables of the election Election object.
         assertEquals(1, election.getElectionID());
         assertEquals("Test", election.getTitle());
         assertEquals(1, election.getClosed());
@@ -132,8 +157,13 @@ public class ModelSetterTests {
         assertEquals("1234", election.getElection_key());
     }
 
+    /**
+     * TestSetCandidate() - Tests the setting of Candidate Model object variables. Sets variables and checks for equivalency.
+     * @throws Exception
+     */
     @Test
     public void TestSetCandidate() throws Exception {
+        //Set values of variables for candidate and candidate2 User objects
         candidate.setCanID("test");
         candidate.setUserID("userTest");
         candidate.setFirst_name("First");
@@ -158,8 +188,10 @@ public class ModelSetterTests {
         candidate2.setExperience("experience");
         candidate2.setContact("contact");
 
+        //Test that candidate is equivalent to candidate2
         assertTrue(candidate.equals(candidate2));
 
+        //Test the value of each of the variables of the candidate Candidate object.
         assertEquals("test", candidate.getCanID());
         assertEquals("userTest", candidate.getUserID());
         assertEquals("First", candidate.getFirst_name());
@@ -173,9 +205,13 @@ public class ModelSetterTests {
         assertEquals("contact", candidate.getContact());
     }
 
-
+    /**
+     * TestSetQuestion() - Tests the setting of Question Model object variables. Sets variables and checks for equivalency.
+     * @throws Exception
+     */
     @Test
     public void TestSetQuestion() throws Exception {
+        //Set values of variables for question and question2 User objects
         question.setQID(1234);
         question.setCanID("1234");
         question.setUserID("1234");
@@ -188,17 +224,30 @@ public class ModelSetterTests {
         question2.setQuestion("test");
         question2.setAnswer("test");
 
+        //Test that candidate is equivalent to candidate2
         assertTrue(question.equals(question2));
 
+        //Test the value of each of the variables of the question and question2 Question objects.
         assertEquals(1234,question.getQID());
         assertEquals("1234",question.getCanID());
         assertEquals("1234", question.getUserID());
         assertEquals("test", question.getQuestion());
         assertEquals("test", question.getAnswer());
+
+        assertEquals(1234,question2.getQID());
+        assertEquals("1234",question2.getCanID());
+        assertEquals("1234", question2.getUserID());
+        assertEquals("test", question2.getQuestion());
+        assertEquals("test", question2.getAnswer());
     }
 
+    /**
+     * TestSetPolicy() - Tests the setting of Policy Model object variables. Sets variables and checks for equivalency.
+     * @throws Exception
+     */
     @Test
     public void TestSetPolicy() throws Exception {
+        //Set values of variables for policy and policy2 User objects
         policy.setElectionID(1234);
         policy.setType("test");
         policy.setFrequency(1);
@@ -213,8 +262,10 @@ public class ModelSetterTests {
         policy2.setWrite_in(0);
         policy2.setAbstain(0);
 
+        //Test that policy is equivalent to policy2
         assertTrue(policy.equals(policy2));
 
+        //Test the value of each of the variables of the policy and policy2 Policy objects.
         assertEquals(1234, policy.getElectionID());
         assertEquals("test", policy.getType());
         assertEquals(1, policy.getFrequency());
@@ -222,9 +273,22 @@ public class ModelSetterTests {
         assertEquals(0, policy.getWrite_in());
         assertEquals(0, policy.getAbstain());
 
+
+        assertEquals(1234, policy2.getElectionID());
+        assertEquals("test", policy2.getType());
+        assertEquals(1, policy2.getFrequency());
+        assertEquals(1, policy2.getNum_votes());
+        assertEquals(0, policy2.getWrite_in());
+        assertEquals(0, policy2.getAbstain());
+
     }
 
+    /**
+     * TestSetBallot() - Tests the setting of Ballot Model object variables. Sets variables and checks for equivalency.
+     * @throws Exception
+     */
     public void TestSetBallot() throws Exception {
+        //Set values of variables for ballot and ballot2 User objects
         ballot.setBallotID(1);
         ballot.setUserID("test");
         ballot.setElectionID(1234);
@@ -239,14 +303,23 @@ public class ModelSetterTests {
         ballot2.setFirst_name("test");
         ballot2.setLast_name("test");
 
+        //Test that ballot is equivalent to ballot2
         assertTrue(ballot.equals(ballot2));
 
+        //Test the value of each of the variables of the ballot and ballot2 Ballot objects.
         assertEquals(1, ballot.getBallotID());
         assertEquals("test", ballot.getUserID());
         assertEquals(1234, ballot.getElectionID());
         assertEquals("test", ballot.getCanID());
         assertEquals("test", ballot.getFirst_name());
         assertEquals("test", ballot.getLast_name());
+
+        assertEquals(1, ballot2.getBallotID());
+        assertEquals("test", ballot2.getUserID());
+        assertEquals(1234, ballot2.getElectionID());
+        assertEquals("test", ballot2.getCanID());
+        assertEquals("test", ballot2.getFirst_name());
+        assertEquals("test", ballot2.getLast_name());
 
     }
 

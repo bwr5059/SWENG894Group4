@@ -34,81 +34,6 @@ public class TreeHelperDao {
 	ConnectionDao connectionDao = new ConnectionDao();
 	
 	/**
-	 * tallyVotes() - 
-	 * @param 
-	 * @return 
-	 */
-	public HashMap<String, Integer> tallyVotes(int electionID){
-	    //Display Votes in a Hash Map
-	    HashMap<String,Integer> map = 
-                new HashMap<String, Integer>(); 
-	    String can = "";
-	    String name = "";
-		
-	    try {
-		Connection conn = connectionDao.RetrieveConnection();
-		String sql = "SELECT * FROM ballot WHERE electionID=? AND canID<>?"; 
-		PreparedStatement stmt=conn.prepareStatement(sql); 
-		stmt.setInt(1,electionID);
-		stmt.setString(2,"Abstain");
-		 
-		ResultSet rs=stmt.executeQuery();
-		while(rs.next()) {
-		    can = rs.getString(4);
-		    name = rs.getString(5) + " " + rs.getString(6);
-		    //If Candidate exists increment vote count
-		    //Otherwise add new entry
-		    if(map.keySet().contains(name)){
-		        map.put(name, map.get(name) + 1); 
-		    }else{
-		        map.put(name, 1);
-		    }
-		}	
-		connectionDao.ReleaseConnection(conn);
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-	    return map;	
-	}
-	
-	/**
-	 * calculateLead() - 
-	 * @param 
-	 * @return 
-	 */
-	public ArrayList<String> calculateLead(int electionID){
-	    //Return Array in case of Tie
-	    ArrayList<String> winners = new ArrayList<String>();
-	    //Returned List of Candidate Counts
-	    HashMap<String,Integer> candidates = 
-                new HashMap<String, Integer>(); 
-	    candidates = tallyVotes(electionID);
-		
-	    //Loop through HashMap to Calculate Lead
-	    int leadNum = 0;
-	    String winner = "";
-	    for(HashMap.Entry<String,Integer> entry : candidates.entrySet())
-	    {
-                String key = entry.getKey();
-		Integer val = entry.getValue();
-		//If new largest number of votes found
-		//Clear current list of winners and start new list
-		if(val > leadNum)
-		{
-		    winners.clear();
-		    leadNum = val;
-		    winner = key;
-		    winners.add(winner);
-		}else if(val == leadNum){
-		    //If number of total votes match current lead
-		    //Add to winner ArrayList
-		    winners.add(winner);
-		}
-	    }
-	    return winners;
-	}
-	
-	/**
 	 * getTotalPotentialVotes() - 
 	 * @param 
 	 * @return 
@@ -144,6 +69,33 @@ public class TreeHelperDao {
 	    try {
 		Connection conn = connectionDao.RetrieveConnection();
 		String sql = "SELECT count(canID) FROM electionCandidate WHERE electionID=?"; 
+		PreparedStatement stmt=conn.prepareStatement(sql); 
+		stmt.setInt(1,electionID);
+		 
+		ResultSet rs=stmt.executeQuery();
+		while(rs.next()) {
+		    total = rs.getInt(1);
+		}	
+		connectionDao.ReleaseConnection(conn);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	    return total;	
+	}
+	
+	/**
+	 * getTotalQuestions() - 
+	 * @param 
+	 * @return 
+	 */
+	public int getTotalQuestions(int electionID){
+	    int total = 0;
+		
+	    try {
+		Connection conn = connectionDao.RetrieveConnection();
+		String sql = "SELECT count(qID) FROM question INNER JOIN electionCandidate " +
+			"ON question.canID = electionCandidate.canID " +
+			"WHERE electionID=?"; 
 		PreparedStatement stmt=conn.prepareStatement(sql); 
 		stmt.setInt(1,electionID);
 		 

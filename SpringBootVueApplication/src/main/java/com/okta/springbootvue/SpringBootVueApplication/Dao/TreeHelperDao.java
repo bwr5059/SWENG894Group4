@@ -109,36 +109,28 @@ public class TreeHelperDao {
 	}
 	
 	/**
-	 * tallyType() - Resturn list of users who abstained or wrote in for given election
-	 * Can also returns users who voted for given candidate
+	 * getTotalPotentialVotes() - 
 	 * @param 
 	 * @return 
 	 */
-	public ArrayList<User> tallyType(int electionID, String type){
-	    ArrayList<User> users = new ArrayList<User>();
+	public int getTotalPotentialVotes(int electionID){
+	    int total = 0;
 		
 	    try {
 		Connection conn = connectionDao.RetrieveConnection();
-		String sql = "SELECT * FROM ballot WHERE electionID=? AND canID=?"; 
+		String sql = "SELECT count(userID) FROM voteAuthorization WHERE electionID=?"; 
 		PreparedStatement stmt=conn.prepareStatement(sql); 
 		stmt.setInt(1,electionID);
-		stmt.setString(2,type);
 		 
 		ResultSet rs=stmt.executeQuery();
-		UserConnectionDao userCon = new UserConnectionDao();
-		User user = new User();
-		//Loop through Users Returned
 		while(rs.next()) {
-			//Gather user data by userID
-			user = userCon.getUserById(rs.getString(2));
-			//Add user object to list to be returned
-			users.add(user);
+		    total = rs.getInt(1);
 		}	
 		connectionDao.ReleaseConnection(conn);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-	    return users;	
+	    return total;	
 	}
 	
 }

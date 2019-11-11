@@ -51,14 +51,16 @@ public class DecisionTree {
 	/*
 	 * *
 	 */
-	public String traverseTree(int total, int low, int gender, int race, int question, ArrayList<Node> tree) {
-		//Temporary Dummy Data
+	public String traverseTree(int electionID, String userID) {
+		//Election Temporary Dummy Data
 		int ballotTotal = 100;
 		int ballotLow = 26;
 		int ballotGender = 75;
 		int ballotRace = 60;
 		int ballotQuestion = 20;
-		
+		//Candidate Temp Data
+		int total = 25, low=5, gender=20, race=20, question=2; 
+		ArrayList<Node> tree = getNodes();
 		
 		String result = "";
 		int id = 0;

@@ -133,4 +133,29 @@ public class TreeHelperDao {
 	    return total;	
 	}
 	
+	/**
+	 * getTotalRegCands() - 
+	 * @param 
+	 * @return 
+	 */
+	public int getTotalRegCands(int electionID){
+	    int total = 0;
+		
+	    try {
+		Connection conn = connectionDao.RetrieveConnection();
+		String sql = "SELECT count(canID) FROM electionCandidate WHERE electionID=?"; 
+		PreparedStatement stmt=conn.prepareStatement(sql); 
+		stmt.setInt(1,electionID);
+		 
+		ResultSet rs=stmt.executeQuery();
+		while(rs.next()) {
+		    total = rs.getInt(1);
+		}	
+		connectionDao.ReleaseConnection(conn);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	    return total;	
+	}
+	
 }

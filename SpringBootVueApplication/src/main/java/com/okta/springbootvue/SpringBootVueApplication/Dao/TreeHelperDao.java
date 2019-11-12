@@ -115,7 +115,7 @@ public class TreeHelperDao {
 	 * @param 
 	 * @return 
 	 */
-	public HashMap<String, Integer> getMajorities(int electionID){
+	/*public HashMap<String, Integer> getMajorities(int electionID){
 	    //Display Votes in a Hash Map
 	    HashMap<String,Integer> majorities = 
                 new HashMap<String, Integer>(); 
@@ -125,17 +125,17 @@ public class TreeHelperDao {
 	    //HashMap of Potential Genders and Races
 	    HashMap<String,Integer> genCounts = 
                 new HashMap<String, Integer>(); 
-	    counts.put("Male",0);
-	    counts.put("Female",0);
-	    counts.put("Not Disclosed",0);
+	    genCounts.put("Male",0);
+	    genCounts.put("Female",0);
+	    genCounts.put("Not Disclosed",0);
 	    HashMap<String,Integer> raceCounts = 
                 new HashMap<String, Integer>(); 
-	    counts.put("American Indian or Alaska Native",0);
-	    counts.put("Asian",0);
-	    counts.put("Black or African American",0);
-	    counts.put("Native Hawaiin or Other Pacific Islander",0);
-	    counts.put("White",0);
-	    counts.put("None",0);
+	    raceCounts.put("American Indian or Alaska Native",0);
+	    raceCounts.put("Asian",0);
+	    raceCounts.put("Black or African American",0);
+	    raceCounts.put("Native Hawaiin or Other Pacific Islander",0);
+	    raceCounts.put("White",0);
+	    raceCounts.put("None",0);
 		
 	    try {
 		Connection conn = connectionDao.RetrieveConnection();
@@ -149,39 +149,39 @@ public class TreeHelperDao {
 		while(rs.next()) {
 		    switch(rs.getString(1)){
 			  case "Male":
-				  genCounts.put("Male", genCounts.get(key) + 1);
+				  genCounts.put("Male", genCounts.get(genKey) + 1);
 			  case "Female":
-				  genCounts.put("Female", genCounts.get(key) + 1);;
+				  genCounts.put("Female", genCounts.get(genKey) + 1);;
 			  default:
-				  genCounts.put("Not Disclosed", genCounts.get(key) + 1);;
+				  genCounts.put("Not Disclosed", genCounts.get(genKey) + 1);;
 		    }
 		  
 	            //Count Voter Races
 		    switch(rs.getString(2)){
 			    case "American Indian or Alaska Native":
-				    raceCounts.put("American Indian or Alaska Native", raceCounts.get(key) + 1);
+				    raceCounts.put("American Indian or Alaska Native", raceCounts.get(raceKey) + 1);
 			    case "Asian":
-				    raceCounts.put("Asian", raceCounts.get(key) + 1);
+				    raceCounts.put("Asian", raceCounts.get(raceKey) + 1);
 			    case "Black or African American":
-				    raceCounts.put("Black or African American", raceCounts.get(key) + 1);
+				    raceCounts.put("Black or African American", raceCounts.get(raceKey) + 1);
 			    case "Native Hawaiin or Other Pacific Islander":
-				    raceCounts.put("Native Hawaiian or Other Pacific Islander", raceCounts.get(key) + 1);
+				    raceCounts.put("Native Hawaiian or Other Pacific Islander", raceCounts.get(raceKey) + 1);
 			    case "White":
-				    raceCounts.put("White", raceCounts.get(key) + 1);
+				    raceCounts.put("White", raceCounts.get(raceKey) + 1);
 			    default:
-				    raceCounts.put("None", raceCounts.get(key) + 1);
+				    raceCounts.put("None", raceCounts.get(raceKey) + 1);
 		    }
 		}	
 		connectionDao.ReleaseConnection(conn);
 		//Loop through counts to get Majority Gender and Race
-		for(HashMap.Entry<String,Integer> entry : genCounts.entrySet())
-            	     if(genCounts.Value>genCount){
+		for(HashMap.Entry<String,Integer> entry : genCounts.entrySet()) {
+            	     if(entry.getValue()>genCount){
 		         genCounts = entry.getValue();
 			 genKey = entry.getKey();
 		     }
     		}
-		for(HashMap.Entry<String,Integer> entry : racents.entrySet())
-            	     if(genCounts.Value>genCount){
+		for(HashMap.Entry<String,Integer> entry : racents.entrySet()) {
+            	     if(entry.getValue()>raceCount){
 		         raceCounts = entry.getValue();
 			 raceKey = entry.getKey();
 		     }
@@ -193,7 +193,7 @@ public class TreeHelperDao {
 			e.printStackTrace();
 		}
 	    return majorities;
-	}
+	}*/
 
 /**
 	 * getCandInfo() - 
@@ -228,7 +228,7 @@ public class TreeHelperDao {
 		    }
 		}
 		  
-		}	
+			
 		connectionDao.ReleaseConnection(conn);
 		tallies.put("Total",total);
 		tallies.put("Gender",gender);
@@ -245,7 +245,7 @@ public class TreeHelperDao {
 	 * @param 
 	 * @return 
 	 */
-	public int getCandQuestionInfo(int electionID. String canID){
+	public int getCandQuestionInfo(int electionID, String canID){
 	    int total = 0;
 		
 	    try {

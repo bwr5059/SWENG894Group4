@@ -194,5 +194,50 @@ public class TreeHelperDao {
 		}
 	    return majorities;
 	}
+
+/**
+	 * getCandInfo() - 
+	 * @param 
+	 * @return 
+	 */
+	public HashMap<String, Integer> getCandInfo(int electionID, String canID, String majGen, String majRace){
+	    //Display Candidate Vote Tallies in HashMap
+	    HashMap<String,Integer> tallies = 
+                new HashMap<String, Integer>(); 
+	    int total=0, gender=0, race=0;
+		
+	    try {
+		Connection conn = connectionDao.RetrieveConnection();
+		String sql = "SELECT gender, race FROM user INNER JOIN ballot ON " +
+			"id = userID WHERE electionID=? AND canID=?"; 
+		PreparedStatement stmt=conn.prepareStatement(sql); 
+		stmt.setInt(1,electionID);
+		stmt.setString(2,canID);
+		 
+		ResultSet rs=stmt.executeQuery();
+		//Count Voter Genders
+		while(rs.next()) {
+		    total++;
+		    //check gender
+		    if(rs.getString(1).equals(majGen)){
+			gender++;
+		    }
+		    //check race
+		    if(rs.getString(2).equals(majRace)){
+		        race++;
+		    }
+		}
+		  
+		}	
+		connectionDao.ReleaseConnection(conn);
+		tallies.put("Total",total);
+		tallies.put("Gender",gender);
+		tallies.put("Race",race);
+		
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	    return tallies;
+	}
 	
 }

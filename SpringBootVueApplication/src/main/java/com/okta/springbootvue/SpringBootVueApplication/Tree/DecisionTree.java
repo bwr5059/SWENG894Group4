@@ -4,6 +4,7 @@ import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Node;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ConnectionDao;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ElectionHelperDao;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.TreeHelperDao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -51,14 +52,17 @@ public class DecisionTree {
 	/*
 	 * *
 	 */
-	public String traverseTree(int electionID, String userID) {
+	public String traverseTree(int electionID, String canID) {
+		TreeHelperDao treeHelper = new TreeHelperDao();
 		//Election Temporary Dummy Data
-		int ballotTotal = 100;
-		int ballotLow = 26;
+		int ballotTotal = treeHelper.getTotalPotentialVotes(electionID);
+		//Complete Calculation if gt 0
+		int ballotLow = treeHelper.getTotalRegCands(electionID);
 		int ballotGender = 75;
 		int ballotRace = 60;
-		int ballotQuestion = 20;
+		int ballotQuestion = treeHelper.getTotalQuestions(electionID);
 		//Candidate Temp Data
+		HashMap<String,Integer> majorities = treeHelper.getCandInfo(electionID, canID, "Male", "White");
 		int total = 25, low=5, gender=20, race=20, question=2; 
 		ArrayList<Node> tree = getNodes();
 		

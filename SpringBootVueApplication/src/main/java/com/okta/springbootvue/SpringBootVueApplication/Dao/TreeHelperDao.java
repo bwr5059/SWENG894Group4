@@ -239,5 +239,33 @@ public class TreeHelperDao {
 		}
 	    return tallies;
 	}
+
+/**
+	 * getCandQuestionInfo() - 
+	 * @param 
+	 * @return 
+	 */
+	public int getCandQuestionInfo(int electionID. String canID){
+	    int total = 0;
+		
+	    try {
+		Connection conn = connectionDao.RetrieveConnection();
+		String sql = "SELECT count(qID) FROM question INNER JOIN electionCandidate " +
+			"ON question.canID = electionCandidate.canID " +
+			"WHERE electionID=? AND canID=?"; 
+		PreparedStatement stmt=conn.prepareStatement(sql); 
+		stmt.setInt(1,electionID);
+		stmt.setString(2,canID);
+		 
+		ResultSet rs=stmt.executeQuery();
+		while(rs.next()) {
+		    total++;
+		}	
+		connectionDao.ReleaseConnection(conn);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	    return total;	
+	}
 	
 }

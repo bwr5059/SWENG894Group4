@@ -64,8 +64,11 @@ public class DecisionTree {
 		int ballotRace = 60;
 		int ballotQuestion = treeHelper.getTotalQuestions(electionID);
 		//Candidate Temp Data
-		HashMap<String,Integer> majorities = treeHelper.getCandInfo(electionID, canID, "Male", "White");
+		HashMap<String,Integer> majorities = treeHelper.getCandInfo(electionID, canID);
 		int total = 25, low=5, gender=20, race=20, question=2; 
+		//int total = majorities.get("Total");
+		//int gender = majorities.get("Gender");
+		//int race = majorities.get("Race");
 		ArrayList<Node> tree = getNodes();
 		
 		String result = "";

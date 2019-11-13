@@ -132,7 +132,7 @@ public class TreeHelperDao {
 		while(rs.next()) {
 		   found = 0;
 		   for(HashMap.Entry<String,Integer> entry : tallies.entrySet()) {
-            	       if(entry.getKey().equals(rs.getString(val)){
+            	       if(entry.getKey().equals(rs.getString(val))){
 		           tallies.put(entry.getKey(), entry.getValue()+1);
 			   found = 1;
 		       }
@@ -165,8 +165,9 @@ public class TreeHelperDao {
 	public String getVoterMajorityName(int electionID, int val){
 	    HashMap<String,Integer> tallies = 
                 new HashMap<String, Integer>();
-	    int key = "";
+	    String key = "";
 	    int found = 0;
+	    int count = 0;
 		
 	    try {
 		Connection conn = connectionDao.RetrieveConnection();
@@ -179,7 +180,7 @@ public class TreeHelperDao {
 		while(rs.next()) {
 		   found = 0;
 		   for(HashMap.Entry<String,Integer> entry : tallies.entrySet()) {
-            	       if(entry.getKey().equals(rs.getString(val)){
+            	       if(entry.getKey().equals(rs.getString(val))){
 		           tallies.put(entry.getKey(), entry.getValue()+1);
 			   found = 1;
 		       }

@@ -53,22 +53,34 @@ public class DecisionTree {
 	 * *
 	 */
 	public String traverseTree(int electionID, String canID) {
+		//Object to call functions to collect election
+		//and candidate analytical data
 		TreeHelperDao treeHelper = new TreeHelperDao();
-		//Election Temporary Dummy Data
+		
+		//Election Analytics
+		//Total number of potential votes
 		int ballotTotal = treeHelper.getTotalPotentialVotes(electionID);
-		//Complete Calculation if gt 0
+		//Number of registered candidates
 		int ballotLow = treeHelper.getTotalRegCands(electionID);
-		int ballotGender = 75;
-		//int ballotGender = treeHelper.getVoterMajority(electionID, 1);
-		//int ballotRace = treeHelper.getVoterMajority(electionID, 2);
-		int ballotRace = 60;
+		//Number of potential votes from majority gender
+		int ballotGender = treeHelper.getVoterMajority(electionID, 1);
+		//Number of potential votes from majority race
+		int ballotRace = treeHelper.getVoterMajority(electionID, 2);
+		//Number of questions for candidates registered in election
 		int ballotQuestion = treeHelper.getTotalQuestions(electionID);
-		//Candidate Temp Data
+		
+		//Candidate Analytics
 		HashMap<String,Integer> majorities = treeHelper.getCandInfo(electionID, canID);
-		int total = 25, low=5, gender=20, race=20, question=2; 
-		//int total = majorities.get("Total");
-		//int gender = majorities.get("Gender");
-		//int race = majorities.get("Race");
+		//Number of votes received so far
+		int total = majorities.get("Total");
+		//Number of votes from majority gender
+		int gender = majorities.get("Gender");
+		//Number of votes from majority race
+		int race = majorities.get("Race");
+		int low = 5, question=2;
+		
+		//Query Tree Nodes
+		//Assemble Decision Tree
 		ArrayList<Node> tree = getNodes();
 		
 		String result = "";

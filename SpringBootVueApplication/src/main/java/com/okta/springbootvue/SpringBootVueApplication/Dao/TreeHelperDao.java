@@ -156,17 +156,66 @@ public class TreeHelperDao {
 		}
 	    return count;
 	}
+			  
+	/**
+	 * getVoterMajorityName() - 
+	 * @param 
+	 * @return 
+	 */
+	public String getVoterMajorityName(int electionID, int val){
+	    HashMap<String,Integer> tallies = 
+                new HashMap<String, Integer>();
+	    int key = "";
+	    int found = 0;
+		
+	    try {
+		Connection conn = connectionDao.RetrieveConnection();
+		String sql = "SELECT gender, race FROM user INNER JOIN voteAuthorization ON " +
+			"id = userID WHERE electionID=?"; 
+		PreparedStatement stmt=conn.prepareStatement(sql); 
+		stmt.setInt(1,electionID);
+		ResultSet rs=stmt.executeQuery();
+		    
+		while(rs.next()) {
+		   found = 0;
+		   for(HashMap.Entry<String,Integer> entry : tallies.entrySet()) {
+            	       if(entry.getKey().equals(rs.getString(val)){
+		           tallies.put(entry.getKey(), entry.getValue()+1);
+			   found = 1;
+		       }
+    		    }
+	            if(found==0){
+		        tallies.put(rs.getString(val), 1);
+		    }
+		    
+		}	
+		connectionDao.ReleaseConnection(conn);
+			   
+		//Loop through counts to get Majority Gender and Race
+		for(HashMap.Entry<String,Integer> entry : tallies.entrySet()) {
+            	     if(entry.getValue()>count){
+		         key = entry.getKey();
+		     }
+    		}
+		
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	    return key;
+	}
 
 /**
 	 * getCandInfo() - 
 	 * @param 
 	 * @return 
 	 */
-	public HashMap<String, Integer> getCandInfo(int electionID, String canID, String majGen, String majRace){
+	public HashMap<String, Integer> getCandInfo(int electionID, String canID){
 	    //Display Candidate Vote Tallies in HashMap
 	    HashMap<String,Integer> tallies = 
                 new HashMap<String, Integer>(); 
 	    int total=0, gender=0, race=0;
+	    String majGen = getVoterMajorityName(electionID, 1);
+	    String majRace = getVoterMajorityName(electionID, 2);
 		
 	    try {
 		Connection conn = connectionDao.RetrieveConnection();

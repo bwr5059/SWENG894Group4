@@ -111,16 +111,15 @@ public class TreeHelperDao {
 	}
 	
 	/**
-	 * getMajorities() - 
+	 * getVoterMajority() - 
 	 * @param 
 	 * @return 
 	 */
-	public HashMap<String, Integer> getVoterMajority(int electionID, int val, HashMap<String, Integer> counts){
-	    //Display Votes in a Hash Map
-	    HashMap<String,Integer> majority = 
-                new HashMap<String, Integer>(); 
+	public int getVoterMajority(int electionID, int val){
+	    HashMap<String,Integer> tallies = 
+                new HashMap<String, Integer>();
 	    int count = 0;
-	    String key = "";
+	    int found = 0;
 		
 	    try {
 		Connection conn = connectionDao.RetrieveConnection();
@@ -131,31 +130,31 @@ public class TreeHelperDao {
 		ResultSet rs=stmt.executeQuery();
 		    
 		while(rs.next()) {
-		   //Loop through counts to get Requested Majority
-		    for(HashMap.Entry<String,Integer> entry : counts.entrySet()) {
-            	     	if(entry.getKey().equals(rs.getString(val)){
-		             counts.put(entry.getKey(), entry.getValue()+1);
-		        }
+		   found = 0;
+		   for(HashMap.Entry<String,Integer> entry : tallies.entrySet()) {
+            	       if(entry.getKey().equals(rs.getString(val)){
+		           tallies.put(entry.getKey(), entry.getValue()+1);
+			   found = 1;
+		       }
     		    }
+	            if(found==0){
+		        tallies.put(rs.getString(val), 1);
+		    }
 		    
 		}	
 		connectionDao.ReleaseConnection(conn);
 			   
 		//Loop through counts to get Majority Gender and Race
-		for(HashMap.Entry<String,Integer> entry : counts.entrySet()) {
+		for(HashMap.Entry<String,Integer> entry : tallies.entrySet()) {
             	     if(entry.getValue()>count){
 		         count = entry.getValue();
-			 key = entry.getKey();
 		     }
     		}
-		
-	        //Prepare to return majority value and count
-	        majority.put(key,count);
 		
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-	    return majority;
+	    return count;
 	}
 
 /**

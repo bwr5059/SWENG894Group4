@@ -59,6 +59,23 @@ public class DecisionTree {
 		//Complete Calculation if gt 0
 		int ballotLow = treeHelper.getTotalRegCands(electionID);
 		int ballotGender = 75;
+		/*HashMap<String,Integer> genCounts = 
+         	    new HashMap<String, Integer>(); 	    
+		genCounts.put("Male",0);    
+		genCounts.put("Female",0);
+		genCounts.put("Not Disclosed",0);*/
+		//HashMap<String, Integer> gen = treeHelper.getVoterMajority(electionID, 1, genCounts);
+		//int ballotGender = 
+		/*HashMap<String,Integer> raceCounts = 
+                    new HashMap<String, Integer>(); 
+	    	raceCounts.put("American Indian or Alaska Native",0);
+	    	raceCounts.put("Asian",0);
+	    	raceCounts.put("Black or African American",0);
+	    	raceCounts.put("Native Hawaiin or Other Pacific Islander",0);
+	    	raceCounts.put("White",0);
+	    	raceCounts.put("None",0);*/
+		//HashMap<String, Integer> race = treeHelper.getVoterMajority(electionID, 2, raceCounts);
+		//int ballotRace = 
 		int ballotRace = 60;
 		int ballotQuestion = treeHelper.getTotalQuestions(electionID);
 		//Candidate Temp Data

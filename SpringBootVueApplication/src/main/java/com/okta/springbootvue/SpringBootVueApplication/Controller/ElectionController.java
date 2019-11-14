@@ -348,8 +348,12 @@ public class ElectionController {
 		return numVotes;
 	}
 
-
-	@GetMapping("/election/getCandidateVotes/{electionID")
+	/**
+	 * getCandidateVotes() - Get number of votes for every candidate by candidate
+	 * @param electionID
+	 * @return HashMap<String,Integer>
+	 */
+	@GetMapping("/election/getCandidateVotes/{electionID}")
 	public HashMap<String, Integer> getCandidateVotes(@PathVariable("electionID") int electionID) {
 		HashMap<String,Integer> map =
 				new HashMap<String, Integer>();
@@ -363,6 +367,7 @@ public class ElectionController {
 		map = electionService.tallyVotes(electionID);
 
 		return map;
-
 	}
+
+
 }

@@ -202,5 +202,15 @@ public class ElectionServiceImpl implements ElectionService{
 		return leads;
 	}
 	
+	/**
+	 * tallyVotes() - 
+	 * @param electionID
+	 */
+	public HashMap<String, Integer> tallyVotes(int electionID) {
+		HashMap<String, Integer> listofMaps = new HashMap<String, Integer>();
+		listofMaps= helperDao.tallyVotes(electionID);
+		return listofMaps;
+	}
+	
 
 }

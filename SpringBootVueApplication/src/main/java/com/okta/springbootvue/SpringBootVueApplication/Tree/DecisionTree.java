@@ -137,7 +137,7 @@ public class DecisionTree {
 	/*
 	 * *
 	 */
-	public HashMap<String, Integer> calculateChances(int electionID, HashMap<String, Integer> candidates) {
+	public HashMap<String, Integer> calculateChances(int electionID, ArrayList<String> candidates) {
 		//Check Ballot Submission Progress
 		//Create Function to get total submitted votes over total registered voters
 		int ballotProg = 50;
@@ -163,43 +163,44 @@ public class DecisionTree {
 		//If the number of votes submitted is less than total needed to win
 		//All chances are roughly the same
 		if(ballotProg < smallTotal){
-			for(Map.Entry<String, Integer> entry : candidates.entrySet()){
+			for(String can : candidates){
 		    		if(!can.equals("Write")){
-		        		results.put(entry.getKey(),startChance);
+		        		results.put(can,startChance);
 				}
 			}
 			results.put("Write",startChance);
-		}else if(ballotProg > largeTotal){
-		
-		}
-		
-		//Query Tree Nodes
-		//Assemble Decision Tree
-		ArrayList<Node> tree = getNodes();
-		
-		//Track chances
-		HashMap<String,ArrayList<Integer>>  chances = 
-                	new HashMap<String, ArrayList<Integer>>();
-		
-		//Election Info
-		int totalCans = candidates.size();
-		int totalWrites = 0;
-		
-		String type="";
-		//Loop through Candidates
-		for(Map.Entry<String, Integer> entry : candidates.entrySet()){
-		    if(!can.equals("Write")){
-		        type =  traverseTree(electionID, entry.getKey(), tree);
-		    	if(type.equals("Likely")){
-		            //likely.put(entry.getKey(),startChance);
-		        }else if(type.equals("Potential")){
-			    //potential.put(entry.getKey(),startChance);
-		        }else if(type.equals("Unlikely")){
-	                    //unlikely.put(entry.getKey(),startChance);
-		        }
-		    }else{
-		        totalWrites++;
-		    }
+		}else{
+			//Query Tree Nodes
+			//Assemble Decision Tree
+			ArrayList<Node> tree = getNodes();
+			String type="";
+			int chance = 0;
+			//How to get candidate num votes???
+			int numVotes = 5;
+			//Count the total chance Count
+			int chanceCount = 0;
+			
+			//Loop through Candidates
+			for(String can : candidates){
+		    		if(!can.equals("Write")){
+		        		type =  traverseTree(electionID, entry.getKey(), tree);
+					//Weight each candidate chance
+		    			if(type.equals("Likely")){
+						chance = startChance * 2 * numVotes;
+		        		}else if(type.equals("Potential")){
+			    			chance = startChance * numVotes;
+		        		}else if(type.equals("Unlikely")){
+	                    			chance = startChance * (1/2) * numVotes;
+		        		}
+					chanceCount = chanceCount + chance;
+					results.put(can,chance);
+		    		}else{
+		        		//Handle Write In Votes
+		    		}
+			}
+			
+			//Fix Weights to Equal 100
+			//chance/chanceCount
 		}
 	}
 	

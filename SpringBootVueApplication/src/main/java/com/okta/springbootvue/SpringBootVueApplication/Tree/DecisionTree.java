@@ -179,6 +179,7 @@ public class DecisionTree {
 			int numVotes = 5;
 			//Count the total chance Count
 			int chanceCount = 0;
+			int totalWrites = 0;
 			
 			//Loop through Candidates
 			for(String can : candidates){
@@ -192,12 +193,16 @@ public class DecisionTree {
 		        		}else if(type.equals("Unlikely")){
 	                    			chance = startChance * (1/2) * numVotes;
 		        		}
-					chanceCount = chanceCount + chance;
 					results.put(can,chance);
 		    		}else{
 		        		//Handle Write In Votes
+					totalWrites = numVotes;
+					chance = numVotes;
 		    		}
+				chanceCount = chanceCount + chance;
 			}
+			//Add final Write Entry
+			results.put("Write",totalWrites);
 			
 			//Fix Weights to Equal 100
 			//chance/chanceCount

@@ -145,10 +145,27 @@ public class DecisionTree {
 		//Percentage Results
 		HashMap<String,Integer> results = 
                 	new HashMap<String, Integer>();
+		//Likely Candidates
+		HashMap<String,Integer> likely = 
+                	new HashMap<String, Integer>();
+		//Potential Candidates
+		HashMap<String,Integer> potential = 
+                	new HashMap<String, Integer>();
+		//Unlikely Candidates
+		HashMap<String,Integer> unlikely = 
+                	new HashMap<String, Integer>();
 		
+		String type="";
 		//Loop through Candidates
-		for(String temp : candidates){
-			System.out.println(temp);
+		for(String can : candidates){
+		    type =  traverseTree(electionID, can, tree);
+		    if(type.equals("Likely")){
+		        likely.put(can,0);
+		    }else if(type.equals("Potential")){
+			potential.put(can,0);
+		    }else if(type.equals("Unlikely")){
+	                unlikely.put(can,0);
+		    }
 		}
 	}
 	

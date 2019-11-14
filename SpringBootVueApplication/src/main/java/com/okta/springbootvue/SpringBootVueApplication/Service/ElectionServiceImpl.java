@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ElectionConnectionDao;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ElectionHelperDao;
 //import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.String;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
@@ -207,6 +208,7 @@ public class ElectionServiceImpl implements ElectionService{
 	 * @param electionID
 	 */
 	public HashMap<String, Integer> tallyVotes(int electionID) {
+		ElectionHelperDao helperDao = new ElectionHelperDao();
 		HashMap<String, Integer> listofMaps = new HashMap<String, Integer>();
 		listofMaps= helperDao.tallyVotes(electionID);
 		return listofMaps;

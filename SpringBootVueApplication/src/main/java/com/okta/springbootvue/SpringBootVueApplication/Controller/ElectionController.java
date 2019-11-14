@@ -347,5 +347,22 @@ public class ElectionController {
 		numVotes = electionService.getVotesByVoter(electionID, userID);
 		return numVotes;
 	}
-  
+
+
+	@GetMapping("/election/getCandidateVotes/{electionID")
+	public HashMap<String, Integer> getCandidateVotes(@PathVariable("electionID") int electionID) {
+		HashMap<String,Integer> map =
+				new HashMap<String, Integer>();
+
+		Election election = electionService.findElectionById(electionID);
+
+		if (election == null) {
+			return  map;
+		}
+
+		map = electionService.tallyVotes(electionID);
+
+		return map;
+
+	}
 }

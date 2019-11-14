@@ -155,16 +155,24 @@ public class DecisionTree {
 		HashMap<String,Integer> unlikely = 
                 	new HashMap<String, Integer>();
 		
+		//Election Info
+		int totalCans = candidates.size();
+		int totalWrites = 0;
+		
 		String type="";
 		//Loop through Candidates
 		for(String can : candidates){
-		    type =  traverseTree(electionID, can, tree);
-		    if(type.equals("Likely")){
-		        likely.put(can,0);
-		    }else if(type.equals("Potential")){
-			potential.put(can,0);
-		    }else if(type.equals("Unlikely")){
-	                unlikely.put(can,0);
+		    if(!can.equals("Write")){
+		        type =  traverseTree(electionID, can, tree);
+		    	if(type.equals("Likely")){
+		            likely.put(can,0);
+		        }else if(type.equals("Potential")){
+			    potential.put(can,0);
+		        }else if(type.equals("Unlikely")){
+	                    unlikely.put(can,0);
+		        }
+		    }else{
+		        totalWrites++;
 		    }
 		}
 	}

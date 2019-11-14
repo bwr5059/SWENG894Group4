@@ -73,5 +73,8 @@ public interface ElectionService {
 	
 	//Return lead candidate in election
 	ArrayList<String> getLead(int electionID);
+	
+	//Return hashmap of votes by candidate
+	HashMap<String, Integer> tallyVotes(int electionID);
 		
 }

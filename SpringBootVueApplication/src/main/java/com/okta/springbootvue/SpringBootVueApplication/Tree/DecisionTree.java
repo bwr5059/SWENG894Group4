@@ -137,23 +137,49 @@ public class DecisionTree {
 	/*
 	 * *
 	 */
-	public HashMap<String, Integer> calculateChances(int electionID, ArrayList<String> candidates) {
+	public HashMap<String, Integer> calculateChances(int electionID, HashMap<String, Integer> candidates) {
+		//Check Ballot Submission Progress
+		//Create Function to get total submitted votes over total registered voters
+		int ballotProg = 50;
+		
+		//If Election was Decided by Chance
+		//this would be the prediction of 
+		//each candidate
+		int startChance = 50;
+		//int startChance = (1/candidates+writeIn)*100
+		
+		//Smallest Number of Votes Needed to Win Election
+		//int smallTotal = (1/candidates+writeIn)*numRegisteredVoters
+		int smallTotal = 25;
+		
+		//Largest Number of Votes Needed to Win Election
+		//int largeTotal = (numRegisteredVoters/2)+1
+		int largeTotal = 75;
+		
+		//Results
+		HashMap<String, Integer>  results = 
+                	new HashMap<String, Integer>();
+		
+		//If the number of votes submitted is less than total needed to win
+		//All chances are roughly the same
+		if(ballotProg < smallTotal){
+			for(Map.Entry<String, Integer> entry : candidates.entrySet()){
+		    		if(!can.equals("Write")){
+		        		results.put(entry.getKey(),startChance);
+				}
+			}
+			results.put("Write",startChance);
+		}else if(ballotProg > largeTotal){
+		
+		}
+		
 		//Query Tree Nodes
 		//Assemble Decision Tree
 		ArrayList<Node> tree = getNodes();
 		
-		//Percentage Results
-		HashMap<String,Integer> results = 
-                	new HashMap<String, Integer>();
-		//Likely Candidates
-		HashMap<String,Integer> likely = 
-                	new HashMap<String, Integer>();
-		//Potential Candidates
-		HashMap<String,Integer> potential = 
-                	new HashMap<String, Integer>();
-		//Unlikely Candidates
-		HashMap<String,Integer> unlikely = 
-                	new HashMap<String, Integer>();
+		//Track chances
+		HashMap<String,ArrayList<Integer>>  chances = 
+                	new HashMap<String, ArrayList<Integer>>();
 		
 		//Election Info
 		int totalCans = candidates.size();
@@ -161,15 +187,15 @@ public class DecisionTree {
 		
 		String type="";
 		//Loop through Candidates
-		for(String can : candidates){
+		for(Map.Entry<String, Integer> entry : candidates.entrySet()){
 		    if(!can.equals("Write")){
-		        type =  traverseTree(electionID, can, tree);
+		        type =  traverseTree(electionID, entry.getKey(), tree);
 		    	if(type.equals("Likely")){
-		            likely.put(can,0);
+		            //likely.put(entry.getKey(),startChance);
 		        }else if(type.equals("Potential")){
-			    potential.put(can,0);
+			    //potential.put(entry.getKey(),startChance);
 		        }else if(type.equals("Unlikely")){
-	                    unlikely.put(can,0);
+	                    //unlikely.put(entry.getKey(),startChance);
 		        }
 		    }else{
 		        totalWrites++;

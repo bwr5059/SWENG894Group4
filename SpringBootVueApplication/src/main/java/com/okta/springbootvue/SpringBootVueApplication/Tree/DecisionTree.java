@@ -184,7 +184,7 @@ public class DecisionTree {
 			//Loop through Candidates
 			for(String can : candidates){
 		    		if(!can.equals("Write")){
-		        		type =  traverseTree(electionID, entry.getKey(), tree);
+		        		type =  traverseTree(electionID, can, tree);
 					//Weight each candidate chance
 		    			if(type.equals("Likely")){
 						chance = startChance * 2 * numVotes;
@@ -206,8 +206,11 @@ public class DecisionTree {
 			
 			//Fix Weights to Equal 100
 			//chance/chanceCount
+			
 		}
+		return results;
 	}
+	
 	
 
 }

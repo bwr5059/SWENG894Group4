@@ -15,6 +15,7 @@ package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service;
 
 import org.springframework.stereotype.Service;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ElectionConnectionDao;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ElectionHelperDao;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Policy;
@@ -36,6 +37,9 @@ public class ElectionServiceImpl implements src.main.java.com.okta.springbootvue
 	
 	//Object to call all Election Queries
 	ElectionConnectionDao connDao = new ElectionConnectionDao();
+
+	//Election helper Object
+	ElectionHelperDao helperDao = new ElectionHelperDao();
 
 	/**
 	 * findAllElections() - Retrieves all rows from election table.
@@ -183,6 +187,16 @@ public class ElectionServiceImpl implements src.main.java.com.okta.springbootvue
 		int numVotes = connDao.getVotesByVoter(electionID, userID);
 		return numVotes;
 	}
-	
+
+	/**
+	 * viewCandidates() - View candidates for an election
+	 * @param electionID
+	 */
+	public HashMap<String, Integer> tallyVotes(int electionID) {
+		HashMap<String, Integer> listofMaps = new HashMap<String, Integer>();
+		listofMaps= helperDao.tallyVotes(electionID);
+		return listofMaps;
+	}
+
 
 }

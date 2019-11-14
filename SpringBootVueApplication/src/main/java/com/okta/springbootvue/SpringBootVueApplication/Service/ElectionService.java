@@ -9,12 +9,11 @@
 
 package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service;
 
-import java.util.List;
-import java.util.HashMap;
-
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
-import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Policy;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * ElectionService Class - Interface for ElectionService.
@@ -67,5 +66,8 @@ public interface ElectionService {
 	
 	//Return number of votes cast by user in election
 	int getVotesByVoter(int electionID, String userID);
+
+	//Return hashmap of votes by candidate
+	HashMap<String, Integer> tallyVotes(int electionID);
 		
 }

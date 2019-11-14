@@ -52,7 +52,7 @@ public class DecisionTree {
 	/*
 	 * *
 	 */
-	public String traverseTree(int electionID, String canID) {
+	public String traverseTree(int electionID, String canID, ArrayList<Node> tree) {
 		//Object to call functions to collect election
 		//and candidate analytical data
 		TreeHelperDao treeHelper = new TreeHelperDao();
@@ -62,6 +62,10 @@ public class DecisionTree {
 		int ballotTotal = treeHelper.getTotalPotentialVotes(electionID);
 		//Number of registered candidates
 		int ballotLow = treeHelper.getTotalRegCands(electionID);
+		//Smallest Number of Votes Needed to Win
+		ballotLow = ((1/ballotLow)*ballotTotal)+1;
+		//Majority of Votes
+		ballotTotal = (ballotTotal/2)+1;
 		//Number of potential votes from majority gender
 		int ballotGender = treeHelper.getVoterMajority(electionID, 1);
 		//Number of potential votes from majority race
@@ -77,11 +81,12 @@ public class DecisionTree {
 		int gender = majorities.get("Gender");
 		//Number of votes from majority race
 		int race = majorities.get("Race");
-		int low = 5, question=2;
+		//Number of votes received so far
+		int low = total;
+		//Number of Questions Asked to Candidate
+		int question= treeHelper.getCandQuestionInfo(electionID, canID);
 		
-		//Query Tree Nodes
-		//Assemble Decision Tree
-		ArrayList<Node> tree = getNodes();
+		
 		
 		String result = "";
 		int id = 0;
@@ -127,6 +132,24 @@ public class DecisionTree {
 		}
 		
 		return result;
+	}
+	
+	/*
+	 * *
+	 */
+	public HashMap<String, Integer> calculateChances(int electionID, ArrayList<String> candidates) {
+		//Query Tree Nodes
+		//Assemble Decision Tree
+		ArrayList<Node> tree = getNodes();
+		
+		//Percentage Results
+		HashMap<String,Integer> results = 
+                	new HashMap<String, Integer>();
+		
+		//Loop through Candidates
+		for(String temp : candidates){
+			System.out.println(temp);
+		}
 	}
 	
 

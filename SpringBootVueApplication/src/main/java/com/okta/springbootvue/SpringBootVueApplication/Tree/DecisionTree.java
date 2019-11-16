@@ -52,16 +52,14 @@ public class DecisionTree {
 	/*
 	 * *
 	 */
-	public String traverseTree(int electionID, String canID, ArrayList<Node> tree) {
+	public String traverseTree(int electionID, String canID, ArrayList<Node> tree, int ballotTotal, int ballotLow) {
 		//Object to call functions to collect election
 		//and candidate analytical data
 		TreeHelperDao treeHelper = new TreeHelperDao();
 		
 		//Election Analytics
-		//Total number of potential votes
-		int ballotTotal = treeHelper.getTotalPotentialVotes(electionID);
-		//Number of registered candidates
-		int ballotLow = treeHelper.getTotalRegCands(electionID);
+		//Total number of potential votes sent through parameters
+		//Number of registered candidates send through parameters
 		//Smallest Number of Votes Needed to Win
 		ballotLow = ((1/ballotLow)*ballotTotal)+1;
 		//Majority of Votes
@@ -138,23 +136,28 @@ public class DecisionTree {
 	 * *
 	 */
 	public HashMap<String, Integer> calculateChances(int electionID, ArrayList<String> candidates) {
+		//Object to Call Tree Helper Methods
+		TreeHelperDao treeHelper = new TreeHelperDao();
+		
 		//Check Ballot Submission Progress
-		//Create Function to get total submitted votes over total registered voters
-		int ballotProg = 50;
+		//Total number of potential votes
+		int ballotTotal = treeHelper.getTotalPotentialVotes(electionID);
+		//Total votes submitted to date
+		int ballotToDate = treeHelper.getVotesToDate(electionID);
+		float ballotProg = ballotToDate/ballotTotal;
 		
 		//If Election was Decided by Chance
 		//this would be the prediction of 
 		//each candidate
-		int startChance = 50;
-		//int startChance = (1/candidates+writeIn)*100
+		//Number of Registered Candidates
+		int ballotLow = treeHelper.getTotalRegCands(electionID);
+		int startChance = (1/ballotLow)*100;//Consider write ins?
 		
 		//Smallest Number of Votes Needed to Win Election
-		//int smallTotal = (1/candidates+writeIn)*numRegisteredVoters
-		int smallTotal = 25;
+		int smallTotal = startChance*ballotTotal;
 		
 		//Largest Number of Votes Needed to Win Election
-		//int largeTotal = (numRegisteredVoters/2)+1
-		int largeTotal = 75;
+		int largeTotal = (ballotTotal/2)+1;
 		
 		//Results
 		HashMap<String, Integer>  results = 
@@ -168,6 +171,7 @@ public class DecisionTree {
 		        		results.put(can,startChance);
 				}
 			}
+			//Only one "Write-in" Entry for Pie Chart
 			results.put("Write",startChance);
 		}else{
 			//Query Tree Nodes
@@ -184,7 +188,7 @@ public class DecisionTree {
 			//Loop through Candidates
 			for(String can : candidates){
 		    		if(!can.equals("Write")){
-		        		type =  traverseTree(electionID, can, tree);
+		        		type =  traverseTree(electionID, can, tree, ballotTotal, ballotLow);
 					//Weight each candidate chance
 		    			if(type.equals("Likely")){
 						chance = startChance * 2 * numVotes;
@@ -196,8 +200,8 @@ public class DecisionTree {
 					results.put(can,chance);
 		    		}else{
 		        		//Handle Write In Votes
-					totalWrites = numVotes;
-					chance = numVotes;
+		    			totalWrites = numVotes;
+		    			chance = numVotes;
 		    		}
 				chanceCount = chanceCount + chance;
 			}

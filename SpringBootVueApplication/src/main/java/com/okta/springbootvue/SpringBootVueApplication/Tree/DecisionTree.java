@@ -135,9 +135,13 @@ public class DecisionTree {
 	/*
 	 * *
 	 */
-	public HashMap<String, Integer> calculateChances(int electionID, ArrayList<String> candidates) {
-		//Object to Call Tree Helper Methods
+	public HashMap<String, Integer> calculateChances(int electionID) {
+		//Objects to Call Helper Methods
 		TreeHelperDao treeHelper = new TreeHelperDao();
+		ElectionHelperDao electionHelper = new ElectionHelperDao();
+		
+		//Get Candidates with Votes
+		HashMap<String, Integer> candidates = electionHelper.tallyVotes(electionID);
 		
 		//Check Ballot Submission Progress
 		//Total number of potential votes
@@ -180,15 +184,18 @@ public class DecisionTree {
 			String type="";
 			int chance = 0;
 			//How to get candidate num votes???
-			int numVotes = 5;
+			String canID = "";
+			int numVotes = 0;
 			//Count the total chance Count
 			int chanceCount = 0;
 			int totalWrites = 0;
 			
 			//Loop through Candidates
-			for(String can : candidates){
-		    		if(!can.equals("Write")){
-		        		type =  traverseTree(electionID, can, tree, ballotTotal, ballotLow);
+			for(Map.Entry can : candidates.entrySet()){
+				numVotes = can.getValue();
+				canID = can.getKey();
+		    		if(!canID.equals("Write")){
+		        		type =  traverseTree(electionID, canID, tree, ballotTotal, ballotLow);
 					//Weight each candidate chance
 		    			if(type.equals("Likely")){
 						chance = startChance * 2 * numVotes;
@@ -197,7 +204,7 @@ public class DecisionTree {
 		        		}else if(type.equals("Unlikely")){
 	                    			chance = startChance * (1/2) * numVotes;
 		        		}
-					results.put(can,chance);
+					results.put(canID,chance);
 		    		}else{
 		        		//Handle Write In Votes
 		    			totalWrites = numVotes;

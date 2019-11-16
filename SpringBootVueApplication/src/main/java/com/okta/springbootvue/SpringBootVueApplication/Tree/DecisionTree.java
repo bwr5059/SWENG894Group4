@@ -155,7 +155,7 @@ public class DecisionTree {
 		//each candidate
 		//Number of Registered Candidates
 		int ballotLow = treeHelper.getTotalRegCands(electionID);
-		int startChance = (1/ballotLow)*100;//Consider write ins?
+		int startChance = (1/(ballotLow+1))*100;//Plus 1 for Write-Ins
 		
 		//Smallest Number of Votes Needed to Win Election
 		int smallTotal = startChance*ballotTotal;
@@ -195,6 +195,7 @@ public class DecisionTree {
 				numVotes = can.getValue();
 				canID = can.getKey();
 		    		if(!canID.equals("Write")){
+					//Traverse Decision Tree to Predict Chance
 		        		type =  traverseTree(electionID, canID, tree, ballotTotal, ballotLow);
 					//Weight each candidate chance
 		    			if(type.equals("Likely")){
@@ -206,17 +207,26 @@ public class DecisionTree {
 		        		}
 					results.put(canID,chance);
 		    		}else{
-		        		//Handle Write In Votes
+		        		//Total Number of Write-In Votes
 		    			totalWrites = numVotes;
 		    			chance = numVotes;
 		    		}
+				//Tally Total Weighted Votes
 				chanceCount = chanceCount + chance;
 			}
 			//Add final Write Entry
 			results.put("Write",totalWrites);
-			
+
+			//TO DO CHANGE RESULTS TO FLOAT
+			int result = 0;
 			//Fix Weights to Equal 100
-			//chance/chanceCount
+			for(Map.Entry calc : results.entrySet()){
+				numVotes = calc.getValue();
+				canID = calc.getKey();
+				result = numVotes/chanceCount;
+				results.put(canID, result);
+			}
+			
 			
 		}
 		return results;

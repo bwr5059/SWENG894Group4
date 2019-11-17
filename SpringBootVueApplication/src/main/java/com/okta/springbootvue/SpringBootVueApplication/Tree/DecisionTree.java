@@ -188,11 +188,11 @@ public class DecisionTree {
 			//Assemble Decision Tree
 			ArrayList<Node> tree = getNodes();
 			String type="";
-			int chance = 0;
-			Integer numVotes = 0;
+			float chance = 0;
+			float numVotes = 0;
 			//Count the total chance Count
-			int chanceCount = 0;
-			int totalWrites = 0;
+			float chanceCount = 0;
+			float totalWrites = 0;
 			
 			//Loop through Candidates
 			for(HashMap.Entry<String,Integer> entry : candidates.entrySet()){
@@ -221,10 +221,9 @@ public class DecisionTree {
 			//Add final Write Entry
 			results.put("Write",totalWrites);
 
-			//TO DO CHANGE RESULTS TO FLOAT
-			int result = 0;
+			float result = 0;
 			//Fix Weights to Equal 100
-			for(HashMap.Entry<String,Integer> entry : results.entrySet()){
+			for(HashMap.Entry<String,Float> entry : results.entrySet()){
 				numVotes = entry.getValue();
 				canID = entry.getKey();
 				result = numVotes/chanceCount;

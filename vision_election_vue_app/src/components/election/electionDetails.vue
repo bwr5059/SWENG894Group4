@@ -78,8 +78,9 @@
       <b-button v-show="!editable&this.$parent.$parent.authorized" v-on:click="edit">Edit</b-button>
       <b-button v-show="editable" class="mr-1" v-on:click="cancel">Cancel</b-button>
       <b-button v-show="editable" v-on:click="updateElection()">Submit</b-button>
-      <b-button v-show="!editable" class="ml-1">Register</b-button>
+      <!-- <b-button v-show="!editable" class="ml-1">Register</b-button> -->
       <b-button v-show="!editable" v-on:click="showmodal=true" class="ml-1">Set Policy</b-button>
+      <b-button v-show="!editable" v-on:click="showmodal6=true" class="ml-1">Duplicate Election</b-button>
     </b-form>
         <b-modal id="modal-1" title="Set Voting Policy" v-model="showmodal">
             <b-card>
@@ -104,15 +105,7 @@
                     placeholder="Enter numeric frequency"
                     type="number"
                   ></b-form-input>
-                </b-form-group> 
-                <b-form-group id="input-group-3" label="Number of Votes:" label-for="input-3">
-                  <b-form-input
-                    id="input-3"
-                    v-model="form.policyMaxVotes"
-                    placeholder="Enter number of max votes"
-                    type="number"
-                  ></b-form-input>
-                </b-form-group> 
+                </b-form-group>  
                 <b-form-group>
                   <b-form-checkbox
                     id="checkbox-1"
@@ -212,6 +205,31 @@
       </template>
     </b-table>
   </div>
+  <b-modal id="modal-6" title="Withdraw" v-model="showmodal6">
+            <b-card>
+              Are you sure you want to duplicate the election?
+            </b-card>
+          <template v-slot:modal-footer>
+              <div class="w-100">
+                <b-button
+                  variant="primary"
+                  size="sm"
+                  class="float-right"
+                  @click="duplicateElection"
+                >
+                Yes
+                </b-button>
+                <b-button
+                  variant="primary"
+                  size="sm"
+                  class="float-right mr-2"
+                  @click="showmodal6=false"
+                >
+                No
+                </b-button>
+              </div>
+            </template>
+        </b-modal>
 </b-card>
 <b-card v-show="!this.$parent.$parent.authorized" :title="voterCandidateHeader" :sub-title="voterCandidateSub">
   <div>
@@ -220,8 +238,23 @@
       </div>
   </div>
 <b-container v-if="show">
+<b-tabs>
+<b-tab title="Details" active>
 <b-row>
-{{this.form.electionDescription}}
+<br>
+
+</b-row>
+<b-row>
+  <b-col>
+    {{isElectionClosed}}
+   
+    <br>
+     <br>
+    {{getWinner}} {{this.winner}}
+    <br>
+    <br>
+  {{this.form.electionDescription}}
+  </b-col>
 </b-row>
 <br>
 <b-row>
@@ -239,6 +272,26 @@
   </b-col>
 
 </b-row>
+</b-tab>
+<b-tab id="analytics" title="Progress" v-if="this.data.data.closed==0">
+  <fusioncharts
+  :type="this.type"
+  :width="this.width"
+  :height="this.height"
+  :dataFormat="this.dataFormat"
+  :dataSource="this.dataSource"
+></fusioncharts>
+</b-tab>
+<b-tab id="analytics" title="Results" v-if="this.data.data.closed==1">
+  <fusioncharts
+  :type="this.type"
+  :width="this.width"
+  :height="this.height"
+  :dataFormat="this.dataFormat"
+  :dataSource="this.dataSource"
+></fusioncharts>
+</b-tab>
+</b-tabs>
 <b-row>
   <!-- <br>
   Candidates: -->
@@ -273,13 +326,14 @@
 <br>
 <b-row>
 <b-button v-show="!editable&&!registered" class="ml-1" v-on:click="showRegisterDialog=true">Register</b-button>
-<b-button v-show="!editable&&registered" class="ml-1" v-on:click="showmodal2=true">Withdraw</b-button>
-<b-button v-show="registered&&isSelected" class="ml-1" v-on:click="validateVote">Vote</b-button>
+<b-button v-show="!editable&&registered&&!hasVoted" class="ml-1" v-on:click="showmodal2=true">Withdraw</b-button>
+<b-button v-show="registered&&isSelected&&!hasVoted" class="ml-1" v-on:click="validateVote">Vote</b-button>
 <b-button v-show="registered&&!hasVoted" class="ml-1" v-on:click="showmodal5=true">Abstain from Voting</b-button>
-<b-button v-show="this.$parent.$parent.isVoter&&registered&!hasVoted" v-on:click="showWriteInCandidate=true" class="ml-1 pull-right">Write In Candidate</b-button>
+<b-button v-show="this.userObj.type=='Voter'&&registered&!hasVoted" v-on:click="showWriteInCandidate=true" class="ml-1 pull-right">Write In Candidate</b-button>
+<b-button v-show="hasVoted&&isSelected&&today<=this.form.electionCloseDate" v-on:click="showChangeVote=true" class="ml-1 pull-right">Change Vote</b-button>
 </b-row>
 </b-container>
-   <b-modal id="modal-3" title="Abstain From Voting" v-model="showmodal5">
+<b-modal id="modal-3" title="Abstain From Voting" v-model="showmodal5">
             <b-card>
               Are you sure you want to abstain from voting in this election?
             </b-card>
@@ -304,8 +358,6 @@
               </div>
             </template>
         </b-modal>
-
-
 <b-modal id="modal-2" title="Withdraw" v-model="showmodal2">
             <b-card>
               Are you sure you want to withdraw?
@@ -358,32 +410,8 @@
         </b-modal>
 
            <!-- Show the Table of Candidates Written in by votwe Under this election -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<b-card v-show="this.$parent.$parent.isVoter">
-   <div>
+<!-- <b-card v-show="this.userObj.type=='Voter'">
+   <div> -->
      <b-modal name="associateCandidateModal2" id="modal-2" title="Write in Candidate" v-model="showWriteInCandidate">
             <b-card>
               <b-form>
@@ -436,9 +464,34 @@
               </div>
             </template>
         </b-modal>
-    
+        <b-modal id="modal-4" title="Change Vote" v-model="showChangeVote">
+            <b-card>
+              Are you sure you want to change your vote?
+            </b-card>
+          <template v-slot:modal-footer>
+              <div class="w-100">
+                <b-button
+                  variant="primary"
+                  size="sm"
+                  class="float-right"
+                  @click="changeVote"
+                >
+                Yes
+                </b-button>
+                <b-button
+                  variant="primary"
+                  size="sm"
+                  class="float-right mr-2"
+                  @click="showChangeVote=false"
+                >
+                No
+                </b-button>
+              </div>
+            </template>
+        </b-modal>
+<!--     
   </div>
-</b-card>
+</b-card> -->
 <b-modal id="modal-4" title="CastVote" v-model="showmodal4">
             <b-card>
               Are you sure you want to write in candidate and cast your vote?
@@ -465,7 +518,7 @@
             </template>
         </b-modal>
 
-<b-card>
+<!-- <b-card> -->
     <b-modal name="ElectionRegistrationModal" id="modal-2" title="Register for Election" v-model="showRegisterDialog">
             <b-card>
               <b-form>
@@ -502,7 +555,7 @@
               </div>
             </template>
         </b-modal>
-</b-card>
+<!-- </b-card> -->
 
 </b-card>
 </div>
@@ -513,13 +566,37 @@
 import api from '@/apis/electionApi'
 import api_candidate from '@/apis/candidateApi'
 import api_user from '@/apis/userApi'
+import VueFusionCharts from 'vue-fusioncharts';
+import FusionCharts from 'fusioncharts';
+import Column2D from 'fusioncharts/fusioncharts.charts';
+import FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
+import Vue from 'vue';
+
+Vue.use(VueFusionCharts, FusionCharts, Column2D, FusionTheme);
+var tabbed = document.getElementById("analytics");
+
 export default {
   name: 'electionDetails',
   props: {
     msg: String
   },
+ 
   data: () => {  
+      
       return {  
+        type: "column2d",
+        width: "100%",
+        height: "100%",
+        dataFormat: "json",
+        dataSource: {
+        chart: {
+            caption: "Votes by Candidate",
+            xaxisname: "Candidate",
+            yaxisname: "Total Votes",
+            theme: "fusion"
+          },
+        data: null
+        },
         currentElectionData: '',
         registrationData: '',
         registered: false,
@@ -560,14 +637,19 @@ export default {
         showmodal3: false,
         showmodal4: false,
         showmodal5: false,
+        showmodal6: false,
         showmodalAssociateCandidate: false,
         showWriteInCandidate:false,
         showRegisterDialog:false,
         election_key:'',
         candidates: null,
         currentVotes: null,
-        policySet: false
-        
+        policySet: false,
+        showChangeVote: false,
+        today: null,
+        isClosed: false,
+        electionClosed: false,
+        winner:'',
       }  
     },  
 computed: {
@@ -584,6 +666,31 @@ computed: {
    */
   voterCandidateSub(){
     return this.form.electionTitle;
+  },
+
+  isElectionClosed(){
+    if(this.data.data.closed==1){
+    this.electionClosed=true;
+      return "The election is now closed."
+    }else{
+      return "The election is open."
+    }
+
+  },
+
+  getWinner(){
+    if(this.data.data.closed==1){
+      api.getWinner(this.form.electionId).then((response)=>{
+        this.$log.debug("vote cast: ", response)
+        //alert(response.data)
+        this.winner="The winner is "+response.data;
+        return "The winner is "+response.data[0];
+      }).catch((error)=>
+      this.$log.debug(error)) 
+    }else{
+    
+    return ""
+  }
   }
 },
 created: function(){
@@ -603,6 +710,7 @@ mounted: function(){
   this.userObj = this.$parent.$parent.userObj
   //sets the registration type from the userObj
   this.regType = this.userObj.type
+  
 },
 watch: {
   //checks when the routing change and refreshes the current election
@@ -634,15 +742,26 @@ methods: {
       this.form.electionCloseDate = this.data.data.close_date
       this.form.electionStartDate = this.data.data.start_date
       this.form.electionKey = this.data.data.election_key
+      this.dataSource.data = [
+            {
+              label: "Luke Skywalker",
+              value: "25"
+            },
+            {
+              label: "Ben Solo",
+              value: "40"
+            },
+          ]
       this.getCandidates()
       this.getAllCandidates()
       this.getRegistration()
       this.getPolicy()
       this.getVotes()
+      this.calculateCurrentDay()
     }).catch((error) => {  
       this.$log.debug(error);  
       this.error="Failed to get election"  
-	  });
+    });
     },
     /**getRegistration() checks if a user has registered against an election.
     **/
@@ -702,7 +821,6 @@ methods: {
       }).then(this.$router.push({ path: '/app/user/home' }))
       
     },
-
     VerifyElectionKey:function(){
 if(this.election_key==this.form.electionKey){
   alert('Election Key Authenticated')
@@ -769,22 +887,11 @@ if(this.election_key==this.form.electionKey){
       this.show = false
       this.$log.debug("casting vote...")
       //this.$log.debug(this.form.electionId, this.userObj.id, this.selecteditem[0].canID, "", "", this.userObj.type)
-      api_user.castVote(this.form.electionId, this.userObj.id, this.selecteditem[0].canID, "", "", "cast").then((response)=>{
+      api_user.castVote(this.form.electionId, this.userObj.id, this.selecteditem[0].canID, this.selecteditem[0].first_name, this.selecteditem[0].last_name, "cast").then((response)=>{
         this.$log.debug("vote cast: ", response)
         alert("Your vote has been cast!")
         this.getElection(this.form.electionId)
-      }).catch((error)=>
-      this.$log.debug(error))
-    },
-
-    abstainFromVoting : function(){
-      this.showmodal5=false
-      this.$log.debug("abstaining from casting vote...")
-      api_user.castVote(this.form.electionId, this.userObj.id, "", "", "", "abstain").then((response)=>{
-        this.$log.debug("vote cast: ", response)
         this.hasVoted=true;
-        alert("You have successfully abstained from voting!")
-        this.getElection(this.form.electionId)
       }).catch((error)=>
       this.$log.debug(error))
     },
@@ -800,7 +907,6 @@ if(this.election_key==this.form.electionKey){
         }).catch((error)=>
         this.$log.debug(error))
     },
-
     /**getAllCandidates() calls the api to return all candidates from the system and creates
     an array of the candidates
      */
@@ -841,7 +947,7 @@ if(this.election_key==this.form.electionKey){
           this.getElection(this.form.electionId)
         }).catch((error)=>
           this.$log.debug(error),
-          alert(error),
+          //alert(error),
           this.getElection(this.form.electionId))
       }else{
         this.showmodal=false
@@ -853,7 +959,7 @@ if(this.election_key==this.form.electionKey){
           this.getElection(this.form.electionId)
         }).catch((error)=>
         this.$log.debug(error),
-        alert(error),
+        //alert(error),
         this.getElection(this.form.electionId))
       }
     },
@@ -910,14 +1016,11 @@ if (r == true) {
    this.disassociateCandidate(can_id)
 }
     },
-
     writeCandidate: function(){
        var r = confirm("Are you sure you want to write in candidate and cast your vote?");
 if (r == true) {
-
-
       this.$log.debug("calling api: writeCandidate()")
-       api_user.castVote(this.form.electionId, this.userObj.id, "", this.write_in.firstname, this.write_in.lastname, "write").then((response)=>{
+       api_user.castVote(this.form.electionId, this.userObj.id, "", this.write_in.firstname, this.write_in.lastname, "cast").then((response)=>{
         this.$log.debug("write in cast: ", response)
         alert("Vote casted and Candidate Written in")
       this.showWriteInCandidate=false
@@ -927,7 +1030,6 @@ if (r == true) {
           this.$log.debug(error))
 }
     },
-
     /**
      * getVotes() gets the current num of votes by electionID and by current user
      * @return number of votes
@@ -943,7 +1045,6 @@ if (r == true) {
       }).catch((error)=>
           this.$log.debug(error))
     },
-
     validateVote: function(){
       if(this.currentVotes!=0){
         alert("You have already cast a vote")
@@ -952,13 +1053,62 @@ if (r == true) {
       }
     },
 
-    abstainFromVote:function(){
-       if(this.currentVotes!=0){
-        alert("You have already cast a vote")
-      }else{
-        this.showmodal5=true
-      }
-    }
+    calculateCurrentDay: function(){
+      this.today = new Date();
+      var dd = String(this.today.getDate()).padStart(2, '0');
+      var mm = String(this.today.getMonth() + 1).padStart(2, '0'); //January is 0!
+      var yyyy = this.today.getFullYear();
+      //this.today = mm + '-' + dd + '-' + yyyy;
+      this.today = yyyy + '-' + mm + '-' + dd;
+    },
+    /**
+     * changeVote() function calls the user api and endpoint to change a voters vote.  This method
+     * disables the showChangeVote variable to false, which hides modal-4.  It also changes the show
+     * variable to false, which turns on the loading spinner.  If the response message is a successful
+     * response, it triggers the getElection function for the current electionID to reload the election
+     * details and updates all the current variables.
+     */
+    changeVote: function(){
+      this.showChangeVote= false,
+      this.show=false
+      api_user.changeVote(this.form.electionId, this.userObj.id, this.selecteditem[0].canID, this.selecteditem[0].first_name, this.selecteditem[0].last_name).then((response)=>{
+        this.$log.debug("vote changed: ", response)
+        alert("Your vote has been changed!")
+        this.getElection(this.form.electionId)
+      }).catch((error)=>
+      this.$log.debug(error))
+    },
+
+    abstainFromVoting : function(){
+      this.showmodal5=false
+      this.$log.debug("abstaining from casting vote...")
+      api_user.castVote(this.form.electionId, this.userObj.id, "", "", "", "abstain").then((response)=>{
+        this.$log.debug("vote cast: ", response)
+        this.hasVoted=true;
+        alert("You have successfully abstained from voting!")
+        this.getElection(this.form.electionId)
+      }).catch((error)=>
+      this.$log.debug(error))
+    },
+    /**
+     * duplicateElection() takes the current election details and calls the createElection endpoint to create a new election
+     * using the existing election data that is currently loaded.  If successful it redirects the user to the new election
+     * that was created.
+     */
+    duplicateElection: function(){
+      this.showmodal6= false,
+      this.show=false
+      api.duplicateElection(this.form.electionTitle, this.form.electionDescription, this.form.electionStartDate, this.form.electionCloseDate, 
+      this.form.electionId,this.form.electionKey).then((response)=>{
+        this.$log.debug("Election duplicated", response)
+        alert("Election Duplicated!")
+        this.$router.push({ path: '/app/home/election/'+response.data.electionID+'/details' })
+      }).catch((error)=>{
+        this.$log.debug(error)
+      })
+      
+    },
+    
 },
 }
 </script>

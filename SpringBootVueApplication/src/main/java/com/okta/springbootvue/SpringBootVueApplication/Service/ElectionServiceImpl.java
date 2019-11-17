@@ -56,9 +56,10 @@ public class ElectionServiceImpl implements src.main.java.com.okta.springbootvue
 	 * @param electionID
 	 * @return
 	 */
-	public Election findElectionById(int electionID) {
-		Election election = connDao.getElectionById(electionID);
-		return election;
+	public Election findElectionById(int electionID){
+			calculateClosed(electionID);
+			Election election = connDao.getElectionById(electionID);
+			return election;
 	}
 	
 	/**
@@ -203,7 +204,7 @@ public class ElectionServiceImpl implements src.main.java.com.okta.springbootvue
 	 * @param electionID
 	 * @throws Exception
 	 */
-	public void calculateClosed(int electionID) throws Exception {
+	public void calculateClosed(int electionID) {
 		helperDao.calculateClosed(electionID);
 	}
 

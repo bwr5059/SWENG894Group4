@@ -135,7 +135,7 @@ public class DecisionTree {
 	/*
 	 * *
 	 */
-	public HashMap<String, Integer> calculateChances(int electionID) {
+	public HashMap<String, Float> calculateChances(int electionID) {
 		//Objects to Call Helper Methods
 		TreeHelperDao treeHelper = new TreeHelperDao();
 		ElectionHelperDao electionHelper = new ElectionHelperDao();
@@ -148,29 +148,33 @@ public class DecisionTree {
 		int ballotTotal = treeHelper.getTotalPotentialVotes(electionID);
 		//Total votes submitted to date
 		int ballotToDate = treeHelper.getVotesToDate(electionID);
-		float ballotProg = ballotToDate/ballotTotal;
+		float ballotProg = 0;
+		if(ballotTotal>0) {
+			ballotProg = (float)ballotToDate/ballotTotal;
+		}
+		
 		
 		//If Election was Decided by Chance
 		//this would be the prediction of 
 		//each candidate
 		//Number of Registered Candidates
 		int ballotLow = treeHelper.getTotalRegCands(electionID);
-		int startChance = (1/(ballotLow+1))*100;//Plus 1 for Write-Ins
+		float startChance = (1/((float)ballotLow+1));//Plus 1 for Write-Ins
 		
 		//Smallest Number of Votes Needed to Win Election
-		int smallTotal = startChance*ballotTotal;
+		float smallTotal = startChance*ballotTotal;
 		
 		//Largest Number of Votes Needed to Win Election
-		int largeTotal = (ballotTotal/2)+1;
+		float largeTotal = (ballotTotal/2)+1;
 		
 		//Results
-		HashMap<String, Integer>  results = 
-                	new HashMap<String, Integer>();
+		HashMap<String, Float>  results = 
+                	new HashMap<String, Float>();
 		String canID = "";
 		
 		//If the number of votes submitted is less than total needed to win
 		//All chances are roughly the same
-		if(ballotProg < smallTotal){
+		if((ballotProg*ballotTotal) < smallTotal){
 			for(HashMap.Entry<String,Integer> entry : candidates.entrySet()){
 				canID = entry.getKey();
 		    	if(!canID.equals("Write")){

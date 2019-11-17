@@ -1,13 +1,11 @@
 import axios from 'axios'  
 import Vue from 'vue'  
   
-const SERVER_URL = 'http://localhost:9000';  
+const SERVER_URL = 'http://localhost:5000';  
   
 const instance = axios.create({  
   baseURL: SERVER_URL,  
-  timeout: 50000000  
-  // timeout: 5000
-
+  timeout: 5000  
 });  
   
 export default {  
@@ -29,6 +27,12 @@ export default {
     return data? JSON.parse(data) : data;  
   }]  
 }),  
+
+  duplicateElection: (electionTitle, electionDescription, startDate, closeDate, id, electionKey)=> instance.post('/election/addElection/', {title: electionTitle,  
+    start_date: startDate, close_date: closeDate, description: electionDescription, election_key:electionKey, transformResponse: [function (data) {  
+      return data? JSON.parse(data) : data;  
+    }]  
+  }),
   // (R)ead  ("/election/{electionId}"
   getElection: (eID) => instance.get('/election/'+eID, {
     transformResponse: [function (data) {  
@@ -108,6 +112,11 @@ export default {
       [function (data) {
         return data
       }]}),
+      
+      getWinner : (electionID)=> instance.get('/election/calculateLead/'+electionID+'/', {transformResponse: 
+        [function (data) {
+          return data
+        }]}),
 
 
 }

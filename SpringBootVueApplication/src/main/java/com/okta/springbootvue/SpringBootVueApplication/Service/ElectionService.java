@@ -69,5 +69,8 @@ public interface ElectionService {
 
 	//Return hashmap of votes by candidate
 	HashMap<String, Integer> tallyVotes(int electionID);
+
+	//Calculate if election should be set to closed
+	void calculateClosed(int electionID) throws Exception;
 		
 }

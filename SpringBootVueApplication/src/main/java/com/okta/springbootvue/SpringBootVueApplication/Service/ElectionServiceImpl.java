@@ -198,5 +198,14 @@ public class ElectionServiceImpl implements src.main.java.com.okta.springbootvue
 		return listofMaps;
 	}
 
+	/**
+	 * calculateClosed() - Checks if an election should be in the closed state.
+	 * @param electionID
+	 * @throws Exception
+	 */
+	public void calculateClosed(int electionID) throws Exception {
+		helperDao.calculateClosed(electionID);
+	}
+
 
 }

@@ -250,7 +250,7 @@
    
     <br>
      <br>
-    {{getWinner}} {{this.winner}}
+    {{getElectionWinner}} {{this.winner}}
     <br>
     <br>
   {{this.form.electionDescription}}
@@ -678,7 +678,7 @@ computed: {
 
   },
 
-  getWinner(){
+  getElectionWinner(){
     if(this.data.data.closed==1){
       api.getWinner(this.form.electionId).then((response)=>{
         this.$log.debug("vote cast: ", response)

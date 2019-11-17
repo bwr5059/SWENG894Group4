@@ -17,6 +17,7 @@ import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.util.ArrayList;
@@ -225,7 +226,7 @@ public class ElectionHelperDao {
 	 * @param electionID
 	 * @throws Exception
 	 */
-	public void calculateClosed(int electionID) throws Exception{
+	public void calculateClosed(int electionID) {
 		Boolean closed = false;
 		String closeDate = "";
 		String closeTime = "";
@@ -268,44 +269,51 @@ public class ElectionHelperDao {
 		SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
 
-		//Parse election close date to adhere to date format
-		Date formattedCloseDate=dateFormatter.parse(closeDate);
+		Date formattedCloseDate;
+		Date formattedCloseTime;
+		try {
+			//Parse election close date to adhere to date format
+			formattedCloseDate=dateFormatter.parse(closeDate);
 
-		//Parse election close time to adhere to the time format
-		Date formattedCloseTime=timeFormatter.parse(closeTime);
+			//Parse election close time to adhere to the time format
+			formattedCloseTime=timeFormatter.parse(closeTime);
 
-		//Get the current date
-		LocalDate nowDate = LocalDate.now();
+			//Get the current date
+			LocalDate nowDate = LocalDate.now();
 
-		//Get today's date as a Date
-		Date currentDate = Date.from(nowDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+			//Get today's date as a Date
+			Date currentDate = Date.from(nowDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-		//Get the current time
-		//LocalTime nowTime = LocalTime.now();
+			//Get the current time
+			//LocalTime nowTime = LocalTime.now();
 
-		//Get the current time in an instant
-		Instant instant = Instant.now();
+			//Get the current time in an instant
+			Instant instant = Instant.now();
 
 // get overall time
-		LocalTime time = instant.atZone(ZoneOffset.UTC).toLocalTime();
+			LocalTime time = instant.atZone(ZoneOffset.UTC).toLocalTime();
 // get hour
-		int hour = instant.atZone(ZoneOffset.UTC).getHour();
+			int hour = instant.atZone(ZoneOffset.UTC).getHour();
 // get minute
-		int minute = instant.atZone(ZoneOffset.UTC).getMinute();
+			int minute = instant.atZone(ZoneOffset.UTC).getMinute();
 // get second
-		int second = instant.atZone(ZoneOffset.UTC).getSecond();
+			int second = instant.atZone(ZoneOffset.UTC).getSecond();
 
-		String currentTime = hour + ":" + minute + ":" + second;
+			String currentTime = hour + ":" + minute + ":" + second;
 
-		Date formattedCurrentTime=timeFormatter.parse(currentTime);
+			Date formattedCurrentTime=timeFormatter.parse(currentTime);
 
-		//If past election close date, close election. If on election close date and after close time, close election
-		if (currentDate.after(formattedCloseDate)) {
-			election.setClosed(1);
-			electionConnectionDao.updateElection(election,electionList);
-		} else if(currentDate.equals(formattedCloseDate) && formattedCurrentTime.after(formattedCloseTime)) {
-			election.setClosed(1);
-			electionConnectionDao.updateElection(election,electionList);
+			//If past election close date, close election. If on election close date and after close time, close election
+			if (currentDate.after(formattedCloseDate)) {
+				election.setClosed(1);
+				electionConnectionDao.updateElection(election,electionList);
+			} else if(currentDate.equals(formattedCloseDate) && formattedCurrentTime.after(formattedCloseTime)) {
+				election.setClosed(1);
+				electionConnectionDao.updateElection(election,electionList);
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
 		}
+
 	}
 }

@@ -77,14 +77,15 @@ public class ElectionController {
 	 * @return new ResponseEntity<Election>(election, HttpStatus)
 	**/
 	@GetMapping("/election/{electionID}")
-	public ResponseEntity<Election> getElection(@PathVariable("electionID") int electionID) throws Exception{
+	public ResponseEntity<Election> getElection(@PathVariable("electionID") int electionID){
+
+		electionService.calculateClosed(electionID);
+
 		Election election = electionService.findElectionById(electionID);
 		if (election == null) {
 			return new ResponseEntity<Election>(HttpStatus.NOT_FOUND);
 		}
 
-		//Sets election closed field to 1 if election should be closed
-		electionService.calculateClosed(electionID);
 		return new ResponseEntity<Election>(election, HttpStatus.OK);
 	}
   
@@ -378,7 +379,7 @@ public class ElectionController {
 	 * @throws Exception
 	 */
 	@GetMapping("/election/checkCloseElection/{electionID}")
-	public void checkCloseElection(@PathVariable("electionID") int electionID) throws Exception {
+	public void checkCloseElection(@PathVariable("electionID") int electionID) {
 		electionService.calculateClosed(electionID);
 	}
 

@@ -11,27 +11,26 @@
 
 package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.sql.PreparedStatement;
-import java.util.HashMap;
-
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
-import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.UserConnectionDao;
-import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
-import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Policy;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.time.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * ElectionHelperDao Class - Connects to MySQL database vision-database and performs queries through methods to update
  * database.
  */
 public class ElectionHelperDao {
-	ConnectionDao connectionDao = new ConnectionDao();
+	src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ConnectionDao connectionDao = new src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ConnectionDao();
+	src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ElectionConnectionDao electionConnectionDao = new src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ElectionConnectionDao();
 	
 	/**
 	 * tallyVotes() - 
@@ -125,7 +124,7 @@ public class ElectionHelperDao {
 		stmt.setString(2,type);
 		 
 		ResultSet rs=stmt.executeQuery();
-		UserConnectionDao userCon = new UserConnectionDao();
+		src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.UserConnectionDao userCon = new src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.UserConnectionDao();
 		User user = new User();
 		//Loop through Users Returned
 		while(rs.next()) {
@@ -217,5 +216,96 @@ public class ElectionHelperDao {
 	    }	
 		
 	    return demo;	
+	}
+
+
+	/**
+	 * calculateClosed() - Calculates if an election has elapsed it's closing date and time. Sets an election to 'closed'
+	 * if current date and time are past close date and time.
+	 * @param electionID
+	 * @throws Exception
+	 */
+	public void calculateClosed(int electionID) throws Exception{
+		Boolean closed = false;
+		String closeDate = "";
+		String closeTime = "";
+		Election election = new Election();
+		List<Election> electionList = new ArrayList<>();
+
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+			String sql = "SELECT * FROM election WHERE electionID=?";
+			PreparedStatement stmt=conn.prepareStatement(sql);
+			//stmt.setInt(1,electionID);
+			stmt.setInt(1,electionID);
+
+			ResultSet rs=stmt.executeQuery();
+			while(rs.next()) {
+				election.setElectionID(rs.getInt(1));
+				election.setTitle(rs.getString(2));
+				election.setClosed(rs.getInt(3));
+				election.setClose_date(rs.getString(4));
+				election.setClose_time(rs.getString(5));
+				election.setNum_candidates(rs.getInt(6));
+				election.setNum_votes(rs.getInt(7));
+				election.setStart_date(rs.getString(8));
+				election.setStart_time(rs.getString(9));
+				election.setDescription(rs.getString(10));
+				election.setElection_key(rs.getString(11));
+			}
+			connectionDao.ReleaseConnection(conn);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+
+		//Assign closeDate the election's closing date
+		closeDate = election.getClose_date();
+
+		//Assign closeTime the election's closing time
+		closeTime = election.getClose_time();
+
+		//Formatters for date and time
+		SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
+
+		//Parse election close date to adhere to date format
+		Date formattedCloseDate=dateFormatter.parse(closeDate);
+
+		//Parse election close time to adhere to the time format
+		Date formattedCloseTime=timeFormatter.parse(closeTime);
+
+		//Get the current date
+		LocalDate nowDate = LocalDate.now();
+
+		//Get today's date as a Date
+		Date currentDate = Date.from(nowDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+		//Get the current time
+		//LocalTime nowTime = LocalTime.now();
+
+		//Get the current time in an instant
+		Instant instant = Instant.now();
+
+// get overall time
+		LocalTime time = instant.atZone(ZoneOffset.UTC).toLocalTime();
+// get hour
+		int hour = instant.atZone(ZoneOffset.UTC).getHour();
+// get minute
+		int minute = instant.atZone(ZoneOffset.UTC).getMinute();
+// get second
+		int second = instant.atZone(ZoneOffset.UTC).getSecond();
+
+		String currentTime = hour + ":" + minute + ":" + second;
+
+		Date formattedCurrentTime=timeFormatter.parse(currentTime);
+
+		//If past election close date, close election. If on election close date and after close time, close election
+		if (currentDate.after(formattedCloseDate)) {
+			election.setClosed(1);
+			electionConnectionDao.updateElection(election,electionList);
+		} else if(currentDate.equals(formattedCloseDate) && formattedCurrentTime.after(formattedCloseTime)) {
+			election.setClosed(1);
+			electionConnectionDao.updateElection(election,electionList);
+		}
 	}
 }

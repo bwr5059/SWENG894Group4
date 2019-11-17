@@ -166,13 +166,15 @@ public class DecisionTree {
 		//Results
 		HashMap<String, Integer>  results = 
                 	new HashMap<String, Integer>();
+		String canID = "";
 		
 		//If the number of votes submitted is less than total needed to win
 		//All chances are roughly the same
 		if(ballotProg < smallTotal){
-			for(String can : candidates){
-		    		if(!can.equals("Write")){
-		        		results.put(can,startChance);
+			for(HashMap.Entry<String,Integer> entry : candidates.entrySet()){
+				canID = entry.getKey();
+		    	if(!canID.equals("Write")){
+		        	results.put(canID,startChance);
 				}
 			}
 			//Only one "Write-in" Entry for Pie Chart
@@ -183,17 +185,15 @@ public class DecisionTree {
 			ArrayList<Node> tree = getNodes();
 			String type="";
 			int chance = 0;
-			//How to get candidate num votes???
-			String canID = "";
-			int numVotes = 0;
+			Integer numVotes = 0;
 			//Count the total chance Count
 			int chanceCount = 0;
 			int totalWrites = 0;
 			
 			//Loop through Candidates
-			for(Map.Entry can : candidates.entrySet()){
-				numVotes = can.getValue();
-				canID = can.getKey();
+			for(HashMap.Entry<String,Integer> entry : candidates.entrySet()){
+				numVotes = entry.getValue();
+				canID = entry.getKey();
 		    		if(!canID.equals("Write")){
 					//Traverse Decision Tree to Predict Chance
 		        		type =  traverseTree(electionID, canID, tree, ballotTotal, ballotLow);
@@ -220,9 +220,9 @@ public class DecisionTree {
 			//TO DO CHANGE RESULTS TO FLOAT
 			int result = 0;
 			//Fix Weights to Equal 100
-			for(Map.Entry calc : results.entrySet()){
-				numVotes = calc.getValue();
-				canID = calc.getKey();
+			for(HashMap.Entry<String,Integer> entry : results.entrySet()){
+				numVotes = entry.getValue();
+				canID = entry.getKey();
 				result = numVotes/chanceCount;
 				results.put(canID, result);
 			}

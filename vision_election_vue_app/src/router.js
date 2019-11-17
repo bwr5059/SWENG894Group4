@@ -24,6 +24,7 @@ import candidates from './components/candidate/candidates.vue'
 import candidateProfile_main from './components/candidate/CandidateProfile_main.vue'
 import candidateProfile_general from './components/candidate/candidateProfile_general.vue'
 import viewCandidate from './components/candidate/viewCandidate.vue'
+import contactPage from './components/contact/contact.vue'
   
 Vue.use(Auth, {  
   issuer: 'https://dev-208412.okta.com/oauth2/default',  
@@ -47,6 +48,10 @@ let router = new Router({
     {
         path: '/login',
         component: login},
+    {
+        path:'/contact',
+        component:contactPage
+    },
     {
         path: '/help',
         component: help,

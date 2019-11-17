@@ -2,17 +2,18 @@
     <div class=container>
         <b-navbar type="light">
             <b-navbar-nav>
-                <router-link to="/app/user/home" class="navbar-brand">Election</router-link>
+                <router-link v-show="!authorized" to="/app/user/home" class="navbar-brand">Participant</router-link>
+                <router-link v-show="authorized" to="/app/user/home" class="navbar-brand">Election Manager</router-link>
                 <router-link v-show="authorized" to="/app/user/createElection" class="btn btn-secondary my-2 my-sm-0 mr-1" tag="button" id='home-button'> New </router-link>
                 <router-link v-show="authorized" to="/app/user/addAdmin" class="btn btn-secondary my-2 my-sm-0 mr-1" tag="button" id='home-button'> Election Admin </router-link>
-                <router-link to="/app/home/elections" class="btn btn-secondary my-2 my-sm-0 mr-1">Search all</router-link>
-                <router-link to="/app/home/candidates" class="btn btn-secondary my-2 my-sm-0 mr-1">Candidates</router-link>
-                <router-link v-show="isCandidate" to="/candidate" class="btn btn-secondary my-2 my-sm-0 mr-1">Candidate Profile</router-link>
+                <router-link to="/app/home/elections" class="btn-sm btn-secondary my-2 my-sm-1 mr-1">Search all</router-link>
+                <router-link to="/app/home/candidates" class="btn-sm btn-secondary my-2 my-sm-1 mr-1">Candidates</router-link>
+                <router-link v-show="isCandidate" to="/candidate" class="btn-sm btn-secondary my-2 my-sm-1 mr-1">Candidate Profile</router-link>
             </b-navbar-nav>
             <b-navbar-nav class="ml-auto">
                 <b-nav-form>
                 <b-form-select v-model='searchType' size='sm' class='mr-1'>
-                  <option :value="null">Select a search option</option>
+                  <option :value="null">Select...</option>
                   <option value="Election">Election</option>
                   <option value="Candidate">Candidate</option>
                 </b-form-select>

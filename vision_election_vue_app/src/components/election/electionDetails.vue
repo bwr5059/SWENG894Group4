@@ -249,7 +249,7 @@
     {{isElectionClosed}}
     <br>
     {{getWinner}}
-    <br>
+
     <br>
   {{this.form.electionDescription}}
   </b-col>
@@ -571,7 +571,7 @@ import FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
 import Vue from 'vue';
 
 Vue.use(VueFusionCharts, FusionCharts, Column2D, FusionTheme);
-var tabbed = document.getElementById("analytics");
+
 
 export default {
   name: 'electionDetails',
@@ -676,7 +676,7 @@ computed: {
 
   getWinner(){
     if(this.data.data.closed==1){
-      return "Winner is "
+      return "Winner is <br>"
     }else{
       return ""
     }
@@ -731,22 +731,34 @@ methods: {
       this.form.electionCloseDate = this.data.data.close_date
       this.form.electionStartDate = this.data.data.start_date
       this.form.electionKey = this.data.data.election_key
-      this.dataSource.data = [
+     /*  this.dataSource.data = [
             {
-              label: "Luke Skywalker",
+              key: "Luke Skywalker",
               value: "25"
             },
             {
-              label: "Ben Solo",
+              key: "Ben Solo",
               value: "40"
             },
+            {
+              label: "Han Solo",
+              value: "50"
+            }
           ]
+          var newDataSource = this.dataSource.data.map(function(item){
+            return{
+              label: item.key||item.label,
+              value: item.value
+            }
+          })
+          this.dataSource.data = newDataSource */
       this.getCandidates()
       this.getAllCandidates()
       this.getRegistration()
       this.getPolicy()
-      this.getVotes()
+      this.getUserVotes()
       this.calculateCurrentDay()
+      this.getCandidateVotes()
     }).catch((error) => {  
       this.$log.debug(error);  
       this.error="Failed to get election"  
@@ -810,15 +822,18 @@ methods: {
       }).then(this.$router.push({ path: '/app/user/home' }))
       
     },
+    /**
+     * verifyElectionKey() function validates the election key agains the value input by a user when registering.
+     */
     VerifyElectionKey:function(){
-if(this.election_key==this.form.electionKey){
-  alert('Election Key Authenticated')
-  this.showRegisterDialog=false
-  this.register();
-}else{
-  alert('Invalid Key Supplied')
-}
-    },
+      if(this.election_key==this.form.electionKey){
+        alert('Election Key Authenticated')
+        this.showRegisterDialog=false
+        this.register();
+      }else{
+        alert('Invalid Key Supplied')
+      }
+          },
     /**register() gets the current registration type and submits to the relevant API to register the current
     *user to an election
     **/
@@ -843,8 +858,8 @@ if(this.election_key==this.form.electionKey){
         this.$log.debug(error))
       }
     },
-    /**withdraw() calls the api to withdraw a candidate from an election
-     * 
+    /**
+     * withdraw() calls the api to withdraw a candidate from an election
      */
     withdraw: function(){
       if(this.regType=="Candidate"){
@@ -884,7 +899,8 @@ if(this.election_key==this.form.electionKey){
       }).catch((error)=>
       this.$log.debug(error))
     },
-    /**getCandidates() calls the api to get candidates for the current election and creates an array of the returned candidates
+    /**
+     * getCandidates() calls the api to get candidates for the current election and creates an array of the returned candidates
      */
     getCandidates: function(){
       this.$log.debug("calling api: get candidates")
@@ -896,9 +912,10 @@ if(this.election_key==this.form.electionKey){
         }).catch((error)=>
         this.$log.debug(error))
     },
-    /**getAllCandidates() calls the api to return all candidates from the system and creates
-    an array of the candidates
-     */
+    /**
+    * getAllCandidates() calls the api to return all candidates from the system and creates
+    * an array of the candidates
+    */
     getAllCandidates: function(){
       this.$log.debug("calling api to: get all candidates ")
       api_candidate.getCandidates().then((response)=>{
@@ -970,6 +987,10 @@ if(this.election_key==this.form.electionKey){
       }).catch((error)=>
         this.$log.debug(error))
     },
+    /**
+     * associateCandidate() function associates a candidate to an election.  It calls
+     * the registerCandidate API call.
+     */
     associateCandidate: function(){
       this.$log.debug("calling api: associateCandidate()")
       api.registerCandidate(this.candidate_id,this.form.electionId) .then((response)=>{
@@ -983,6 +1004,10 @@ if(this.election_key==this.form.electionKey){
         }).catch((error)=>
         this.$log.debug(error))
     },
+    /**
+     * disassociateCandidate() function removes a candidate from an election.  It calls
+     * the withdraw candidate API call.
+     */
     disassociateCandidate: function(candidateID){
       this.$log.debug("calling api: associateCandidate()")
       api.withdrawCandidate(candidateID,this.form.electionId) .then((response)=>{
@@ -1001,13 +1026,17 @@ if(this.election_key==this.form.electionKey){
       this.selectedCandidate = items
      var can_id=this.selectedCandidate[0].canID;
      var r = confirm("remove candidate from election ?");
-if (r == true) {
-   this.disassociateCandidate(can_id)
-}
-    },
+    if (r == true) {
+      this.disassociateCandidate(can_id)
+    }
+        },
+    /**
+     * writeCandidate() function allows a user to manually input a candidate
+     * as text and calls the castVote API call.
+     */
     writeCandidate: function(){
-       var r = confirm("Are you sure you want to write in candidate and cast your vote?");
-if (r == true) {
+      var r = confirm("Are you sure you want to write in candidate and cast your vote?");
+      if (r == true) {
       this.$log.debug("calling api: writeCandidate()")
        api_user.castVote(this.form.electionId, this.userObj.id, "", this.write_in.firstname, this.write_in.lastname, "cast").then((response)=>{
         this.$log.debug("write in cast: ", response)
@@ -1017,13 +1046,13 @@ if (r == true) {
       this.hasVoted=true;
       }).catch((error)=>
           this.$log.debug(error))
-}
+      }
     },
     /**
-     * getVotes() gets the current num of votes by electionID and by current user
+     * getUserVotes() gets the current num of votes by electionID and by current user
      * @return number of votes
      */
-    getVotes: function(){
+    getUserVotes: function(){
       api.getVotes(this.form.electionId, this.userObj.id) .then((response)=>{
         this.$log.debug("got votes: ", response)
         this.currentVotes = Number(response.data)
@@ -1034,6 +1063,9 @@ if (r == true) {
       }).catch((error)=>
           this.$log.debug(error))
     },
+    /**
+     * validateVote() function validates if the user has already voted. Depricated.
+     */
     validateVote: function(){
       if(this.currentVotes!=0){
         alert("You have already cast a vote")
@@ -1041,7 +1073,10 @@ if (r == true) {
         this.showmodal3=true
       }
     },
-
+    /**
+     * calculateCurrentDay() function gets the current date and converts the date format
+     * to match the format sent from the DB.
+     */
     calculateCurrentDay: function(){
       this.today = new Date();
       var dd = String(this.today.getDate()).padStart(2, '0');
@@ -1067,7 +1102,9 @@ if (r == true) {
       }).catch((error)=>
       this.$log.debug(error))
     },
-
+    /**
+     * abstainFromVoting() function allows a user to abstain from voting and calls the castVote API call.
+     */
     abstainFromVoting : function(){
       this.showmodal5=false
       this.$log.debug("abstaining from casting vote...")
@@ -1095,7 +1132,36 @@ if (r == true) {
       }).catch((error)=>{
         this.$log.debug(error)
       })
+    },
+    /**
+     * getCadidateVotes() function gets the current number of votes for each candidate. This function calls
+     * the getCandidateVotes API call. 
+     * @return number of votes per candidate
+     */
+    getCandidateVotes: function(){
+      this.$log.debug("Getting votes for election")
+      api.getCandidateVotes(this.form.electionId).then((response)=>{
+        this.$log.debug("Votes by candidate returned", response)
+        
+        var returnString = response.data.substring(1, response.data.length-1)
+       
+        if(returnString.length!=0){
+          this.dataSource.data = []
+        returnString = returnString.replace(/"/g, "")
+        //returnString = returnString.replace('"', '')
       
+        var returnArray = returnString.split(",")
+        var newArray = []
+        for(var e=0;e<returnArray.length;e++){
+          var splitArray = returnArray[e].split(":")
+          var objArray = {label: splitArray[0], value: splitArray[1]}
+          this.dataSource.data.push(objArray)
+        }}
+         
+        //this.dataSource.data = newArray
+      }).catch((error)=>{
+        this.$log.debug(error)
+      })
     },
     
 },

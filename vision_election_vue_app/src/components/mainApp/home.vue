@@ -1,27 +1,28 @@
 <template>
   <b-container>
-    <b-row class ='d-flex justify-content-center'>
-    Home content goes here.  You successfully logged in!
-  
-    </b-row>
-  
-  
-    <b-row class ='d-flex justify-content-center'>
-    <!-- email: {{userEmail}} id: {{userID}} firstname: {{userFName}} lastname: {{userLName}} -->
-
-  
-
     
-    </b-row>
-    <b-row class ='d-flex justify-content-center'>
-      <b-form-textarea
-          id="textarea"
-           
-          placeholder="Enter something..."
-          rows="3"
-          max-rows="6"
-      ></b-form-textarea>
-    </b-row>
+      <b-card title="Welcome to Vision Election...">
+        <b-card-text>
+    <b>Create and Customize Elections</b> <br>
+
+Fast and easy creation of elections without the hassle. Vision Election System offers many policy customization options including determining how many candidates a voter can vote for and options for writing in a candidate or abstaining from voting.  
+<br>
+<br>
+<b>Manage your Elections</b> <br>
+
+Worry free management of your elections. Control who can vote in elections by issuing a generated key and remove voters who can no longer vote. Add and remove candidates before the start of an election. 
+<br>
+<br>
+<b>Participate in an Election</b> <br>
+
+Participate as a voter in an election with a few simple clicks. Our easy to use interface makes your online voting experience worry free. 
+        </b-card-text>
+      </b-card>
+   
+  
+  
+   
+   
 
     
   

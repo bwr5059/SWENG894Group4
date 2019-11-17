@@ -1,7 +1,7 @@
 import axios from 'axios'  
 import Vue from 'vue'  
   
-const SERVER_URL = 'http://localhost:9000';  
+const SERVER_URL = 'http://localhost:5000';  
   
 const instance = axios.create({  
   baseURL: SERVER_URL,  
@@ -112,6 +112,11 @@ export default {
       [function (data) {
         return data
       }]}),
+
+      getCandidateVotes: (electionID)=> instance.get('/election/getCandidateVotes/'+electionID, {transformResponse: 
+        [function (data) {
+          return data
+        }]}),
 
 
 }

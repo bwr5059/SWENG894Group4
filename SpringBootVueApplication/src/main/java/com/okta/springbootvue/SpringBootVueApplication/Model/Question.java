@@ -29,6 +29,10 @@ public class Question {
   private String canID;
   
   //User asking the question
+  private String userFirstName;
+
+  private String userLastName;
+
   private String userID;
   
   private String question;

@@ -11,23 +11,21 @@
 
 package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao;
 
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Question;
+
 import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.PreparedStatement;
-
-import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Question;
-import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
 
 /**
  * QuestionConnectionDao Class - Connects to MySQL database vision-database and performs queries through methods to update
  * database.
  */
 public class QuestionConnectionDao {
-	ConnectionDao connectionDao = new ConnectionDao();
+	src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ConnectionDao connectionDao = new src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ConnectionDao();
 	
 	/**
 	 * getMaxID() - Gets current highest qID
@@ -68,9 +66,11 @@ public class QuestionConnectionDao {
 			while(rs.next())  {
 				question.setQID(rs.getInt(1));
 				question.setCanID(rs.getString(2));
-				question.setUserID(rs.getString(3));
-				question.setQuestion(rs.getString(4));
-				question.setAnswer(rs.getString(5));
+				question.setUserFirstName(rs.getString(3));
+				question.setUserLastName(rs.getString(4));
+				question.setUserID(rs.getString(5));
+				question.setQuestion(rs.getString(6));
+				question.setAnswer(rs.getString(7));
 			}
 			
 			connectionDao.ReleaseConnection(conn);
@@ -99,9 +99,11 @@ public class QuestionConnectionDao {
 				Question question = new Question();
 				question.setQID(rs.getInt(1));
 				question.setCanID(rs.getString(2));
-				question.setUserID(rs.getString(3));
-				question.setQuestion(rs.getString(4));
-				question.setAnswer(rs.getString(5));
+				question.setUserFirstName(rs.getString(3));
+				question.setUserLastName(rs.getString(4));
+				question.setUserID(rs.getString(5));
+				question.setQuestion(rs.getString(6));
+				question.setAnswer(rs.getString(7));
 				questionList.add(question);
 			}
 			
@@ -124,14 +126,16 @@ public class QuestionConnectionDao {
 		
 		try {
 			Connection conn = connectionDao.RetrieveConnection();
-			String sql = "INSERT INTO question(qID, canID, userID, question, answer) VALUES (?,?,?,?,?)"; 
-			PreparedStatement stmt=conn.prepareStatement(sql); 
-			
+			String sql = "INSERT INTO question(qID, canID, userFirstName, userLastName, userID, question, answer) VALUES (?,?,?,?,?,?,?)";
+			PreparedStatement stmt=conn.prepareStatement(sql);
+
 			stmt.setInt(1, question.getQID());
 			stmt.setString(2,question.getCanID());
-			stmt.setString(3,question.getUserID());
-			stmt.setString(4,question.getQuestion());
-			stmt.setString(5,question.getAnswer());	 
+			stmt.setString(3,question.getUserFirstName());
+			stmt.setString(4,question.getUserLastName());
+			stmt.setString(5,question.getUserID());
+			stmt.setString(6,question.getQuestion());
+			stmt.setString(7,question.getAnswer());
 			stmt.executeUpdate();
 			
 			connectionDao.ReleaseConnection(conn);

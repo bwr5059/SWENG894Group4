@@ -140,14 +140,20 @@ public class DecisionTree {
 		TreeHelperDao treeHelper = new TreeHelperDao();
 		ElectionHelperDao electionHelper = new ElectionHelperDao();
 		
+		//Get Total Candidates
+		HashMap<String, String> regCandidates = electionHelper.tallyCands(electionID);
+		System.out.println("REGISTERED CANS: " + regCandidates);
+		
 		//Get Candidates with Votes
 		HashMap<String, Integer> candidates = electionHelper.tallyVotes(electionID);
+		System.out.println("CANS WITH VOTES: " + candidates);
 		
 		//Check Ballot Submission Progress
 		//Total number of potential votes
-		int ballotTotal = treeHelper.getTotalPotentialVotes(electionID);
+		int ballotTotal = treeHelper.getTotalPotentialVotes(electionID) + 1;//+1 for Write-Ins
 		//Total votes submitted to date
 		int ballotToDate = treeHelper.getVotesToDate(electionID);
+		System.out.println("TO DATE: " + ballotToDate);
 		float ballotProg = 0;
 		if(ballotTotal>0) {
 			ballotProg = (float)ballotToDate/ballotTotal;
@@ -158,28 +164,37 @@ public class DecisionTree {
 		//this would be the prediction of 
 		//each candidate
 		//Number of Registered Candidates
-		int ballotLow = treeHelper.getTotalRegCands(electionID);
+		//int ballotLow = treeHelper.getTotalRegCands(electionID);
+		int ballotLow = regCandidates.size();
+		System.out.println("NUM REG CANDS: " + ballotLow);
 		float startChance = (1/((float)ballotLow+1));//Plus 1 for Write-Ins
+		System.out.println("START CHANCE: " + startChance);
 		
 		//Smallest Number of Votes Needed to Win Election
 		float smallTotal = startChance*ballotTotal;
+		System.out.println("SMALL TOTAL: " + smallTotal);
 		
 		//Largest Number of Votes Needed to Win Election
 		float largeTotal = (ballotTotal/2)+1;
+		System.out.println("LARGE TOTAL: " + largeTotal);
 		
 		//Results
 		HashMap<String, Float>  results = 
                 	new HashMap<String, Float>();
+		String canName = "";
 		String canID = "";
 		
 		//If the number of votes submitted is less than total needed to win
 		//All chances are roughly the same
-		if((ballotProg*ballotTotal) < smallTotal){
-			for(HashMap.Entry<String,Integer> entry : candidates.entrySet()){
-				canID = entry.getKey();
-		    	if(!canID.equals("Write")){
-		        	results.put(canID,startChance);
-				}
+		System.out.println("BALLOT PROG: " + ballotProg);
+		System.out.println("BALLOT TOTAL: " + ballotTotal);
+		System.out.println("SMALL TOTAL: " + smallTotal);
+		
+		if((ballotProg*ballotTotal) <= smallTotal){
+			for(HashMap.Entry<String,String> entry : regCandidates.entrySet()){
+				canName = entry.getKey();
+				System.out.println("CAN: " + canName);
+		        results.put(canName,startChance);
 			}
 			//Only one "Write-in" Entry for Pie Chart
 			results.put("Write",startChance);
@@ -190,36 +205,50 @@ public class DecisionTree {
 			String type="";
 			float chance = 0;
 			float numVotes = 0;
+			float totalVotesCast = 0;
 			//Count the total chance Count
 			float chanceCount = 0;
 			float totalWrites = 0;
 			
-			//Loop through Candidates
-			for(HashMap.Entry<String,Integer> entry : candidates.entrySet()){
-				numVotes = entry.getValue();
-				canID = entry.getKey();
-		    		if(!canID.equals("Write")){
+			//Loop through Registered Candidates
+			for(HashMap.Entry<String,String> entry : regCandidates.entrySet()){
+				canID = entry.getValue();
+				canName = entry.getKey();
+		    		
+				//Check if Candidate has any votes
+				if(candidates.get(canName) != null){
+					//Get Number of Votes Candidate Received
+					numVotes = (float)candidates.get(canName);
+					//Keep tally of votes to registered candidates
+					totalVotesCast = totalVotesCast + numVotes;
+					
 					//Traverse Decision Tree to Predict Chance
-		        		type =  traverseTree(electionID, canID, tree, ballotTotal, ballotLow);
+		        	type =  traverseTree(electionID, canID, tree, ballotTotal, ballotLow);
+		        	
 					//Weight each candidate chance
-		    			if(type.equals("Likely")){
+		    		if(type.equals("Likely")){
 						chance = startChance * 2 * numVotes;
-		        		}else if(type.equals("Potential")){
-			    			chance = startChance * numVotes;
-		        		}else if(type.equals("Unlikely")){
-	                    			chance = startChance * (1/2) * numVotes;
-		        		}
-					results.put(canID,chance);
-		    		}else{
-		        		//Total Number of Write-In Votes
-		    			totalWrites = numVotes;
-		    			chance = numVotes;
-		    		}
+						System.out.println(canName + ": Likely");
+		        	}else if(type.equals("Potential")){
+			    		chance = startChance * numVotes;
+			    		System.out.println(canName + ": Potential");
+		        	}else if(type.equals("Unlikely")){
+	                	chance = startChance * (1/2) * numVotes;
+	                	System.out.println(canName + ": Unlikely");
+		        	}
+		    		
+		    		//Add Weighted Chance to results
+					results.put(canName,chance);
+		    	}else{
+		    			//Candidate has not received any votes
+		    			results.put(canName,(float)0);
+		    	}
+				
 				//Tally Total Weighted Votes
 				chanceCount = chanceCount + chance;
 			}
-			//Add final Write Entry
-			results.put("Write",totalWrites);
+			//All other votes go to Write-Ins
+			results.put("Write",((float)ballotToDate-totalVotesCast));
 
 			float result = 0;
 			//Fix Weights to Equal 100

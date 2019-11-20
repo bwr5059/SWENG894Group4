@@ -227,13 +227,13 @@ public class DecisionTree {
 		        	
 					//Weight each candidate chance
 		    		if(type.equals("Likely")){
-						chance = startChance * 2 * numVotes;
+						chance = 2 * numVotes;
 						System.out.println(canName + ": Likely");
 		        	}else if(type.equals("Potential")){
-			    		chance = startChance * numVotes;
+			    		chance = numVotes;
 			    		System.out.println(canName + ": Potential");
 		        	}else if(type.equals("Unlikely")){
-	                	chance = startChance * (1/2) * numVotes;
+	                	chance = (1/2) * numVotes;
 	                	System.out.println(canName + ": Unlikely");
 		        	}
 		    		
@@ -255,6 +255,7 @@ public class DecisionTree {
 			for(HashMap.Entry<String,Float> entry : results.entrySet()){
 				numVotes = entry.getValue();
 				canID = entry.getKey();
+				System.out.println(canID + ": " + numVotes + ", " + chanceCount);
 				result = numVotes/chanceCount;
 				results.put(canID, result);
 			}

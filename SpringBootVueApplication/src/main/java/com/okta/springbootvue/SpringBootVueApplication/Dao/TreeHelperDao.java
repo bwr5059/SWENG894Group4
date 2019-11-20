@@ -88,7 +88,7 @@ public class TreeHelperDao {
 	 * @param 
 	 * @return 
 	 */
-	public int getTotalRegCands(int electionID){
+	/*public int getTotalRegCands(int electionID){
 	    int total = 0;
 		
 	    try {
@@ -106,7 +106,7 @@ public class TreeHelperDao {
 			e.printStackTrace();
 		}
 	    return total;	
-	}
+	}*/
 	
 	/**
 	 * getTotalQuestions() - 
@@ -289,7 +289,7 @@ public class TreeHelperDao {
 		Connection conn = connectionDao.RetrieveConnection();
 		String sql = "SELECT count(qID) FROM question INNER JOIN electionCandidate " +
 			"ON question.canID = electionCandidate.canID " +
-			"WHERE electionID=? AND canID=?"; 
+			"WHERE electionID=? AND electionCandidate.canID=?"; 
 		PreparedStatement stmt=conn.prepareStatement(sql); 
 		stmt.setInt(1,electionID);
 		stmt.setString(2,canID);

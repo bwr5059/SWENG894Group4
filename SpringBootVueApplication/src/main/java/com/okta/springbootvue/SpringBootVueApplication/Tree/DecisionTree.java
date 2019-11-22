@@ -256,7 +256,7 @@ public class DecisionTree {
 				numVotes = entry.getValue();
 				canID = entry.getKey();
 				System.out.println(canID + ": " + numVotes + ", " + chanceCount);
-				result = numVotes/chanceCount;
+				result = (numVotes/chanceCount)*100;
 				results.put(canID, result);
 			}
 			

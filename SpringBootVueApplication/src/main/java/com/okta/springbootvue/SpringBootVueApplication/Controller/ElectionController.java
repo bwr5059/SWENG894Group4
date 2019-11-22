@@ -387,5 +387,26 @@ public class ElectionController {
 
 		return map;
 	}
+	
+	/**
+	 * getChances() - 
+	 * @param electionID
+	 * @return HashMap<String,Integer>
+	 */
+	@GetMapping("/election/getChances/{electionID}")
+	public HashMap<String, Float> getChances(@PathVariable("electionID") int electionID) {
+		HashMap<String,Float> map =
+				new HashMap<String,Float>();
+
+		Election election = electionService.findElectionById(electionID);
+
+		if (election == null) {
+			return  map;
+		}
+
+		map = electionService.getChances(electionID);
+
+		return map;
+	}
   
 }

@@ -66,8 +66,12 @@ public class DecisionTree {
 		ballotTotal = (ballotTotal/2)+1;
 		//Number of potential votes from majority gender
 		int ballotGender = treeHelper.getVoterMajority(electionID, 1);
+		//Find Majority of that Number
+		ballotGender = (ballotGender/2)+1;
 		//Number of potential votes from majority race
 		int ballotRace = treeHelper.getVoterMajority(electionID, 2);
+		//Find Majority of that Number
+		ballotRace = (ballotRace/2)+1;
 		//Number of questions for candidates registered in election
 		int ballotQuestion = treeHelper.getTotalQuestions(electionID);
 		
@@ -142,18 +146,15 @@ public class DecisionTree {
 		
 		//Get Total Candidates
 		HashMap<String, String> regCandidates = electionHelper.tallyCands(electionID);
-		System.out.println("REGISTERED CANS: " + regCandidates);
 		
 		//Get Candidates with Votes
 		HashMap<String, Integer> candidates = electionHelper.tallyVotes(electionID);
-		System.out.println("CANS WITH VOTES: " + candidates);
 		
 		//Check Ballot Submission Progress
 		//Total number of potential votes
 		int ballotTotal = treeHelper.getTotalPotentialVotes(electionID) + 1;//+1 for Write-Ins
 		//Total votes submitted to date
 		int ballotToDate = treeHelper.getVotesToDate(electionID);
-		System.out.println("TO DATE: " + ballotToDate);
 		float ballotProg = 0;
 		if(ballotTotal>0) {
 			ballotProg = (float)ballotToDate/ballotTotal;
@@ -166,17 +167,13 @@ public class DecisionTree {
 		//Number of Registered Candidates
 		//int ballotLow = treeHelper.getTotalRegCands(electionID);
 		int ballotLow = regCandidates.size();
-		System.out.println("NUM REG CANDS: " + ballotLow);
 		float startChance = (1/((float)ballotLow+1));//Plus 1 for Write-Ins
-		System.out.println("START CHANCE: " + startChance);
 		
 		//Smallest Number of Votes Needed to Win Election
 		float smallTotal = startChance*ballotTotal;
-		System.out.println("SMALL TOTAL: " + smallTotal);
 		
 		//Largest Number of Votes Needed to Win Election
 		float largeTotal = (ballotTotal/2)+1;
-		System.out.println("LARGE TOTAL: " + largeTotal);
 		
 		//Results
 		HashMap<String, Float>  results = 
@@ -186,14 +183,9 @@ public class DecisionTree {
 		
 		//If the number of votes submitted is less than total needed to win
 		//All chances are roughly the same
-		System.out.println("BALLOT PROG: " + ballotProg);
-		System.out.println("BALLOT TOTAL: " + ballotTotal);
-		System.out.println("SMALL TOTAL: " + smallTotal);
-		
 		if((ballotProg*ballotTotal) <= smallTotal){
 			for(HashMap.Entry<String,String> entry : regCandidates.entrySet()){
 				canName = entry.getKey();
-				System.out.println("CAN: " + canName);
 		        results.put(canName,startChance);
 			}
 			//Only one "Write-in" Entry for Pie Chart
@@ -228,25 +220,24 @@ public class DecisionTree {
 					//Weight each candidate chance
 		    		if(type.equals("Likely")){
 						chance = 2 * numVotes;
-						System.out.println(canName + ": Likely");
 		        	}else if(type.equals("Potential")){
 			    		chance = numVotes;
-			    		System.out.println(canName + ": Potential");
 		        	}else if(type.equals("Unlikely")){
-	                	chance = (1/2) * numVotes;
-	                	System.out.println(canName + ": Unlikely");
+	                	chance = numVotes/2;
 		        	}
 		    		
 		    		//Add Weighted Chance to results
 					results.put(canName,chance);
+					//Tally Total Weighted Votes
+					chanceCount = chanceCount + chance;
 		    	}else{
 		    			//Candidate has not received any votes
 		    			results.put(canName,(float)0);
 		    	}
 				
-				//Tally Total Weighted Votes
-				chanceCount = chanceCount + chance;
 			}
+			//Add Write-In Votes to Chance Count
+			chanceCount = chanceCount + (float)ballotToDate-totalVotesCast;
 			//All other votes go to Write-Ins
 			results.put("Write",((float)ballotToDate-totalVotesCast));
 
@@ -255,7 +246,6 @@ public class DecisionTree {
 			for(HashMap.Entry<String,Float> entry : results.entrySet()){
 				numVotes = entry.getValue();
 				canID = entry.getKey();
-				System.out.println(canID + ": " + numVotes + ", " + chanceCount);
 				result = (numVotes/chanceCount)*100;
 				results.put(canID, result);
 			}

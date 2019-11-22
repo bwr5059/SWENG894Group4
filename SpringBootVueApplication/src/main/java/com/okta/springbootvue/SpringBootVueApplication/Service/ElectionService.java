@@ -76,5 +76,8 @@ public interface ElectionService {
 	
 	//Return hashmap of votes by candidate
 	HashMap<String, Integer> tallyVotes(int electionID);
+	
+	//Return hashmap of percentage chance to win by candidate
+	HashMap<String, Float> getChances(int electionID);
 		
 }

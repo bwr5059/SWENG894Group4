@@ -30,6 +30,7 @@ import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Elect
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Policy;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Tree.DecisionTree;
 
 /**
  * ElectionServiceImpl Class - Implements ElectionService interface. Connects ElectionService class methods to database by
@@ -211,6 +212,17 @@ public class ElectionServiceImpl implements ElectionService{
 		ElectionHelperDao helperDao = new ElectionHelperDao();
 		HashMap<String, Integer> listofMaps = new HashMap<String, Integer>();
 		listofMaps= helperDao.tallyVotes(electionID);
+		return listofMaps;
+	}
+	
+	/**
+	 * getChances() - 
+	 * @param electionID
+	 */
+	public HashMap<String, Float> getChances(int electionID) {
+		DecisionTree tree = new DecisionTree();
+		HashMap<String, Float> listofMaps = new HashMap<String, Float>();
+		listofMaps= tree.calculateChances(electionID);
 		return listofMaps;
 	}
 	

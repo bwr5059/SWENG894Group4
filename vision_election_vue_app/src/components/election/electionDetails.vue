@@ -75,9 +75,10 @@
           </b-form-group>
           </b-col>
         </b-row>
-      <b-button v-show="!editable&this.$parent.$parent.authorized" v-on:click="edit">Edit</b-button>
+      <b-button class="ml-1"  v-show="!editable&this.$parent.$parent.authorized" v-on:click="edit">Edit</b-button>
+      <b-button class="ml-1" v-show="!editable&this.$parent.$parent.authorized" v-on:click="deleteElection">Delete</b-button>
       <b-button v-show="editable" class="mr-1" v-on:click="cancel">Cancel</b-button>
-      <b-button v-show="editable" v-on:click="updateElection()">Submit</b-button>
+      <b-button class="ml-1" v-show="editable" v-on:click="updateElection()">Submit</b-button>
       <!-- <b-button v-show="!editable" class="ml-1">Register</b-button> -->
       <b-button v-show="!editable" v-on:click="showmodal=true" class="ml-1">Set Policy</b-button>
       <b-button v-show="!editable" v-on:click="showmodal6=true" class="ml-1">Duplicate Election</b-button>
@@ -804,6 +805,20 @@ methods: {
     edit: function(){
       this.editable=true
     },
+
+  /**
+  Delete
+   */
+    deleteElection:function(){
+       var r = confirm("Are you sure you want to delete the election ?");
+if (r == true) {
+   api.removeElection(this.form.electionId).then((response)=>{
+        this.$log.debug("Deleted election", response)
+      }).catch((error)=>{
+        this.$log.debug(error)
+      }).then(this.$router.push({ path: '/app/home/elections' }))
+}
+         },
     /**cancel() disables editing of election
     **/
     cancel: function(){

@@ -52,7 +52,7 @@ public class DecisionTree {
 	/*
 	 * *
 	 */
-	public String traverseTree(int electionID, String canID, ArrayList<Node> tree, int ballotTotal, int ballotLow) {
+	public String traverseTree(int electionID, String canID, ArrayList<Node> tree, int ballotTotal, int ballotLow, int ballotGender, int ballotRace, int ballotQuestion) {
 		//Object to call functions to collect election
 		//and candidate analytical data
 		TreeHelperDao treeHelper = new TreeHelperDao();
@@ -64,16 +64,10 @@ public class DecisionTree {
 		ballotLow = ((1/ballotLow)*ballotTotal)+1;
 		//Majority of Votes
 		ballotTotal = (ballotTotal/2)+1;
-		//Number of potential votes from majority gender
-		int ballotGender = treeHelper.getVoterMajority(electionID, 1);
 		//Find Majority of that Number
 		ballotGender = (ballotGender/2)+1;
-		//Number of potential votes from majority race
-		int ballotRace = treeHelper.getVoterMajority(electionID, 2);
 		//Find Majority of that Number
 		ballotRace = (ballotRace/2)+1;
-		//Number of questions for candidates registered in election
-		int ballotQuestion = treeHelper.getTotalQuestions(electionID);
 		
 		//Candidate Analytics
 		HashMap<String,Integer> majorities = treeHelper.getCandInfo(electionID, canID);
@@ -201,6 +195,12 @@ public class DecisionTree {
 			//Count the total chance Count
 			float chanceCount = 0;
 			float totalWrites = 0;
+			//Number of potential votes from majority gender
+			int ballotGender = treeHelper.getVoterMajority(electionID, 1);
+			//Number of potential votes from majority race
+			int ballotRace = treeHelper.getVoterMajority(electionID, 2);
+			//Number of questions for candidates registered in election
+			int ballotQuestion = treeHelper.getTotalQuestions(electionID);
 			
 			//Loop through Registered Candidates
 			for(HashMap.Entry<String,String> entry : regCandidates.entrySet()){
@@ -215,7 +215,7 @@ public class DecisionTree {
 					totalVotesCast = totalVotesCast + numVotes;
 					
 					//Traverse Decision Tree to Predict Chance
-		        	type =  traverseTree(electionID, canID, tree, ballotTotal, ballotLow);
+		        	type =  traverseTree(electionID, canID, tree, ballotTotal, ballotLow, ballotGender, ballotRace, ballotQuestion);
 		        	
 					//Weight each candidate chance
 		    		if(type.equals("Likely")){

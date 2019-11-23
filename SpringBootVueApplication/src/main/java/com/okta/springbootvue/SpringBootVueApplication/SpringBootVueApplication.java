@@ -30,7 +30,7 @@ public class SpringBootVueApplication {
         CorsConfiguration config = new CorsConfiguration();  
         config.setAllowCredentials(true); 
         // *** URL below needs to match the Vue client URL and port ***
-        config.setAllowedOrigins(Collections.singletonList("http://visionelection-env.fx3z2p5pjd.us-east-2.elasticbeanstalk.com")); 
+        config.setAllowedOrigins(Collections.singletonList("http://vision-election-sweng894.com.s3-website.us-east-2.amazonaws.com")); 
         config.setAllowedMethods(Collections.singletonList("*"));  
         config.setAllowedHeaders(Collections.singletonList("*"));  
         source.registerCorsConfiguration("/**", config);  

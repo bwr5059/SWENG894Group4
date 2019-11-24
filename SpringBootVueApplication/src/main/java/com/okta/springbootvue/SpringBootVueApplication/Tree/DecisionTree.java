@@ -1,3 +1,14 @@
+/*---------------------------------------------------------------------
+|  Class DecisionTree
+|
+|  Purpose: Decision Tree Methods
+|
+|  Methods: getNodes, traverseTree, calculateChances
+|
+|  Version: Sprint 3
+|  
+*-------------------------------------------------------------------*/
+
 package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Tree;
 
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Node;
@@ -49,8 +60,10 @@ public class DecisionTree {
 	}
 	
 	
-	/*
-	 * *
+	/**
+	 * traverseTree - Traverse decision tree by candidate
+	 * @param electionID, canID, tree, ballotTotal, ballotLow, ballotGender, ballotRace, ballotQuestion
+	 * @return String
 	 */
 	public String traverseTree(int electionID, String canID, ArrayList<Node> tree, int ballotTotal, int ballotLow, int ballotGender, int ballotRace, int ballotQuestion) {
 		//Object to call functions to collect election
@@ -130,8 +143,10 @@ public class DecisionTree {
 		return result;
 	}
 	
-	/*
-	 * *
+	/**
+	 * calculateChances - Return candidate chances of winning election
+	 * @param electionID
+	 * @return HashMap<String, Float>
 	 */
 	public HashMap<String, Float> calculateChances(int electionID) {
 		//Objects to Call Helper Methods

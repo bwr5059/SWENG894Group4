@@ -810,14 +810,25 @@ methods: {
   Delete
    */
     deleteElection:function(){
-       var r = confirm("Are you sure you want to delete the election ?");
+
+      //check if election has started
+      var startElectionDate=Date.parse(this.form.electionStartDate);
+      
+      //var notStarted=this.isDateBeforeToday(new Date(2016, 11, 16));
+      var started=this.isDateBeforeToday(startElectionDate);
+
+    if(!started){
+       var r = confirm("The election has not started. Are you sure you want to delete the election ?");
 if (r == true) {
    api.removeElection(this.form.electionId).then((response)=>{
         this.$log.debug("Deleted election", response)
       }).catch((error)=>{
         this.$log.debug(error)
       }).then(this.$router.push({ path: '/app/home/elections' }))
-}
+    }
+    }else{
+      alert('Election has started/closed and cannot be deleted');
+    }
          },
     /**cancel() disables editing of election
     **/
@@ -1123,7 +1134,11 @@ if (r == true) {
       })
       
     },
-    
+    isDateBeforeToday: function(date) {
+    return date < new Date(new Date().toDateString());
+},
+
+
 },
 }
 </script>

@@ -30,6 +30,7 @@
 
 import api from '@/apis/userApi'
 import Eapi from '@/apis/electionApi'
+import Capi from '@/apis/candidateApi'
 export default {
   name: 'homeLayout',
   props: {
@@ -51,7 +52,8 @@ export default {
         profileComplete: null,
         activeUser: null,
         searchType: null,
-        elections: null
+        elections: null,
+        candidates: null
       }
 },
 created: function(){
@@ -132,11 +134,38 @@ router path.
         }
     },
 
+    validateCandidate: function(candidate){
+      this.$log.debug("Checking candidate", this.candidates)
+        for(var a = 0; a<this.candidates.length; a++){
+          if(this.candidates[a].last_name==candidate){
+            return true
+          }
+        }
+    },
+
     searchCandidate: function(){
-        alert("Routing to Candidate Profile")
-       this.$router.push({path: `/app/home/Candidate/${this.form.id}/details`})
+      //   alert("Routing to Candidate Profile")
+      //  this.$router.push({path: `/app/home/Candidate/${this.form.id}/details`})
+      //   this.form.id="";
+      //   this.searchType=null;
+       Capi.getCandidates().then( (response) => {  
+        this.$log.debug("Success getting candidates:", response);
+        this.candidates=response.data._embedded.candidates
+        if(this.validateCandidate(this.form.id)){  
+        this.$router.push({path: `/app/home/Candidate/${this.form.id}/details`})
         this.form.id="";
         this.searchType=null;
+        //this.candidates=null;
+        }else{
+          alert("Candidate not found")
+          this.form.id="";
+          this.searchType=null;
+          //this.elections=null;
+        }
+    }).catch((error) => {  
+      this.$log.debug(error);  
+      this.error = "Failed to get elections"  
+	});  
     },
 
 

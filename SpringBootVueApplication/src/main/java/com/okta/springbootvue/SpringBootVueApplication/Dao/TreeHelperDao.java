@@ -3,7 +3,8 @@
 |
 |  Purpose: Tree Database Queries
 |
-|  Methods: 
+|  Methods: getTotalPotentialVotes, getVotesToDate, getTotalQuestions,
+|  getVoterMajority, getVoterMajorityName, getCandQuestionInfo
 |
 |  Version: Sprint 3
 |  
@@ -34,9 +35,9 @@ public class TreeHelperDao {
 	ConnectionDao connectionDao = new ConnectionDao();
 	
 	/**
-	 * getTotalPotentialVotes() - 
-	 * @param 
-	 * @return 
+	 * getTotalPotentialVotes() - Return count of all registered users
+	 * @param electionID
+	 * @return int
 	 */
 	public int getTotalPotentialVotes(int electionID){
 	    int total = 0;
@@ -59,9 +60,9 @@ public class TreeHelperDao {
 	}
 	
 	/**
-	 * getVotesToDate() - 
-	 * @param 
-	 * @return 
+	 * getVotesToDate() - Return count of ballots submitted
+	 * @param electionID
+	 * @return int
 	 */
 	public int getVotesToDate(int electionID){
 	    int total = 0;
@@ -85,9 +86,9 @@ public class TreeHelperDao {
 	}
 	
 	/**
-	 * getTotalQuestions() - 
-	 * @param 
-	 * @return 
+	 * getTotalQuestions() - Return count of questions asked to registered candidates
+	 * @param electionID
+	 * @return int
 	 */
 	public int getTotalQuestions(int electionID){
 	    int total = 0;
@@ -112,9 +113,9 @@ public class TreeHelperDao {
 	}
 	
 	/**
-	 * getVoterMajority() - 
-	 * @param 
-	 * @return 
+	 * getVoterMajority() - Return majority gender or race of registered voters
+	 * @param electionID, val
+	 * @return int
 	 */
 	public int getVoterMajority(int electionID, int val){
 	    HashMap<String,Integer> tallies = 
@@ -159,9 +160,9 @@ public class TreeHelperDao {
 	}
 			  
 	/**
-	 * getVoterMajorityName() - 
-	 * @param 
-	 * @return 
+	 * getVoterMajorityName() - Return majority gender or race name
+	 * @param electionID, val
+	 * @return String
 	 */
 	public String getVoterMajorityName(int electionID, int val){
 	    HashMap<String,Integer> tallies = 
@@ -207,10 +208,10 @@ public class TreeHelperDao {
 	    return key;
 	}
 
-/**
-	 * getCandInfo() - 
-	 * @param 
-	 * @return 
+	/**
+	 * getCandInfo() - Return Number of Majority Type Voted for given candidate
+	 * @param electionID, canID
+	 * @return HashMap<String,Integer>
 	 */
 	public HashMap<String, Integer> getCandInfo(int electionID, String canID){
 	    //Display Candidate Vote Tallies in HashMap
@@ -253,10 +254,10 @@ public class TreeHelperDao {
 	    return tallies;
 	}
 
-/**
-	 * getCandQuestionInfo() - 
-	 * @param 
-	 * @return 
+	/**
+	 * getCandQuestionInfo() - Return Count of questions asked to a candidate
+	 * @param electionID, canID
+	 * @return int
 	 */
 	public int getCandQuestionInfo(int electionID, String canID){
 	    int total = 0;

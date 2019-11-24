@@ -3,7 +3,7 @@
 |
 |  Purpose: Election Database Queries
 |
-|  Methods: 
+|  Methods: tallyCands, tallyVotes, calculateLead
 |
 |  Version: Sprint 3
 |  
@@ -34,9 +34,9 @@ public class ElectionHelperDao {
 	ConnectionDao connectionDao = new ConnectionDao();
 	
 	/**
-	 * tallyCands() - 
-	 * @param 
-	 * @return 
+	 * tallyCands() - Candidate by ID and name
+	 * @param electionID
+	 * @return HashMap<String,String>
 	 */
 	public HashMap<String,String> tallyCands(int electionID){
 	    //Display Votes in a Hash Map
@@ -66,9 +66,9 @@ public class ElectionHelperDao {
 	}
 	
 	/**
-	 * tallyVotes() - 
-	 * @param 
-	 * @return 
+	 * tallyVotes() - Candidate by Votes
+	 * @param electionID
+	 * @return HashMap<String, Integer>
 	 */
 	public HashMap<String, Integer> tallyVotes(int electionID){
 	    //Display Votes in a Hash Map
@@ -104,9 +104,9 @@ public class ElectionHelperDao {
 	}
 	
 	/**
-	 * calculateLead() - 
-	 * @param 
-	 * @return 
+	 * calculateLead() - Current Election Lead Candidate(s)
+	 * @param electionID
+	 * @return ArrayList<String>
 	 */
 	public ArrayList<String> calculateLead(int electionID){
 	    //Return Array in case of Tie
@@ -143,8 +143,8 @@ public class ElectionHelperDao {
 	/**
 	 * tallyType() - Resturn list of users who abstained or wrote in for given election
 	 * Can also returns users who voted for given candidate
-	 * @param 
-	 * @return 
+	 * @param electionID, type
+	 * @return ArrayList<User>
 	 */
 	public ArrayList<User> tallyType(int electionID, String type){
 	    ArrayList<User> users = new ArrayList<User>();

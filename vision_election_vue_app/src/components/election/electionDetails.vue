@@ -876,19 +876,24 @@ methods: {
      * deleteElection() calls the removeElection endpoint to delete an election from the system.
      */
     deleteElection:function(){
-       var r = confirm("Are you sure you want to delete the election ?");
+      //check if election has started
+      var startElectionDate=Date.parse(this.form.electionStartDate);
+      
+      //var notStarted=this.isDateBeforeToday(new Date(2016, 11, 16));
+      var started=this.isDateBeforeToday(startElectionDate);
+      if(!started){
+        var r = confirm("The election has not started. Are you sure you want to delete the election ?");
         if (r == true) {
           api.removeElection(this.form.electionId).then((response)=>{
                 this.$log.debug("Deleted election", response)
-                if(response.status==200){
-                  alert("Election Deleted!")
-                  this.$router.push({ path: '/app/home/elections' })
-                }
               }).catch((error)=>{
                 this.$log.debug(error)
-              })
-        }
-    },
+              }).then(this.$router.push({ path: '/app/home/elections' }))
+            }
+            }else{
+              alert('Election has started/closed and cannot be deleted');
+            }
+         },
     /**cancel() disables editing of election
     **/
     cancel: function(){
@@ -1270,26 +1275,24 @@ methods: {
       this.$log.debug("getting prediction: ")
       api.getPrediction(this.form.electionId).then((response)=>{
         this.$log.debug("prediction returned: ", response)
-          
         var returnString = response.data.substring(1, response.data.length-1)
-       
         if(returnString.length!=0){
           this.dataSource2.data = []
         returnString = returnString.replace(/"/g, "")
-        //returnString = returnString.replace('"', '')
-      
         var returnArray = returnString.split(",")
-        
         for(var e=0;e<returnArray.length;e++){
           var splitArray = returnArray[e].split(":")
           var objArray = {label: splitArray[0], value: splitArray[1]}
           this.dataSource2.data.push(objArray)
         }
         this.showPrediction=true}
-    
       }).catch((error)=>
       this.$log.debug(error)) 
-    }
+    },
+
+    isDateBeforeToday: function(date) {
+    return date < new Date(new Date().toDateString());
+    },
     
 },
 }

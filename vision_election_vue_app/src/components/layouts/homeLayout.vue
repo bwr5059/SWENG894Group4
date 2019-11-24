@@ -107,7 +107,6 @@ router path.
       Eapi.getElections().then( (response) => {  
         this.$log.debug("Success getting elections:", response);
         this.elections=response.data
-        alert("test")
         if(this.validateElection(this.form.id)){  
         this.$router.push({path: `/app/home/election/${this.form.id}/details`})
         this.form.id="";

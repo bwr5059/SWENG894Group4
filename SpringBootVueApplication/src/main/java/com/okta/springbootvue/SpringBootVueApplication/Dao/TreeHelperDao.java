@@ -133,13 +133,13 @@ public class TreeHelperDao {
 		while(rs.next()) {
 		   found = 0;
 		   for(HashMap.Entry<String,Integer> entry : tallies.entrySet()) {
-			   if(entry.getKey().equals(rs.getString(val))){
-				   tallies.put(entry.getKey(), entry.getValue()+1);
-				   found = 1;
+			if(entry.getKey().equals(rs.getString(val))){
+			   tallies.put(entry.getKey(), entry.getValue()+1);
+			   found = 1;
 		       }
 		   }
-	       if(found==0){
-	    	   tallies.put(rs.getString(val), 1);
+	       	   if(found==0){
+	    	   	tallies.put(rs.getString(val), 1);
 		   }
 		    
 		}	
@@ -149,8 +149,8 @@ public class TreeHelperDao {
 		for(HashMap.Entry<String,Integer> entry : tallies.entrySet()) {
 			if(entry.getValue()>count){
 				count = entry.getValue();
-		    }
-    	}
+		    	}
+    		}
 		
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -186,8 +186,8 @@ public class TreeHelperDao {
 				   found = 1;
 		       }
 		   }
-	       if(found==0){
-	    	   tallies.put(rs.getString(val), 1);
+	       	   if(found==0){
+	    	   	tallies.put(rs.getString(val), 1);
 		   }
 		    
 		}	

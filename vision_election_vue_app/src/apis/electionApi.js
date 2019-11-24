@@ -5,7 +5,7 @@ const SERVER_URL = 'http://localhost:5000';
   
 const instance = axios.create({  
   baseURL: SERVER_URL,  
-  timeout: 5000  
+  timeout: 40000  
 });  
   
 export default {  
@@ -117,6 +117,16 @@ export default {
         [function (data) {
           return data
         }]}),
+
+        getWinner : (electionID)=> instance.get('/election/calculateLead/'+electionID+'/', {transformResponse: 
+          [function (data) {
+            return data
+          }]}),
+
+    getPrediction: (electionID)=> instance.get('/election/getChances/'+electionID, {transformResponse: 
+      [function (data) {
+        return data
+      }]}),
 
 
 }

@@ -2,6 +2,7 @@ import axios from 'axios'
 import Vue from 'vue'  
   
 const SERVER_URL = 'http://localhost:5000';  
+//const SERVER_URL = 'http://visionelection-env.fx3z2p5pjd.us-east-2.elasticbeanstalk.com/'; 
   
 const instance = axios.create({  
   baseURL: SERVER_URL,  

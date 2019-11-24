@@ -76,6 +76,7 @@
           </b-col>
         </b-row>
       <b-button v-show="!editable&this.$parent.$parent.authorized" v-on:click="edit">Edit</b-button>
+      <b-button class="ml-1" v-show="!editable&this.$parent.$parent.authorized" v-on:click="deleteElection">Delete</b-button>
       <b-button v-show="editable" class="mr-1" v-on:click="cancel">Cancel</b-button>
       <b-button v-show="editable" v-on:click="updateElection()">Submit</b-button>
       <!-- <b-button v-show="!editable" class="ml-1">Register</b-button> -->
@@ -151,14 +152,13 @@
               </div>
             </template>
         </b-modal>
-  
 </b-card>
 
 <!-- Show the Table of Candidates Under this election -->
 <b-card v-show="this.$parent.$parent.authorized">
    <div>
     <h2>Candidates Registered for this Election</h2>
-    <b-button v-show="!editable" v-on:click="showmodalAssociateCandidate=true" class="ml-1 pull-right">Add Candidate to Election</b-button>
+    <!-- <b-button v-show="!editable" v-on:click="showmodalAssociateCandidate=true" class="ml-1 pull-right">Add Candidate to Election</b-button> -->
      <b-modal name="associateCandidateModal" id="modal-2" title="Associate Candidate with Election" v-model="showmodalAssociateCandidate">
             <b-card>
               <b-form>
@@ -204,6 +204,8 @@
         </div>  
       </template>
     </b-table>
+    <b-button v-show="!editable" v-on:click="showmodalAssociateCandidate=true" class="ml-1 pull-right">Add Candidate to Election</b-button>
+    <b-button v-show="selectedCandidate&&isSelected" v-on:click="disassociateCandidate(selectedCandidate[0].canID)" class="ml-1 pull-right">Remove Candidate</b-button>
   </div>
   <b-modal id="modal-6" title="Withdraw" v-model="showmodal6">
             <b-card>
@@ -245,12 +247,24 @@
 
 </b-row>
 <b-row>
-  <b-col>
+  <b-col v-if="this.data.data.closed==1">
     {{isElectionClosed}}
-    <br>
-    {{getWinner}}
 
     <br>
+    <br>
+    {{getElectionWinner}}
+    <br>
+    <br>
+  {{this.form.electionDescription}}
+  </b-col>
+  <b-col v-if="this.data.data.closed==0">
+    {{isElectionClosed}}
+
+  
+    <br>
+    {{getElectionWinner}}
+    <br>
+    
   {{this.form.electionDescription}}
   </b-col>
 </b-row>
@@ -288,6 +302,31 @@
   :dataFormat="this.dataFormat"
   :dataSource="this.dataSource"
 ></fusioncharts>
+</b-tab>
+<b-tab id="prediction" title="Prediction" v-if="this.data.data.closed==0">
+  <b-container fluid>
+ 
+     
+        
+        <b-row class="justify-content-md-center">
+        
+        <b-spinner class="m-5" v-if="!showPrediction"></b-spinner>
+        </b-row>
+        <b-row class="justify-content-md-center">
+       <strong>Calculating Prediction...</strong>
+        </b-row>
+        
+   
+  
+  <fusioncharts
+  :type="type2"
+  :width="width"
+  :height="height"
+  :dataFormat="dataFormat"
+  :dataSource="dataSource2"
+  v-if="showPrediction"
+></fusioncharts>
+  </b-container>
 </b-tab>
 </b-tabs>
 <b-row>
@@ -569,8 +608,9 @@ import FusionCharts from 'fusioncharts';
 import Column2D from 'fusioncharts/fusioncharts.charts';
 import FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
 import Vue from 'vue';
+import Charts from 'fusioncharts/fusioncharts.charts';
 
-Vue.use(VueFusionCharts, FusionCharts, Column2D, FusionTheme);
+Vue.use(VueFusionCharts, FusionCharts, Column2D, FusionTheme, Charts);
 
 
 export default {
@@ -583,6 +623,7 @@ export default {
       
       return {  
         type: "column2d",
+        type2: "pie2d",
         width: "100%",
         height: "100%",
         dataFormat: "json",
@@ -591,6 +632,18 @@ export default {
             caption: "Votes by Candidate",
             xaxisname: "Candidate",
             yaxisname: "Total Votes",
+            theme: "fusion"
+          },
+        data: null
+        },
+         dataSource2: {
+        chart: {
+            caption: "Chance of winning",
+            plottooltext: "<b>$percentValue</b> chance to win election",
+            showlegend: "1",
+            showpercentvalues: "1",
+            legendposition: "bottom",
+            usedataplotcolorforlabels: "1",
             theme: "fusion"
           },
         data: null
@@ -627,7 +680,7 @@ export default {
         candidate_id:'',
         eligibleCandidates:null,
         selectedCandidate:null,
-        isBusy: false,
+        isBusy: true,
         selecteditem: [],
         isSelected: false,
         showmodal: false,
@@ -645,7 +698,9 @@ export default {
         policySet: false,
         showChangeVote: false,
         today: null,
-        isClosed: false
+        isClosed: false,
+        winner: '',
+        showPrediction: false,
         
       }  
     },  
@@ -674,12 +729,20 @@ computed: {
 
   },
 
-  getWinner(){
+ getElectionWinner(){
     if(this.data.data.closed==1){
-      return "Winner is <br>"
+      // api.getWinner(this.form.electionId).then((response)=>{
+      //   this.$log.debug("getting winner: ", response)
+      //   //alert(response.data)
+      //   this.winner="The winner is "+response.data;
+      //   return "The winner is "+response.data[0];
+      // }).catch((error)=>
+      // this.$log.debug(error)) 
+      return "The winner is "+this.winner
     }else{
-      return ""
-    }
+    
+    return ""
+  }
   }
 },
 created: function(){
@@ -759,6 +822,10 @@ methods: {
       this.getUserVotes()
       this.calculateCurrentDay()
       this.getCandidateVotes()
+      this.getWinner()
+      if(this.data.data.closed!=1){
+        this.getPrediction()
+      }
     }).catch((error) => {  
       this.$log.debug(error);  
       this.error="Failed to get election"  
@@ -804,6 +871,23 @@ methods: {
     **/
     edit: function(){
       this.editable=true
+    },
+    /**
+     * deleteElection() calls the removeElection endpoint to delete an election from the system.
+     */
+    deleteElection:function(){
+       var r = confirm("Are you sure you want to delete the election ?");
+        if (r == true) {
+          api.removeElection(this.form.electionId).then((response)=>{
+                this.$log.debug("Deleted election", response)
+                if(response.status==200){
+                  alert("Election Deleted!")
+                  this.$router.push({ path: '/app/home/elections' })
+                }
+              }).catch((error)=>{
+                this.$log.debug(error)
+              })
+        }
     },
     /**cancel() disables editing of election
     **/
@@ -909,6 +993,7 @@ methods: {
         this.fields = ["Name", "Selected"]
         this.fields_election_candidates=['first_name','last_name']  
         this.candidates = response.data
+        this.isBusy = false
         }).catch((error)=>
         this.$log.debug(error))
     },
@@ -1009,7 +1094,9 @@ methods: {
      * the withdraw candidate API call.
      */
     disassociateCandidate: function(candidateID){
-      this.$log.debug("calling api: associateCandidate()")
+      this.$log.debug("calling api: disassociateCandidate()")
+      var r = confirm("remove candidate from election ?")
+      if(r==true){
       api.withdrawCandidate(candidateID,this.form.electionId) .then((response)=>{
           this.$log.debug("disassociate sCandidate set", response)
           if(response.status==200){
@@ -1020,15 +1107,21 @@ methods: {
              //this.$router.push({path: `/app/home/elections`})
         }).catch((error)=>
         this.$log.debug(error))
+      }
     },
 //WHEN SELECTED IT ASK to remo  ve the candidate
       selected: function(items){
       this.selectedCandidate = items
-     var can_id=this.selectedCandidate[0].canID;
-     var r = confirm("remove candidate from election ?");
-    if (r == true) {
-      this.disassociateCandidate(can_id)
-    }
+    // var can_id=this.selectedCandidate[0].canID;
+    //  var r = confirm("remove candidate from election ?");
+    // if (r == true) {
+    //   this.disassociateCandidate(can_id)
+    // }
+       if(this.selectedCandidate[0]){
+      this.isSelected = true
+      }else{
+        this.isSelected = false
+      }
         },
     /**
      * writeCandidate() function allows a user to manually input a candidate
@@ -1151,7 +1244,7 @@ methods: {
         //returnString = returnString.replace('"', '')
       
         var returnArray = returnString.split(",")
-        var newArray = []
+        
         for(var e=0;e<returnArray.length;e++){
           var splitArray = returnArray[e].split(":")
           var objArray = {label: splitArray[0], value: splitArray[1]}
@@ -1163,6 +1256,40 @@ methods: {
         this.$log.debug(error)
       })
     },
+
+    getWinner: function(){
+      api.getWinner(this.form.electionId).then((response)=>{
+        this.$log.debug("getting winner: ", response)
+        //alert(response.data)
+        this.winner=response.data;
+      }).catch((error)=>
+      this.$log.debug(error)) 
+    },
+
+    getPrediction: function(){
+      this.$log.debug("getting prediction: ")
+      api.getPrediction(this.form.electionId).then((response)=>{
+        this.$log.debug("prediction returned: ", response)
+          
+        var returnString = response.data.substring(1, response.data.length-1)
+       
+        if(returnString.length!=0){
+          this.dataSource2.data = []
+        returnString = returnString.replace(/"/g, "")
+        //returnString = returnString.replace('"', '')
+      
+        var returnArray = returnString.split(",")
+        
+        for(var e=0;e<returnArray.length;e++){
+          var splitArray = returnArray[e].split(":")
+          var objArray = {label: splitArray[0], value: splitArray[1]}
+          this.dataSource2.data.push(objArray)
+        }
+        this.showPrediction=true}
+    
+      }).catch((error)=>
+      this.$log.debug(error)) 
+    }
     
 },
 }

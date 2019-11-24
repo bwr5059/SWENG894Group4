@@ -4,8 +4,8 @@
             <b-navbar-nav>
                 <router-link v-show="!authorized" to="/app/user/home" class="navbar-brand">Participant</router-link>
                 <router-link v-show="authorized" to="/app/user/home" class="navbar-brand">Election Manager</router-link>
-                <router-link v-show="authorized" to="/app/user/createElection" class="btn btn-secondary my-2 my-sm-0 mr-1" tag="button" id='home-button'> New </router-link>
-                <router-link v-show="authorized" to="/app/user/addAdmin" class="btn btn-secondary my-2 my-sm-0 mr-1" tag="button" id='home-button'> Election Admin </router-link>
+                <router-link v-show="authorized" to="/app/user/createElection" class="btn-sm btn-secondary my-2 my-sm-1 mr-1" > New </router-link>
+                <router-link v-show="authorized" to="/app/user/addAdmin" class="btn-sm btn-secondary my-2 my-sm-1 mr-1" > Election Admin </router-link>
                 <router-link to="/app/home/elections" class="btn-sm btn-secondary my-2 my-sm-1 mr-1">Search all</router-link>
                 <router-link to="/app/home/candidates" class="btn-sm btn-secondary my-2 my-sm-1 mr-1">Candidates</router-link>
                 <router-link v-show="isCandidate" to="/candidate" class="btn-sm btn-secondary my-2 my-sm-1 mr-1">Candidate Profile</router-link>
@@ -29,6 +29,7 @@
 <script>
 
 import api from '@/apis/userApi'
+import Eapi from '@/apis/electionApi'
 export default {
   name: 'homeLayout',
   props: {
@@ -39,17 +40,18 @@ export default {
 
    data: () => {  
       return {
-    authorized: false,
-    isCandidate:false,
-    name:'Duruike',
-    form: {
-          id: '',
-  
-        },
-    userObj: null,
-    profileComplete: null,
-    activeUser: null,
-    searchType: null,
+        authorized: false,
+        isCandidate:false,
+        name:'Duruike',
+        form: {
+              id: '',
+      
+            },
+        userObj: null,
+        profileComplete: null,
+        activeUser: null,
+        searchType: null,
+        elections: null
       }
 },
 created: function(){
@@ -102,10 +104,33 @@ router path.
     },
 
     searchElection: function(){
-        alert("Routing to election details")
+      Eapi.getElections().then( (response) => {  
+        this.$log.debug("Success getting elections:", response);
+        this.elections=response.data
+        alert("test")
+        if(this.validateElection(this.form.id)){  
         this.$router.push({path: `/app/home/election/${this.form.id}/details`})
         this.form.id="";
         this.searchType=null;
+        this.elections=null;
+        }else{
+          alert("Election not found")
+          this.form.id="";
+          this.searchType=null;
+          //this.elections=null;
+        }
+    }).catch((error) => {  
+      this.$log.debug(error);  
+      this.error = "Failed to get elections"  
+	});  
+    },
+      validateElection: function(electionID){
+        this.$log.debug("Checking elections", this.elections)
+        for(var a = 0; a<this.elections.length; a++){
+          if(this.elections[a].electionID==electionID){
+            return true
+          }
+        }
     },
 
     searchCandidate: function(){
@@ -143,8 +168,8 @@ router path.
       
   }) 
     },
-    }
+    
       
-  
+    }
 }
 </script>

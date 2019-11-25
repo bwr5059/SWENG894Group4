@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.QuestionConnectionDao;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Question;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -45,9 +47,10 @@ public class QuestionServiceImpl implements src.main.java.com.okta.springbootvue
 	 * viewQuestionsByCandidate() -
 	 * @param canID
 	*/
-	public List<Question> viewQuestionsByCandidate(String canID) {
-		questions= connDao.getQuestionsByCandidate(canID);
-		return questions;
+	public List<HashMap> viewQuestionsByCandidate(String canID) {
+		List<HashMap> listofMaps = new ArrayList<HashMap>();
+		listofMaps= connDao.getQuestionsByCandidate(canID);
+		return listofMaps;
 		
 	}
 	

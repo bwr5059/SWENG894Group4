@@ -9,10 +9,10 @@
 
 package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service;
 
-import java.util.List;
-
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Question;
-import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * QuestionService Class - Interface for QuestionService.
@@ -23,6 +23,6 @@ public interface QuestionService {
 	Question findById(int qID);
 	
 	//View Questions by Candidate
-	List<Question> viewQuestionsByCandidate(String canID);
+	List<HashMap> viewQuestionsByCandidate(String canID);
 		
 }

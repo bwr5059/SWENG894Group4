@@ -18,6 +18,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -66,11 +67,9 @@ public class QuestionConnectionDao {
 			while(rs.next())  {
 				question.setQID(rs.getInt(1));
 				question.setCanID(rs.getString(2));
-				question.setUserFirstName(rs.getString(3));
-				question.setUserLastName(rs.getString(4));
-				question.setUserID(rs.getString(5));
-				question.setQuestion(rs.getString(6));
-				question.setAnswer(rs.getString(7));
+				question.setUserID(rs.getString(3));
+				question.setQuestion(rs.getString(4));
+				question.setAnswer(rs.getString(5));
 			}
 			
 			connectionDao.ReleaseConnection(conn);
@@ -80,11 +79,7 @@ public class QuestionConnectionDao {
 		return question;
 	}
 	
-	/**
-	 * getQuestionsByCandidate() - Performs select MySQL statement to retrieve questions from candidateQuestion table.
-	 * @param canID
-	 * @return Question List
-	 */
+/**
 	public List<Question> getQuestionsByCandidate(String canID){
 		List<Question> questionList = new ArrayList<>();
 		
@@ -99,11 +94,9 @@ public class QuestionConnectionDao {
 				Question question = new Question();
 				question.setQID(rs.getInt(1));
 				question.setCanID(rs.getString(2));
-				question.setUserFirstName(rs.getString(3));
-				question.setUserLastName(rs.getString(4));
-				question.setUserID(rs.getString(5));
-				question.setQuestion(rs.getString(6));
-				question.setAnswer(rs.getString(7));
+				question.setUserID(rs.getString(3));
+				question.setQuestion(rs.getString(4));
+				question.setAnswer(rs.getString(5));
 				questionList.add(question);
 			}
 			
@@ -112,6 +105,46 @@ public class QuestionConnectionDao {
 				e.printStackTrace();
 			}
 		return questionList;
+	}
+
+ **/
+
+	/**
+	 * getQuestionsByCandidate() - Performs select MySQL statement to retrieve questions from candidateQuestion table.
+	 * @param canID
+	 * @return
+	 */
+	public List<HashMap> getQuestionsByCandidate(String canID) {
+
+		List<HashMap> listOfMaps = new ArrayList<HashMap>();
+
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+			String sql = "SELECT question.qID, question.canID, question.question, question.answer, " +
+					"user.first_name, user.last_name FROM question INNER JOIN user ON question.userID = user.id " +
+					"WHERE question.canID=?" ;
+			PreparedStatement stmt=conn.prepareStatement(sql);
+			stmt.setString(1,canID);
+
+			ResultSet rs=stmt.executeQuery();
+			while(rs.next())  {
+				HashMap objMap = new HashMap();
+				objMap.put("qID", rs.getInt(1));
+				objMap.put("canID",rs.getString(2));
+				objMap.put("question",rs.getString(3));
+				objMap.put("answer",rs.getString(4));
+				objMap.put("first_name",rs.getString(5));
+				objMap.put("last_name",rs.getString(6));
+
+				listOfMaps.add(objMap);
+			}
+
+			connectionDao.ReleaseConnection(conn);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return listOfMaps;
+
 	}
 	
 	/**
@@ -126,16 +159,14 @@ public class QuestionConnectionDao {
 		
 		try {
 			Connection conn = connectionDao.RetrieveConnection();
-			String sql = "INSERT INTO question(qID, canID, userFirstName, userLastName, userID, question, answer) VALUES (?,?,?,?,?,?,?)";
+			String sql = "INSERT INTO question(qID, canID, userID, question, answer) VALUES (?,?,?,?,?)";
 			PreparedStatement stmt=conn.prepareStatement(sql);
 
 			stmt.setInt(1, question.getQID());
 			stmt.setString(2,question.getCanID());
-			stmt.setString(3,question.getUserFirstName());
-			stmt.setString(4,question.getUserLastName());
-			stmt.setString(5,question.getUserID());
-			stmt.setString(6,question.getQuestion());
-			stmt.setString(7,question.getAnswer());
+			stmt.setString(3,question.getUserID());
+			stmt.setString(4,question.getQuestion());
+			stmt.setString(5,question.getAnswer());
 			stmt.executeUpdate();
 			
 			connectionDao.ReleaseConnection(conn);

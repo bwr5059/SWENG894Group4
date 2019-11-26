@@ -81,6 +81,7 @@ public class ElectionController {
 	**/
 	@GetMapping("/election/{electionID}")
 	public ResponseEntity<Election> getElection(@PathVariable("electionID") int electionID) {
+		electionService.calculateClosed(electionID);
 		Election election = electionService.findElectionById(electionID);
 		if (election == null) {
 			return new ResponseEntity<Election>(HttpStatus.NOT_FOUND);

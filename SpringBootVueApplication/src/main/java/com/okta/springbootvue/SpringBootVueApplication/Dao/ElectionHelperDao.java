@@ -176,47 +176,11 @@ public class ElectionHelperDao {
 	/**
 	 * calculateClosed() - Calculates if an election has elapsed it's closing date and time. Sets an election to 'closed'
 	 * if current date and time are past close date and time.
-	 * @param electionID
+	 * @param closeDate, closeTime
 	 * @throws Exception
 	 */
-	public void calculateClosed(int electionID) {
+	public void calculateClosed(String closeDate, String closeTime) {
 		Boolean closed = false;
-		String closeDate = "";
-		String closeTime = "";
-		Election election = new Election();
-		List<Election> electionList = new ArrayList<>();
-
-		try {
-			Connection conn = connectionDao.RetrieveConnection();
-			String sql = "SELECT * FROM election WHERE electionID=?";
-			PreparedStatement stmt=conn.prepareStatement(sql);
-			//stmt.setInt(1,electionID);
-			stmt.setInt(1,electionID);
-
-			ResultSet rs=stmt.executeQuery();
-			while(rs.next()) {
-				election.setElectionID(rs.getInt(1));
-				election.setTitle(rs.getString(2));
-				election.setClosed(rs.getInt(3));
-				election.setClose_date(rs.getString(4));
-				election.setClose_time(rs.getString(5));
-				election.setNum_candidates(rs.getInt(6));
-				election.setNum_votes(rs.getInt(7));
-				election.setStart_date(rs.getString(8));
-				election.setStart_time(rs.getString(9));
-				election.setDescription(rs.getString(10));
-				election.setElection_key(rs.getString(11));
-			}
-			connectionDao.ReleaseConnection(conn);
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-
-		//Assign closeDate the election's closing date
-		closeDate = election.getClose_date();
-
-		//Assign closeTime the election's closing time
-		closeTime = election.getClose_time();
 
 		//Formatters for date and time
 		SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");

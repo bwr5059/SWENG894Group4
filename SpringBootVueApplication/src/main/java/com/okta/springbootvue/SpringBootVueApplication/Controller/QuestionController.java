@@ -55,15 +55,16 @@ public class QuestionController {
 	 * @return
 	 */
 	@GetMapping("/question/viewQuestions/{canID}")
-	public ResponseEntity<List<Question>> listQuestionsByCandidate(@PathVariable("canID") String canID){ 
+	public List<HashMap> listQuestionsByCandidate(@PathVariable("canID") String canID){
 		Candidate candidate = candidateService.findById(canID);
 	  
 		if (candidate == null) {
-			return new ResponseEntity<List<Question>>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<List<HashMap>>(HttpStatus.NOT_FOUND);
 		}
 
-		List<Question> questions = questionService.viewQuestionsByCandidate(canID);
-		return new ResponseEntity<List<Question>>(questions, HttpStatus.OK);
+		List<HashMap> questions = questionService.viewQuestionsByCandidate(canID);
+
+		return questions;
 	}
   
 }

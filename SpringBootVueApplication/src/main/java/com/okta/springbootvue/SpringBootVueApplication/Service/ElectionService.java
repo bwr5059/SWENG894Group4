@@ -79,5 +79,8 @@ public interface ElectionService {
 	
 	//Return hashmap of percentage chance to win by candidate
 	HashMap<String, Float> getChances(int electionID);
+	
+	//Calculate if election should be set to closed
+	void calculateClosed(int electionID);
 		
 }

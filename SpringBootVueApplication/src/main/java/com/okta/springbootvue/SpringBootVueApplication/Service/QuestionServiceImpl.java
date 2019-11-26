@@ -52,9 +52,10 @@ public class QuestionServiceImpl implements QuestionService{
 	 * viewQuestionsByCandidate() -
 	 * @param canID
 	*/
-	public List<Question> viewQuestionsByCandidate(String canID) {
-		questions= connDao.getQuestionsByCandidate(canID);
-		return questions;
+	public List<HashMap> viewQuestionsByCandidate(String canID) {
+		List<HashMap> listofMaps = new ArrayList<HashMap>();
+		listofMaps= connDao.getQuestionsByCandidate(canID);
+		return listofMaps;
 		
 	}
 	

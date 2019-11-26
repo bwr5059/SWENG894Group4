@@ -83,33 +83,39 @@ public class QuestionConnectionDao {
 	/**
 	 * getQuestionsByCandidate() - Performs select MySQL statement to retrieve questions from candidateQuestion table.
 	 * @param canID
-	 * @return Question List
+	 * @return
 	 */
-	public List<Question> getQuestionsByCandidate(String canID){
-		List<Question> questionList = new ArrayList<>();
-		
+	public List<HashMap> getQuestionsByCandidate(String canID) {
+
+		List<HashMap> listOfMaps = new ArrayList<HashMap>();
+
 		try {
 			Connection conn = connectionDao.RetrieveConnection();
-			String sql = "SELECT * FROM question WHERE canID=?"; 
-			PreparedStatement stmt=conn.prepareStatement(sql); 
+			String sql = "SELECT question.qID, question.canID, question.question, question.answer, " +
+					"user.first_name, user.last_name FROM question INNER JOIN user ON question.userID = user.id " +
+					"WHERE question.canID=?" ;
+			PreparedStatement stmt=conn.prepareStatement(sql);
 			stmt.setString(1,canID);
-			 
+
 			ResultSet rs=stmt.executeQuery();
 			while(rs.next())  {
-				Question question = new Question();
-				question.setQID(rs.getInt(1));
-				question.setCanID(rs.getString(2));
-				question.setUserID(rs.getString(3));
-				question.setQuestion(rs.getString(4));
-				question.setAnswer(rs.getString(5));
-				questionList.add(question);
+				HashMap objMap = new HashMap();
+				objMap.put("qID", rs.getInt(1));
+				objMap.put("canID",rs.getString(2));
+				objMap.put("question",rs.getString(3));
+				objMap.put("answer",rs.getString(4));
+				objMap.put("first_name",rs.getString(5));
+				objMap.put("last_name",rs.getString(6));
+
+				listOfMaps.add(objMap);
 			}
-			
+
 			connectionDao.ReleaseConnection(conn);
-			}catch(Exception e) {
-				e.printStackTrace();
-			}
-		return questionList;
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return listOfMaps;
+
 	}
 	
 	/**

@@ -226,5 +226,13 @@ public class ElectionServiceImpl implements ElectionService{
 		return listofMaps;
 	}
 	
-
+	/**
+	 * calculateClosed() - Checks if an election should be in the closed state.
+	 * @param electionID
+	 * @throws Exception
+	 */
+	public void calculateClosed(int electionID) {
+		helperDao.calculateClosed(electionID);
+	}
+	
 }

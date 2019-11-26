@@ -312,7 +312,7 @@
         
         <b-spinner class="m-5" v-if="!showPrediction"></b-spinner>
         </b-row>
-        <b-row class="justify-content-md-center">
+        <b-row class="justify-content-md-center" v-if="!showPrediction">
        <strong>Calculating Prediction...</strong>
         </b-row>
         

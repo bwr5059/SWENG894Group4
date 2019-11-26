@@ -177,10 +177,12 @@ public class ElectionHelperDao {
 	 * calculateClosed() - Calculates if an election has elapsed it's closing date and time. Sets an election to 'closed'
 	 * if current date and time are past close date and time.
 	 * @param closeDate, closeTime
+	 * @return closed
 	 * @throws Exception
 	 */
-	public void calculateClosed(String closeDate, String closeTime) {
+	public int calculateClosed(String closeDate, String closeTime) {
 		Boolean closed = false;
+		int closed = 0;
 
 		//Formatters for date and time
 		SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -220,18 +222,16 @@ public class ElectionHelperDao {
 
 			Date formattedCurrentTime=timeFormatter.parse(currentTime);
 
-			//If past election close date, close election. If on election close date and after close time, close election
-			if (currentDate.after(formattedCloseDate)) {
-				election.setClosed(1);
-				electionConnectionDao.updateElection(election,electionList);
-			} else if(currentDate.equals(formattedCloseDate) && formattedCurrentTime.after(formattedCloseTime)) {
-				election.setClosed(1);
-				electionConnectionDao.updateElection(election,electionList);
+			//If past election close date, close election. 
+			//If on election close date and after close time, close election
+			if (currentDate.after(formattedCloseDate) || currentDate.equals(formattedCloseDate) && formattedCurrentTime.after(formattedCloseTime)) {
+				closed = 1;
 			}
+			
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-
+		return closed;
 	}
 	
 }

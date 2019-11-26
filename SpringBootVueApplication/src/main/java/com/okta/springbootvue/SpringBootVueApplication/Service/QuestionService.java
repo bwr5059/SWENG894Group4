@@ -23,6 +23,6 @@ public interface QuestionService {
 	Question findById(int qID);
 	
 	//View Questions by Candidate
-	List<Question> viewQuestionsByCandidate(String canID);
+	List<HashMap> viewQuestionsByCandidate(String canID);
 		
 }

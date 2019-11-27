@@ -20,6 +20,11 @@ import java.util.List;
 import java.sql.PreparedStatement;
 import java.util.HashMap;
 
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.*;
+
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.UserConnectionDao;
@@ -171,6 +176,67 @@ public class ElectionHelperDao {
 			e.printStackTrace();
 		}
 	    return users;	
+	}
+	
+	/**
+	 * calculateClosed() - Calculates if an election has elapsed it's closing date and time. Sets an election to 'closed'
+	 * if current date and time are past close date and time.
+	 * @param closeDate, closeTime
+	 * @return closed
+	 * @throws Exception
+	 */
+	public int calculateClosed(String closeDate, String closeTime) {
+		//Boolean closed = false;
+		int closed = 0;
+
+		//Formatters for date and time
+		SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
+
+		Date formattedCloseDate;
+		Date formattedCloseTime;
+		try {
+			//Parse election close date to adhere to date format
+			formattedCloseDate=dateFormatter.parse(closeDate);
+
+			//Parse election close time to adhere to the time format
+			formattedCloseTime=timeFormatter.parse(closeTime);
+
+			//Get the current date
+			LocalDate nowDate = LocalDate.now();
+
+			//Get today's date as a Date
+			Date currentDate = Date.from(nowDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+			//Get the current time
+			//LocalTime nowTime = LocalTime.now();
+
+			//Get the current time in an instant
+			Instant instant = Instant.now();
+
+			// get overall time
+			LocalTime time = instant.atZone(ZoneOffset.UTC).toLocalTime();
+			// get hour
+			int hour = instant.atZone(ZoneOffset.UTC).getHour();
+			// get minute
+			int minute = instant.atZone(ZoneOffset.UTC).getMinute();
+			// get second
+			int second = instant.atZone(ZoneOffset.UTC).getSecond();
+
+			String currentTime = hour + ":" + minute + ":" + second;
+
+			Date formattedCurrentTime=timeFormatter.parse(currentTime);
+
+			//If past election close date, close election. 
+			//If on election close date and after close time, close election
+			if (currentDate.after(formattedCloseDate) || currentDate.equals(formattedCloseDate) && formattedCurrentTime.after(formattedCloseTime)) {
+				closed = 1;
+			}
+			
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return closed;
 	}
 	
 }

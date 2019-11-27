@@ -11,23 +11,22 @@
 
 package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao;
 
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Question;
+
 import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.sql.PreparedStatement;
-
-import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Question;
-import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
 
 /**
  * QuestionConnectionDao Class - Connects to MySQL database vision-database and performs queries through methods to update
  * database.
  */
 public class QuestionConnectionDao {
-	ConnectionDao connectionDao = new ConnectionDao();
+	src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ConnectionDao connectionDao = new src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ConnectionDao();
 	
 	/**
 	 * getMaxID() - Gets current highest qID
@@ -80,11 +79,7 @@ public class QuestionConnectionDao {
 		return question;
 	}
 	
-	/**
-	 * getQuestionsByCandidate() - Performs select MySQL statement to retrieve questions from candidateQuestion table.
-	 * @param canID
-	 * @return Question List
-	 */
+/**
 	public List<Question> getQuestionsByCandidate(String canID){
 		List<Question> questionList = new ArrayList<>();
 		
@@ -111,6 +106,45 @@ public class QuestionConnectionDao {
 			}
 		return questionList;
 	}
+ **/
+
+	/**
+	 * getQuestionsByCandidate() - Performs select MySQL statement to retrieve questions from candidateQuestion table.
+	 * @param canID
+	 * @return
+	 */
+	public List<HashMap> getQuestionsByCandidate(String canID) {
+
+		List<HashMap> listOfMaps = new ArrayList<HashMap>();
+
+		try {
+			Connection conn = connectionDao.RetrieveConnection();
+			String sql = "SELECT question.qID, question.canID, question.question, question.answer, " +
+					"user.first_name, user.last_name FROM question INNER JOIN user ON question.userID = user.id " +
+					"WHERE question.canID=?" ;
+			PreparedStatement stmt=conn.prepareStatement(sql);
+			stmt.setString(1,canID);
+
+			ResultSet rs=stmt.executeQuery();
+			while(rs.next())  {
+				HashMap objMap = new HashMap();
+				objMap.put("qID", rs.getInt(1));
+				objMap.put("canID",rs.getString(2));
+				objMap.put("question",rs.getString(3));
+				objMap.put("answer",rs.getString(4));
+				objMap.put("first_name",rs.getString(5));
+				objMap.put("last_name",rs.getString(6));
+
+				listOfMaps.add(objMap);
+			}
+
+			connectionDao.ReleaseConnection(conn);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return listOfMaps;
+
+	}
 	
 	/**
 	 * insertQuestion() - Performs insert MySQL statement to add question to candidateQuestion table.
@@ -124,14 +158,14 @@ public class QuestionConnectionDao {
 		
 		try {
 			Connection conn = connectionDao.RetrieveConnection();
-			String sql = "INSERT INTO question(qID, canID, userID, question, answer) VALUES (?,?,?,?,?)"; 
-			PreparedStatement stmt=conn.prepareStatement(sql); 
-			
+			String sql = "INSERT INTO question(qID, canID, userID, question, answer) VALUES (?,?,?,?,?)";
+			PreparedStatement stmt=conn.prepareStatement(sql);
+
 			stmt.setInt(1, question.getQID());
 			stmt.setString(2,question.getCanID());
 			stmt.setString(3,question.getUserID());
 			stmt.setString(4,question.getQuestion());
-			stmt.setString(5,question.getAnswer());	 
+			stmt.setString(5,question.getAnswer());
 			stmt.executeUpdate();
 			
 			connectionDao.ReleaseConnection(conn);
@@ -164,4 +198,3 @@ public class QuestionConnectionDao {
 	}
 	
 }
-

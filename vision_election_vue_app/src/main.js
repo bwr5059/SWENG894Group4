@@ -6,10 +6,16 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import './assets/css/styles.css'
 import VueLogger from 'vuejs-logger'
+import VueFusionCharts from 'vue-fusioncharts';
+import FusionCharts from 'fusioncharts';
+import Column2D from 'fusioncharts/fusioncharts.charts';
+import FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
+import Charts from 'fusioncharts/fusioncharts.charts';
 
 Vue.config.productionTip = false
 Vue.use(BootstrapVue)
 Vue.use(VueLogger, options)
+Vue.use(VueFusionCharts, FusionCharts, Column2D, FusionTheme, Charts);
 
 const options = {
   isEnabled: true,

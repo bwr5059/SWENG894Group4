@@ -826,6 +826,7 @@ methods: {
       if(this.data.data.closed!=1){
         this.getPrediction()
       }
+      this.show=true
     }).catch((error) => {  
       this.$log.debug(error);  
       this.error="Failed to get election"  
@@ -840,12 +841,12 @@ methods: {
           if(response.status==200&&response.data=="Found"){
             this.$log.debug("Voter is registered", response)
             this.registered=true
-            this.show = true
+            //this.show = true
           }
           else{
             this.$log.debug("Voter is not registered", response)
             this.registered=false
-            this.show = true
+            //this.show = true
           }
         }).catch((error)=>
         this.$log.debug(error))
@@ -854,17 +855,17 @@ methods: {
           if(response.status==200&&response.data=="Found"){
             this.$log.debug("Candidate is registered", response)
             this.registered=true
-            this.show = true
+            //this.show = true
           }
           else{
             this.$log.debug("Candidate is not registered", response)
             this.registered=false
-            this.show = true
+            //this.show = true
           }
         }).catch((error)=>
         this.$log.debug(error))
       } else if(this.regType=="Admin"){
-        this.show = true
+        //this.show = true
       }
     },
     /**edit() enables editing of election
@@ -1039,24 +1040,29 @@ methods: {
         this.show = false
         api.createPolicy(this.form.electionId, this.form.policyPollingType, Number(this.form.policyFrequency), Number(this.form.policyMaxVotes)) .then((response)=>{
           this.$log.debug("Policy set", response)
-          if(response.status==200){alert("Election Policy Set!!")}
+          if(response.status==200){alert("Election Policy Set!!")
           this.getElection(this.form.electionId)
-        }).catch((error)=>
-          this.$log.debug(error),
+          }
+          
+        }).catch((error)=>{
+          this.$log.debug(error)
           //alert(error),
-          this.getElection(this.form.electionId))
+          this.getElection(this.form.electionId)
+        })
       }else{
         this.showmodal=false
         this.show = false
         api.modifyPolicy(this.form.electionId, this.form.policyPollingType, Number(this.form.policyFrequency), Number(this.form.policyMaxVotes)) .then((response)=>{
           this.$log.debug("Policy set", response)
-          if(response.status==200){alert("Election Policy Set!!")}
-          
-          this.getElection(this.form.electionId)
-        }).catch((error)=>
-        this.$log.debug(error),
+          if(response.status==200){
+            alert("Election Policy Set!!");
+            this.getElection(this.form.electionId);
+          }
+        }).catch((error)=>{
+        this.$log.debug(error)
         //alert(error),
-        this.getElection(this.form.electionId))
+        this.getElection(this.form.electionId)
+        })
       }
     },
     /**

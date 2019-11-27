@@ -22,7 +22,7 @@ import api from '@/apis/electionApi'
         selecteditem: null,
         data: null,
         isBusy: true,
-        fields: ['electionID', 'title', 'start_date', 'close_date', 'numCandidates', 'numVotes'],
+        fields: ['electionID', 'title', 'start_date', 'close_date'],
       }
     },
 

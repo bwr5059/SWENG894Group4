@@ -39,7 +39,7 @@ import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Elect
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Policy;
-//import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ArrayList;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ElectionHelperDao;
 import java.util.ArrayList;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ElectionConnectionDao;
 //import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.String;
@@ -57,6 +57,8 @@ public class ElectionController {
 	
 	@Autowired
 	UserService userService;
+	
+	ElectionHelperDao electionHelper = new ElectionHelperDao();
 
 	/**
      * listAllElections() - Calls findAllElections() method in electionService class. Returns election list response of
@@ -82,6 +84,7 @@ public class ElectionController {
 	@GetMapping("/election/{electionID}")
 	public ResponseEntity<Election> getElection(@PathVariable("electionID") int electionID) {
 		Election election = electionService.findElectionById(electionID);
+		election.setClosed(electionHelper.calculateClosed(election.getClose_date(), election.getClose_time()));
 		if (election == null) {
 			return new ResponseEntity<Election>(HttpStatus.NOT_FOUND);
 		}

@@ -166,6 +166,9 @@
                               <strong>Loading...</strong>
                             </div>
                           </template>
+                          <template v-slot:cell(name)="data">
+                          {{data.item.first_name}} {{data.item.last_name}}
+                          </template>
                           <template v-slot:cell(answer)="row">
                             <!-- <b-button size="sm" @click="row.toggleDetails" class="mr-2" v-show="!row.item.answer&&isCandidate" v-b-modal.modal-1>
                               Answer Question
@@ -253,7 +256,7 @@ export default {
   data: () => {
     return {
       //activeUser: null,
-      fields: ['userID', 'question','answer'],
+      fields: ['name', 'question','answer'],
        form: {
          candidateID:'',
           fullname:'',

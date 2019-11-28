@@ -174,6 +174,9 @@
                               <strong>Loading...</strong>
                             </div>
                           </template>
+                          <template v-slot:cell(name)="data">
+                          {{data.item.first_name}} {{data.item.last_name}}
+                          </template>
                           <template v-slot:cell(answer)="row">
                             <b-button size="sm" @click="showModal(row.index, row.item.question)" class="mr-2" v-show="!row.item.answer">
                               Reply
@@ -283,7 +286,7 @@ export default {
         editable: false,
         userObj: '',
         userProfileComplete: 0,
-        fields: ['userID', 'question','answer'],
+        fields: ['name', 'question','answer'],
         isBusy: true,
         questions: null,
         qResponse: null,

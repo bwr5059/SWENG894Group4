@@ -270,7 +270,6 @@ export default {
        * userProfileComplete variable.  If the variable is set to 1, then it calls the modify api call.
        */
       addUser: function () {  
-          window.alert("Subbmiting to API")
           if(this.userProfileComplete==0){
           api.createNew(this.activeUser.sub, this.activeUser.email, this.form.type, this.activeUser.given_name, this.activeUser.family_name, this.form.age, this.form.race, this.form.ethnicity, this.form.gender, this.form.address, this.form.city, this.form.state, this.form.zip, this.activeUser.email).then( (response) => {  
             this.$log.debug("New User created:", response); 

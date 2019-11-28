@@ -39,7 +39,10 @@ import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Elect
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Policy;
+//import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ArrayList;
+import java.util.ArrayList;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ElectionConnectionDao;
+//import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.String;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.ElectionService;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.UserService;
 
@@ -77,7 +80,7 @@ public class ElectionController {
 	 * @return new ResponseEntity<Election>(election, HttpStatus)
 	**/
 	@GetMapping("/election/{electionID}")
-	public ResponseEntity<Election> getElection(@PathVariable("electionID") int electionID){
+	public ResponseEntity<Election> getElection(@PathVariable("electionID") int electionID) {
 
 		electionService.calculateClosed(electionID);
 
@@ -85,7 +88,6 @@ public class ElectionController {
 		if (election == null) {
 			return new ResponseEntity<Election>(HttpStatus.NOT_FOUND);
 		}
-
 		return new ResponseEntity<Election>(election, HttpStatus.OK);
 	}
   
@@ -351,7 +353,23 @@ public class ElectionController {
 		numVotes = electionService.getVotesByVoter(electionID, userID);
 		return numVotes;
 	}
-
+	
+	/**
+	 * getLead () - 
+	 * @param electionID
+	 * @return 
+	**/
+	@GetMapping("/election/calculateLead/{electionID}")
+	public ArrayList<String> getVotesByVoter(@PathVariable("electionID") int electionID) {
+		ArrayList<String> leads = new ArrayList<String>();
+		Election election = electionService.findElectionById(electionID);
+		if (election == null) {
+			return null;
+		}
+		leads = electionService.getLead(electionID);
+		return leads;
+	}
+	
 	/**
 	 * getCandidateVotes() - Get number of votes for every candidate by candidate
 	 * @param electionID
@@ -372,16 +390,26 @@ public class ElectionController {
 
 		return map;
 	}
-
+	
 	/**
-	 * checkCloseElection() - Checks if an election should be set to closed.
+	 * getChances() - 
 	 * @param electionID
-	 * @throws Exception
+	 * @return HashMap<String,Integer>
 	 */
-	@GetMapping("/election/checkCloseElection/{electionID}")
-	public void checkCloseElection(@PathVariable("electionID") int electionID) {
-		electionService.calculateClosed(electionID);
+	@GetMapping("/election/getChances/{electionID}")
+	public HashMap<String, Float> getChances(@PathVariable("electionID") int electionID) {
+		HashMap<String,Float> map =
+				new HashMap<String,Float>();
+
+		Election election = electionService.findElectionById(electionID);
+
+		if (election == null) {
+			return  map;
+		}
+
+		map = electionService.getChances(electionID);
+
+		return map;
 	}
-
-
+  
 }

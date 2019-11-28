@@ -40,7 +40,7 @@ public class QuestionController {
 	@GetMapping("/question/viewQuestions/{canID}")
 	public List<HashMap> listQuestionsByCandidate(@PathVariable("canID") String canID){
 		Candidate candidate = candidateService.findById(canID);
-	  
+
 		if (candidate == null) {
 			//return new ResponseEntity<List<Question>>(HttpStatus.NOT_FOUND);
 		}

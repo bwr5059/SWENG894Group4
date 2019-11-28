@@ -21,33 +21,7 @@ public class SpringBootVueApplication {
   
     public static void main(String[] args) {  
       SpringApplication.run(SpringBootVueApplication.class, args);  
-    }  
-
-    //Add test data into the in-memory database - USERS
-    /*@Bean  
-    ApplicationRunner init(UserRepository repository) {  
-        return args -> {  
-            Stream.of("Brent", "Ifeoma", "Kylie", "Larry").forEach(name -> {  
-                    User user = new User();  
-                    user.setFirstName(name);  
-                    repository.save(user);  
-            });  
-            repository.findAll().forEach(System.out::println);  
-        };  
-    }  */
-    
-  //Add test data into the in-memory database - ELECTIONS
-   /*@Bean  
-    ApplicationRunner init(ElectionRepository repository) {  
-        return args -> {  
-            Stream.of("ONE", "TWO", "THREE", "FOUR").forEach(title -> {  
-                    Election election = new Election();  
-                    election.setTitle(title);  
-                    repository.save(election);  
-            });  
-            repository.findAll().forEach(System.out::println);  
-        };  
-    }*/ 
+    }   
 
     // Fix the CORS errors
     @Bean
@@ -56,7 +30,7 @@ public class SpringBootVueApplication {
         CorsConfiguration config = new CorsConfiguration();  
         config.setAllowCredentials(true); 
         // *** URL below needs to match the Vue client URL and port ***
-        config.setAllowedOrigins(Collections.singletonList("http://localhost:8080")); 
+        config.setAllowedOrigins(Collections.singletonList("http://vision-election-sweng894.com.s3-website.us-east-2.amazonaws.com")); 
         config.setAllowedMethods(Collections.singletonList("*"));  
         config.setAllowedHeaders(Collections.singletonList("*"));  
         source.registerCorsConfiguration("/**", config);  

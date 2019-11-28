@@ -3,7 +3,7 @@
 |
 |  Purpose: Election Database Queries
 |
-|  Methods: 
+|  Methods: tallyCands, tallyVotes, calculateLead
 |
 |  Version: Sprint 3
 |  
@@ -11,7 +11,6 @@
 
 package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao;
 
-import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
 
 import java.sql.Connection;
@@ -32,11 +31,42 @@ import java.util.List;
 public class ElectionHelperDao {
 	src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ConnectionDao connectionDao = new src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ConnectionDao();
 	src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ElectionConnectionDao electionConnectionDao = new src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ElectionConnectionDao();
+	/**
+	 * tallyCands() - Candidate by ID and name
+	 * @param electionID
+	 * @return HashMap<String,String>
+	 */
+	public HashMap<String,String> tallyCands(int electionID){
+	    //Display Votes in a Hash Map
+	    HashMap<String,String> map = 
+                new HashMap<String,String>(); 
+	    String can = "";
+	    String name = "";
+		
+	    try {
+		Connection conn = connectionDao.RetrieveConnection();
+		String sql = "SELECT electionCandidate.canID, user.first_name, user.last_name FROM electionCandidate " + 
+		"INNER JOIN user ON user.id = electionCandidate.canID WHERE electionID=?"; 
+		PreparedStatement stmt=conn.prepareStatement(sql); 
+		stmt.setInt(1,electionID);
+		 
+		ResultSet rs=stmt.executeQuery();
+		while(rs.next()) {
+		    can = rs.getString(1);
+		    name = rs.getString(2) + " " + rs.getString(3);
+		    map.put(name, can); 
+		}	
+		connectionDao.ReleaseConnection(conn);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	    return map;	
+	}
 	
 	/**
-	 * tallyVotes() - 
-	 * @param 
-	 * @return 
+	 * tallyVotes() - Candidate by Votes
+	 * @param electionID
+	 * @return HashMap<String, Integer>
 	 */
 	public HashMap<String, Integer> tallyVotes(int electionID){
 	    //Display Votes in a Hash Map
@@ -72,9 +102,9 @@ public class ElectionHelperDao {
 	}
 	
 	/**
-	 * calculateLead() - 
-	 * @param 
-	 * @return 
+	 * calculateLead() - Current Election Lead Candidate(s)
+	 * @param electionID
+	 * @return ArrayList<String>
 	 */
 	public ArrayList<String> calculateLead(int electionID){
 	    //Return Array in case of Tie
@@ -111,8 +141,8 @@ public class ElectionHelperDao {
 	/**
 	 * tallyType() - Resturn list of users who abstained or wrote in for given election
 	 * Can also returns users who voted for given candidate
-	 * @param 
-	 * @return 
+	 * @param electionID, type
+	 * @return ArrayList<User>
 	 */
 	public ArrayList<User> tallyType(int electionID, String type){
 	    ArrayList<User> users = new ArrayList<User>();
@@ -140,85 +170,6 @@ public class ElectionHelperDao {
 		}
 	    return users;	
 	}
-	
-	/**
-	 * getDemographics() - Returns HashMap of User Demographics
-	 * @param 
-	 * @return 
-	 */
-	public HashMap<String, Integer> getDemographics(ArrayList<User> users){
-	    HashMap<String, Integer> demo = 
-                new HashMap<String, Integer>(); 
-	    int total = users.size();
-	
-	    //Demographic Counts
-	    //Gender
-            int male = 0, female = 0, notDisclosed = 0;
-	    //Race
-	    int nativeA = 0, asian = 0, black = 0, nativeH = 0, white = 0;
-	    //Ethnicity
-	    int hispanic = 0, notHispanic = 0;
-	    User curUser = new User();
-	    int i = 0;
-            //Loop through ArrayList of Users
-	    for(User user : users){
-		  curUser = users.get(i);
-		  i++;
-		  //Gender
-		  switch(curUser.getGender()){
-			  case "Male":
-				  male++;
-			  case "Female":
-				  female++;
-			  default:
-				  notDisclosed++;
-		  }
-	          
-		  //Race
-		    switch(curUser.getRace()){
-			    case "American Indian or Alaska Native":
-				    nativeA++;
-			    case "Asian":
-				    asian++;
-			    case "Black or African American":
-				    black++;
-			    case "Native Hawaiin or Other Pacific Islander":
-				    nativeH++;
-			    case "White":
-				    white++;
-			    default:
-				    System.out.println("No Race");
-		    }
-		  //Ethnicity
-		    switch(curUser.getEthnicity()){
-			    case "Hispanic or Latino or Spanish Origin":
-				    hispanic++;
-			    case "Not Hispanic or Latino or Spanish Origin":
-				    notHispanic++;
-			    default:
-				    System.out.println("No Ethnicity");
-		    }
-	    }
-	    //Calculate Results
-	    if(total>0){
-		//Gender
-	        demo.put("Male", (male/total));
-	        demo.put("Female", (female/total));
-	        demo.put("NA", (notDisclosed/total));
-		//Race
-		demo.put("NativeAmerican", (nativeA/total));
-	        demo.put("Asian", (asian/total));
-	        demo.put("Black", (black/total));
-		demo.put("NativeHawaiian", (nativeH/total));
-	        demo.put("White", (white/total));
-		//Ethnicity
-		demo.put("Hispanic", (hispanic/total));
-	        demo.put("NotHispanic", (notHispanic/total));
-	    }	
-		
-	    return demo;	
-	}
-
 
 	/**
 	 * calculateClosed() - Calculates if an election has elapsed it's closing date and time. Sets an election to 'closed'
@@ -230,8 +181,8 @@ public class ElectionHelperDao {
 		Boolean closed = false;
 		String closeDate = "";
 		String closeTime = "";
-		Election election = new Election();
-		List<Election> electionList = new ArrayList<>();
+		src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election election = new src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election();
+		List<src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election> electionList = new ArrayList<>();
 
 		try {
 			Connection conn = connectionDao.RetrieveConnection();
@@ -316,4 +267,5 @@ public class ElectionHelperDao {
 		}
 
 	}
+	
 }

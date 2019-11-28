@@ -42,16 +42,16 @@ public class QuestionServiceImpl implements src.main.java.com.okta.springbootvue
 		Question question = connDao.getQuestionByID(qID);
 		return question;
 	}
-	
+
 	/**
 	 * viewQuestionsByCandidate() -
 	 * @param canID
-	*/
+	 */
 	public List<HashMap> viewQuestionsByCandidate(String canID) {
 		List<HashMap> listofMaps = new ArrayList<HashMap>();
 		listofMaps= connDao.getQuestionsByCandidate(canID);
 		return listofMaps;
-		
+
 	}
 	
 

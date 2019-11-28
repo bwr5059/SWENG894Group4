@@ -12,8 +12,12 @@ package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Policy;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+//import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ArrayList;
+//import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.String;
 
 /**
  * ElectionService Class - Interface for ElectionService.
@@ -66,11 +70,17 @@ public interface ElectionService {
 	
 	//Return number of votes cast by user in election
 	int getVotesByVoter(int electionID, String userID);
-
+	
+	//Return lead candidate in election
+	ArrayList<String> getLead(int electionID);
+	
 	//Return hashmap of votes by candidate
 	HashMap<String, Integer> tallyVotes(int electionID);
 
 	//Calculate if election should be set to closed
 	void calculateClosed(int electionID);
+	
+	//Return hashmap of percentage chance to win by candidate
+	HashMap<String, Float> getChances(int electionID);
 		
 }

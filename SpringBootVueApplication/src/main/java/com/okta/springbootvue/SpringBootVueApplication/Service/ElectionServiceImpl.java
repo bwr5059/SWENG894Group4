@@ -19,10 +19,13 @@ import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.Electio
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Candidate;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Election;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Policy;
+import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Tree.DecisionTree;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+//import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.String;
 
 /**
  * ElectionServiceImpl Class - Implements ElectionService interface. Connects ElectionService class methods to database by
@@ -56,10 +59,10 @@ public class ElectionServiceImpl implements src.main.java.com.okta.springbootvue
 	 * @param electionID
 	 * @return
 	 */
-	public Election findElectionById(int electionID){
-			calculateClosed(electionID);
-			Election election = connDao.getElectionById(electionID);
-			return election;
+	public Election findElectionById(int electionID) {
+		calculateClosed(electionID);
+		Election election = connDao.getElectionById(electionID);
+		return election;
 	}
 	
 	/**
@@ -188,16 +191,40 @@ public class ElectionServiceImpl implements src.main.java.com.okta.springbootvue
 		int numVotes = connDao.getVotesByVoter(electionID, userID);
 		return numVotes;
 	}
-
+	
 	/**
-	 * viewCandidates() - View candidates for an election
+	 * getLead() - 
+	 * @param electionID
+	 * @return 
+	 */
+	public ArrayList<String> getLead(int electionID) {
+		ArrayList<String> leads = new ArrayList<String>(); 
+		leads = connDao.getLead(electionID);
+		return leads;
+	}
+	
+	/**
+	 * tallyVotes() - 
 	 * @param electionID
 	 */
 	public HashMap<String, Integer> tallyVotes(int electionID) {
+		ElectionHelperDao helperDao = new ElectionHelperDao();
 		HashMap<String, Integer> listofMaps = new HashMap<String, Integer>();
 		listofMaps= helperDao.tallyVotes(electionID);
 		return listofMaps;
 	}
+	
+	/**
+	 * getChances() - 
+	 * @param electionID
+	 */
+	public HashMap<String, Float> getChances(int electionID) {
+		DecisionTree tree = new DecisionTree();
+		HashMap<String, Float> listofMaps = new HashMap<String, Float>();
+		listofMaps= tree.calculateChances(electionID);
+		return listofMaps;
+	}
+
 
 	/**
 	 * calculateClosed() - Checks if an election should be in the closed state.
@@ -207,6 +234,4 @@ public class ElectionServiceImpl implements src.main.java.com.okta.springbootvue
 	public void calculateClosed(int electionID) {
 		helperDao.calculateClosed(electionID);
 	}
-
-
 }

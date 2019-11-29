@@ -1,0 +1,53 @@
+plugins {
+	id 'org.springframework.boot' version '2.1.8.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+	id 'java'
+	id 'jacoco'
+}
+
+group = 'com.okta.springbootvue'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	compile 'org.dbunit:dbunit:2.5.0'
+	runtimeOnly 'mysql:mysql-connector-java'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testCompile 'com.h2database:h2:1.4.179'
+}
+
+test {
+	jacoco {
+		append = false
+		destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
+		//classDumpFile = file("$buildDir/jacoco/classpathdumps")
+	}
+}
+
+jacoco {
+	toolVersion = "0.8.4"
+	reportsDir = file("$buildDir/customJacocoReportDir")
+}
+
+jacocoTestReport {
+	reports {
+		xml.enabled false
+		csv.enabled false
+		html.destination file("${buildDir}/jacocoHtml")
+	}
+}

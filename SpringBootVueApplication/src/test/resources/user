@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <USER id="1" name="Manager 1"/>
+    <MANAGER id="2" name="Manager 2"/>
+    <MANAGER id="3" name="Manager 3"/>
+
+    <PROJECT id="1" budget="10000" deadline="2015-03-01 00:00:00" priority="H" title="Project 1" manager_ID="1" />
+    <PROJECT id="2" budget="20000" deadline="2015-04-01 00:00:00" priority="L" title="Project 2" manager_ID="1" />
+    <PROJECT id="3" budget="30000" deadline="2015-05-01 00:00:00" priority="H" title="Project 3" manager_ID="2" />
+</dataset>

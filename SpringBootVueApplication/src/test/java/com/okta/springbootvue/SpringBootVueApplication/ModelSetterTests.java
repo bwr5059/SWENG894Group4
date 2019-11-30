@@ -38,20 +38,29 @@ public class ModelSetterTests {
 
     public User user = new User();
     public User user2 = new User();
+    public User user3 = new User();
     public UserServiceImpl userService = new UserServiceImpl();
     public Election election = new Election();
     public Election election2 = new Election();
+    public Election election3 = new Election();
     public ElectionServiceImpl electionService = new ElectionServiceImpl();
     public Candidate candidate = new Candidate();
     public Candidate candidate2 = new Candidate();
+    public Candidate candidate3 = new Candidate();
     public CandidateServiceImpl candidateService = new CandidateServiceImpl();
     public Question question = new Question();
     public Question question2 = new Question();
+    public Question question3 = new Question();
     public Policy policy = new Policy();
     public Policy policy2 = new Policy();
+    public Policy policy3 = new Policy();
     public Ballot ballot = new Ballot();
     public Ballot ballot2 = new Ballot();
-
+    public Ballot ballot3 =  new Ballot();
+    public Node node = new Node();
+    public Node node2 = new Node();
+    public Node node3 =  new Node();
+    
     /**
      * TestSetUser() - Tests the setting of User Model object variables. Sets variables and checks for equivalency.
      * @throws Exception
@@ -60,6 +69,7 @@ public class ModelSetterTests {
     public void TestSetUser() throws Exception {
         //Set values of variables for user and user2 User objects
         user.setId("test");
+        user.setEmail("test");
         user.setType("Voter");
         user.setAge(25);
         user.setEthnicity("European");
@@ -75,6 +85,7 @@ public class ModelSetterTests {
         user.setRace("White");
 
         user2.setId("test");
+        user2.setEmail("test");
         user2.setType("Voter");
         user2.setAge(25);
         user2.setEthnicity("European");
@@ -91,9 +102,18 @@ public class ModelSetterTests {
 
         //Test that user is equivalent to user2
         assertTrue(user.equals(user2));
+        assertFalse(user.equals(user3));
+        
+        //HashCode Test
+        assertTrue(user.hashCode() == user2.hashCode());
+        assertFalse(user.hashCode() == user3.hashCode());
+        
+        //Test toString
+        assertTrue(user3.toString().equals("User(id=null, email=null, type=null, age=0, ethnicity=null, gender=null, address=null, city=null, state=null, zip=null, first_name=null, last_name=null, profile_complete=0, user_name=null, race=null)"));
 
         //Test the value of each of the variables of the user User object.
         assertEquals("test", user.getId());
+        assertEquals("test", user.getEmail());
         assertEquals("Voter", user.getType());
         assertEquals(25, user.getAge());
         assertEquals("European", user.getEthnicity());
@@ -142,6 +162,14 @@ public class ModelSetterTests {
 
         //Test that election is equivalent to election2
         assertTrue(election.equals(election2));
+        assertFalse(election.equals(election3));
+        
+        //HashCode Test
+        assertTrue(election.hashCode() == election2.hashCode());
+        assertFalse(election.hashCode() == election3.hashCode());
+        
+        //Test toString
+        assertTrue(election3.toString().equals("Election(electionID=0, title=null, closed=0, close_date=null, close_time=null, num_candidates=0, num_votes=0, start_date=null, start_time=null, description=null, election_key=null)"));
 
         //Test the value of each of the variables of the election Election object.
         assertEquals(1, election.getElectionID());
@@ -190,6 +218,14 @@ public class ModelSetterTests {
 
         //Test that candidate is equivalent to candidate2
         assertTrue(candidate.equals(candidate2));
+        assertFalse(candidate.equals(candidate3));
+        
+        //HashCode Test
+        assertTrue(candidate.hashCode() == candidate2.hashCode());
+        assertFalse(candidate.hashCode() == candidate3.hashCode());
+        
+        //Test toString
+        assertTrue(candidate3.toString().equals("Candidate(canID=null, userID=null, first_name=null, last_name=null, email=null, electionID=0, about=null, education=null, employment=null, experience=null, contact=null)"));
 
         //Test the value of each of the variables of the candidate Candidate object.
         assertEquals("test", candidate.getCanID());
@@ -226,6 +262,14 @@ public class ModelSetterTests {
 
         //Test that candidate is equivalent to candidate2
         assertTrue(question.equals(question2));
+        assertFalse(question.equals(question3));
+        
+        //HashCode Test
+        assertTrue(question.hashCode() == question2.hashCode());
+        assertFalse(question.hashCode() == question3.hashCode());
+        
+        //Test toString
+        assertTrue(question3.toString().equals("Question(qID=0, canID=null, userID=null, question=null, answer=null)"));
 
         //Test the value of each of the variables of the question and question2 Question objects.
         assertEquals(1234,question.getQID());
@@ -264,6 +308,14 @@ public class ModelSetterTests {
 
         //Test that policy is equivalent to policy2
         assertTrue(policy.equals(policy2));
+        assertFalse(policy.equals(policy3));
+        
+        //HashCode Test
+        assertTrue(policy.hashCode() == policy2.hashCode());
+        assertFalse(policy.hashCode() == policy3.hashCode());
+        
+        //Test toString
+        assertTrue(policy3.toString().equals("Policy(electionID=0, type=null, frequency=0, num_votes=0, write_in=0, abstain=0)"));
 
         //Test the value of each of the variables of the policy and policy2 Policy objects.
         assertEquals(1234, policy.getElectionID());
@@ -287,6 +339,7 @@ public class ModelSetterTests {
      * TestSetBallot() - Tests the setting of Ballot Model object variables. Sets variables and checks for equivalency.
      * @throws Exception
      */
+    @Test
     public void TestSetBallot() throws Exception {
         //Set values of variables for ballot and ballot2 User objects
         ballot.setBallotID(1);
@@ -305,6 +358,14 @@ public class ModelSetterTests {
 
         //Test that ballot is equivalent to ballot2
         assertTrue(ballot.equals(ballot2));
+        assertFalse(ballot.equals(ballot3));
+        
+        //HashCode Test
+        assertTrue(ballot.hashCode() == ballot2.hashCode());
+        assertFalse(ballot.hashCode() == ballot3.hashCode());
+        
+        //Test toString
+        assertTrue(ballot3.toString().equals("Ballot(ballotID=0, userID=null, electionID=0, canID=null, first_name=null, last_name=null)"));
 
         //Test the value of each of the variables of the ballot and ballot2 Ballot objects.
         assertEquals(1, ballot.getBallotID());
@@ -322,5 +383,46 @@ public class ModelSetterTests {
         assertEquals("test", ballot2.getLast_name());
 
     }
+    
+    /**
+    * TestSetNode() - Tests the setting of Node Model object variables. Sets variables and checks for equivalency.
+    * @throws Exception
+    */
+   @Test
+   public void TestSetNode() throws Exception {
+       //Set values of variables for ballot and ballot2 User objects
+       node.setIdNode(1);
+       node.setType("test");
+       node.setLeft(2);
+       node.setRight(3);
+
+       node2.setIdNode(1);
+       node2.setType("test");
+       node2.setLeft(2);
+       node2.setRight(3);
+
+       //Test that node is equivalent to node2
+       assertTrue(node.equals(node2));
+       assertFalse(node.equals(node3));
+       
+       //HashCode Test
+       assertTrue(node.hashCode() == node2.hashCode());
+       assertFalse(node.hashCode() == node3.hashCode());
+       
+       //Test toString
+       assertTrue(node3.toString().equals("Node(idNode=0, type=null, left=0, right=0)"));
+
+       //Test the value of each of the variables of the node and node2 Ballot objects.
+       assertEquals(1, node.getIdNode());
+       assertEquals("test", node.getType());
+       assertEquals(2, node.getLeft());
+       assertEquals(3, node.getRight());
+
+       assertEquals(1, node2.getIdNode());
+       assertEquals("test", node2.getType());
+       assertEquals(2, node2.getLeft());
+       assertEquals(3, node2.getRight());
+
+   }
 
 }

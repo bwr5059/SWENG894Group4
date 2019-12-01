@@ -177,6 +177,7 @@ router path.
         this.userObj = response.data  
         this.profileComplete = 1
       }else{
+        alert("Welcome to Vision Election.  Please complete your profile.")
          this.$log.debug("redirecting to profile") 
         this.$router.push({path:'/profile'})
       }

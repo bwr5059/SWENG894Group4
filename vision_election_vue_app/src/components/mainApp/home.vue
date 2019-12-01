@@ -71,6 +71,7 @@ export default {
      */
     checkUser() {
       if(this.$parent.profileComplete==0||this.$parent.profileComplete==null){
+        alert("Welcome to Vision Election.  Please complete your profile.")
         this.$log.debug("redirecting to profile") 
         this.$router.push({path:'/profile'})
       }

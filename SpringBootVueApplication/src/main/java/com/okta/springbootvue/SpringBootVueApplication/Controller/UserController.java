@@ -87,7 +87,7 @@ public class UserController {
 	 */
 	@PostMapping("/user/addProfile/{type}")
 	public ResponseEntity<User> newUser(@RequestBody User user, @PathVariable String type) {
-		if(userService.findById(user.getId())!=null) {
+		if(userService.findById(user.getId())==null) {
 			return new ResponseEntity<User>(HttpStatus.CONFLICT); 
 		}
 		

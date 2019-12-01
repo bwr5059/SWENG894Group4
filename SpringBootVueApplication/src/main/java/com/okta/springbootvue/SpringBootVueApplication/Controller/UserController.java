@@ -74,7 +74,7 @@ public class UserController {
 	public ResponseEntity<User> getUser(@PathVariable("id") String id) {
 		User user = userService.findById(id);
 		if (user.getId() == null) {
-			return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}

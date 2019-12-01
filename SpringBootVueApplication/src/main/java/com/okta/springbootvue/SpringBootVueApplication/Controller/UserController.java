@@ -73,7 +73,7 @@ public class UserController {
 	@GetMapping("/user/{id}")
 	public ResponseEntity<User> getUser(@PathVariable("id") String id) {
 		User user = userService.findById(id);
-		if (user == null) {
+		if (user.getId() == null) {
 			return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<User>(user, HttpStatus.OK);

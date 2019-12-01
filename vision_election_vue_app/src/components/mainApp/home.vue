@@ -54,11 +54,11 @@ export default {
       this.activeUser =  this.$parent.activeUser
       this.$log.debug(this.activeUser)
       api.getUser(this.activeUser.sub)  
-      .then(response => {  
-        this.$log.debug("Data loaded: ", response.data)  
+      .then((response => {  
+        this.$log.debug("Data loaded home: ", response.data)  
         this.todos = response.data  
         this.userProfileComplete = 1
-      })  
+      }))  
       .catch(error => {  
         this.$log.debug(error)  
         this.error = "User Profile not complete"  
@@ -71,6 +71,7 @@ export default {
      */
     checkUser() {
       if(this.$parent.profileComplete==0||this.$parent.profileComplete==null){
+        this.$log.debug("redirecting to profile") 
         this.$router.push({path:'/profile'})
       }
     },

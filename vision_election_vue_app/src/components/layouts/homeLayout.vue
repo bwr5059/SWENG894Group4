@@ -167,30 +167,30 @@ router path.
       this.error = "Failed to get elections"  
 	});  
     },
-
-
-     refreshActiveUser: function()
-    {
+     refreshActiveUser: function(){
       this.activeUser =  this.$parent.activeUser
       this.$log.debug("home layout: ", this.activeUser) 
-      api.getUser(this.activeUser.sub)  
-    .then(response => {  
-      this.$log.debug("Data loaded: ", response.data)  
-      this.userObj = response.data  
-      this.profileComplete = 1
-     if(this.userObj.type == "Admin"){
-        this.authorized = true
-        
-     }
-      if(this.userObj.type == "Candidate"){
-        this.isCandidate = true
-        
-     }
-  })  
+      api.getUser(this.activeUser.sub) .then((response) =>{ 
+      this.$log.debug("Data loaded refresh: ", response)
+      if(response.status==200&&response.data.id!=null){
+        this.$log.debug("Data loaded refresh success: ", response.data)
+        this.userObj = response.data  
+        this.profileComplete = 1
+      }else{
+         this.$log.debug("redirecting to profile") 
+        this.$router.push({path:'/profile'})
+      }
+      if(response.data.type == "Admin"){
+          this.authorized = true
+      }
+        if(response.data.type == "Candidate"){
+          this.isCandidate = true
+      }
+      })  
     .catch(error => {  
       this.$log.debug(error)  
-      this.error = "User Profile not complete"  
-      this.$log.debug("User not found")
+      //this.error = "User Profile not complete"  
+      this.$log.debug("User not found home layout")
       this.authorized = false
       this.profileComplete = 0
       

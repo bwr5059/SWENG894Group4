@@ -201,7 +201,7 @@ export default {
       this.activeUser = this.$parent.activeUser,
       api.getUser(this.activeUser.sub)  
       .then(response => {  
-        this.$log.debug("Data loaded: ", response.data)
+        this.$log.debug("Data loaded profile: ", response.data)
         this.userObj = response
         this.form.email = this.$parent.activeUser.email
         this.form.type = this.userObj.data.type
@@ -215,11 +215,12 @@ export default {
         this.form.city = this.userObj.data.city
         this.form.state = this.userObj.data.state
         this.form.zip = this.userObj.data.zip 
-        if(this.userObj!=""){
+        if(this.userObj.data.id!==null){
           this.userProfileComplete = 1
           this.show=true
         }else{
           this.userProfileComplete = 0
+          this.show=true
         } 
       })
     },

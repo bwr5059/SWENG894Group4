@@ -366,12 +366,11 @@ export default {
     },
 
     addUser: function () {  
-        window.alert("Subbmiting to API")
         
     if(this.userProfileComplete==0){
     api.addCandidate(this.activeUser.sub,this.userObj.data.id, this.form.fname, this.form.lname, this.activeUser.email, this.form.electionID, this.form.about, this.form.education, this.form.employment, this.form.experience, this.form.contact).then( (response) => {  
       this.$log.debug("New User created:", response); 
-      alert("New User") 
+      alert("Candidate Profile Created") 
       this.$router.push({ path: '/app/user/home' })
     }).catch((error) => {  
       this.$log.debug(error);  
@@ -412,7 +411,7 @@ export default {
     },
   
     answerQuestion: function(index){
-      api.answerQuestion(this.qResponse,this.questions[index].qid ) .then(response => {
+      api.answerQuestion(this.qResponse,this.questions[index].qID ) .then(response => {
         this.$log.debug("Questions answered: ", response.data)
         this.showmodal = false
         this.isBusy = true

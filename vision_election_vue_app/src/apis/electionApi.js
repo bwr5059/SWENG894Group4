@@ -30,7 +30,7 @@ export default {
 }),  
 
   duplicateElection: (electionTitle, electionDescription, startDate, closeDate, id, electionKey)=> instance.post('/election/addElection/', {title: electionTitle,  
-    start_date: startDate, close_date: closeDate, description: electionDescription, election_key:electionKey, transformResponse: [function (data) {  
+    start_date: startDate, close_date: closeDate, description: electionDescription, election_key:electionKey, start_time: "12:00:00", close_time: "12:00:00", transformResponse: [function (data) {  
       return data? JSON.parse(data) : data;  
     }]  
   }),
@@ -42,7 +42,7 @@ export default {
   }),  
   // (U)pdate  
   updateElection: (electionTitle, electionDescription, startDate, closeDate, id,electionKey)=> instance.put('/election/modifyElection/'+id, {electionID: id, title: electionTitle,  
-    start_date: startDate, close_date: closeDate, description: electionDescription, election_key:electionKey, transformResponse: [function (data) {  
+    start_date: startDate, close_date: closeDate, description: electionDescription, election_key:electionKey, start_time: "12:00:00", close_time: "12:00:00", transformResponse: [function (data) {  
       return data? JSON.parse(data) : data;  
     }]  
   }),

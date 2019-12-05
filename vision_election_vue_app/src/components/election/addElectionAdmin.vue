@@ -19,7 +19,7 @@
       </template>
     </b-table>
     <b-button v-if="editable&&this.isSelected=='Voter'" v-on:click='addAdminUser'>Add</b-button>
-    <b-button v-if="editable&&this.isSelected=='Admin'" v-on:click='removeAdminUser'>Remove</b-button>
+    <!-- <b-button v-if="editable&&this.isSelected=='Admin'" v-on:click='removeAdminUser'>Remove</b-button> -->
   </div>
 </template>
 
@@ -80,7 +80,9 @@ import api from '@/apis/userApi'
     addAdminUser: function(){
       api.addAdmin(this.selecteditem[0].id, 'Admin')
       .then(response => {
+        alert("Added as admin")
         this.$log.debug("Admin added", response.data)
+        this.$router.push({ path: '/app/user/home' })
       }).catch((error) => {  
       this.$log.debug(error);  
       this.error = "Failed to add admin"  

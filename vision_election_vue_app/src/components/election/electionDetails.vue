@@ -785,7 +785,7 @@ methods: {
     getElection: function(id){
       this.$log.debug("Calling API:")
       this.show=false
-      api.getElection(id).then( (response) => {  
+      api.getElection(id).then((response)=>{  
       this.$log.debug("Success getting election:", response);  
       this.data = response
       this.form.electionId = this.data.data.electionID
@@ -794,27 +794,6 @@ methods: {
       this.form.electionCloseDate = this.data.data.close_date
       this.form.electionStartDate = this.data.data.start_date
       this.form.electionKey = this.data.data.election_key
-     /*  this.dataSource.data = [
-            {
-              key: "Luke Skywalker",
-              value: "25"
-            },
-            {
-              key: "Ben Solo",
-              value: "40"
-            },
-            {
-              label: "Han Solo",
-              value: "50"
-            }
-          ]
-          var newDataSource = this.dataSource.data.map(function(item){
-            return{
-              label: item.key||item.label,
-              value: item.value
-            }
-          })
-          this.dataSource.data = newDataSource */
       this.getCandidates()
       this.getAllCandidates()
       this.getRegistration()
@@ -906,10 +885,12 @@ methods: {
      */
     updateElection: function(){
       api.updateElection(this.form.electionTitle, this.form.electionDescription, this.form.electionStartDate, this.form.electionCloseDate, this.form.electionId,this.form.electionKey).then((response)=>{
+        alert("Election Updated")
         this.$log.debug("Updated election", response)
+        this.$router.push({ path: '/app/user/home' })
       }).catch((error)=>{
         this.$log.debug(error)
-      }).then(this.$router.push({ path: '/app/user/home' }))
+      })
       
     },
     /**
@@ -953,6 +934,7 @@ methods: {
      */
     withdraw: function(){
       if(this.regType=="Candidate"){
+        this.showmodal2=false
         this.show = false
         this.$log.debug("calling api: withdrawCandidate")
         api.withdrawCandidate(this.userObj.id, this.form.electionId).then((response)=>{
@@ -1093,6 +1075,7 @@ methods: {
           this.$log.debug("associate sCandidate set", response)
           if(response.status==200){
               alert("Candidate Added to Election!!")
+              this.isBusy=true
               this.getCandidates()
               }
           this.showmodalAssociateCandidate=false
@@ -1112,6 +1095,7 @@ methods: {
           this.$log.debug("disassociate sCandidate set", response)
           if(response.status==200){
               alert("Candidate Removed from Election!!")
+              this.isBusy=true
               this.getCandidates()
               }
           this.showmodalAssociateCandidate=false
@@ -1299,7 +1283,7 @@ methods: {
     isDateBeforeToday: function(date) {
     return date < new Date(new Date().toDateString());
     },
-    
+
 },
 }
 </script>

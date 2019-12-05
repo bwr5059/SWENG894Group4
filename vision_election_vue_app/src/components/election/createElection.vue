@@ -135,11 +135,13 @@ export default {
         api.updateElection(this.form.electionTitle, this.form.electionDescription, this.form.electionStartDate, this.form.electionEndDate, this.electionId,this.form.electionKey).then( (response) => {  
       this.$log.debug("Election updated:", response);  
       this.electionObj = response
+      alert("Election Created")
+      this.$router.push({ path: '/app/user/home' }) 
     }).catch((error) => {  
       this.$log.debug(error);  
       this.error = "Failed update election"  
       });
-      this.$router.push({ path: '/app/user/home' }) 
+      
       },
       deleteElection: function(){
         api.removeElection(this.electionObj.data.electionID).then((response)=> {

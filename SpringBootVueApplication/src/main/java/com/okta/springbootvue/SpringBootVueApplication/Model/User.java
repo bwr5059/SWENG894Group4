@@ -3,7 +3,7 @@
 |
 |  Purpose: Set up attributes for User Objects 
 |
-|  Version: Sprint 1
+|  Version: Sprint 3
 |  
 *-------------------------------------------------------------------*/
 
@@ -17,7 +17,7 @@ import javax.persistence.Entity;
 @Data  
 @NoArgsConstructor  
 /**
- * User Class -
+ * User Class - Attributes for user objects
  */
 public class User {  
       
@@ -26,8 +26,7 @@ public class User {
   
   private String email;
   
-  //Default Voter enum type
-  //Other options: Candidate, Admin
+  //Voter, Candidate, Admin
   private String type;
   
   private int age;

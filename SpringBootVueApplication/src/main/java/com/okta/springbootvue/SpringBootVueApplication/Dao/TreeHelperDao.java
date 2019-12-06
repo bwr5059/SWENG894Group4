@@ -3,9 +3,6 @@
 |
 |  Purpose: Tree Database Queries
 |
-|  Methods: getTotalPotentialVotes, getVotesToDate, getTotalQuestions,
-|  getVoterMajority, getVoterMajorityName, getCandQuestionInfo
-|
 |  Version: Sprint 3
 |  
 *-------------------------------------------------------------------*/

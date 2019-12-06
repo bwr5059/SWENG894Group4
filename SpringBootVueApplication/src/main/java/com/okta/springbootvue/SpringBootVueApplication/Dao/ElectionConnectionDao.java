@@ -3,11 +3,7 @@
 |
 |  Purpose: Election Database Queries
 |
-|  Methods: getElectionList, getElectionByID, insertElection, updateElection,
-|           deleteElection, insertVoteAuth, insertElectionCandidate,
-|           removeElectionCandidate, getCandidatesByElection
-|
-|  Version: Sprint 2
+|  Version: Sprint 3
 |  
 *-------------------------------------------------------------------*/
 
@@ -413,8 +409,8 @@ public class ElectionConnectionDao {
 	
 	/**
 	 * getPolicy() - Performs select MySQL statement to retrieve single user from electionPolicy table.
-	 * @param 
-	 * @return 
+	 * @param int
+	 * @return policy
 	 */
 	public Policy getPolicy(int electionID){
 		Policy policy = new Policy();
@@ -443,10 +439,7 @@ public class ElectionConnectionDao {
 	
 	/**
 	 * insertPolicy() - Inserts a new policy row into the electionPolicy database table using MySQL statement.
-	 * @param 
-	 * @param 
-	 * @param 
-	 * @return 
+	 * @param policy
 	 */
 	public void insertPolicy(Policy policy){
 		try {
@@ -471,10 +464,7 @@ public class ElectionConnectionDao {
 	
 	/**
 	 * updatePolicy() - Update existing policy
-	 * @param 
-	 * @param 
-	 * @param 
-	 * @return 
+	 * @param policy
 	 */
 	public void updatePolicy(Policy policy){
 		try {
@@ -500,8 +490,9 @@ public class ElectionConnectionDao {
 	
 	/**
 	 * getVotesByVoter() - Determine number of votes cast by user against election
-	 * @param 
-	 * @return 
+	 * @param electionID
+	 * @param userID
+	 * @return int
 	 */
 	public int getVotesByVoter(int electionID, String userID){
 		Election election = new Election();
@@ -526,9 +517,9 @@ public class ElectionConnectionDao {
 	}
 	
 	/**
-	 * getLead() - 
-	 * @param 
-	 * @return 
+	 * getLead() - Retrun current election candidate lead
+	 * @param electionID
+	 * @return ArrayList<String>
 	 */
 	public ArrayList<String> getLead(int electionID){
 		ElectionHelperDao elect = new ElectionHelperDao();

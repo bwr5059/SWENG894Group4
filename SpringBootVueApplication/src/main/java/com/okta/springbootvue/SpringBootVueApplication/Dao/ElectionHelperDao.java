@@ -3,8 +3,6 @@
 |
 |  Purpose: Election Database Queries
 |
-|  Methods: tallyCands, tallyVotes, calculateLead
-|
 |  Version: Sprint 3
 |  
 *-------------------------------------------------------------------*/

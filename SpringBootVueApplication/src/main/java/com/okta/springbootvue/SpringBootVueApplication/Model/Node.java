@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------
-|  Class Question
+|  Class Node
 |
-|  Purpose: Set up attributes for Node Objects 
+|  Purpose: Set up attributes for Node Objects for Decision Tree
 |
 |  Version: Sprint 3
 |  

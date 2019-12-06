@@ -3,11 +3,7 @@
 |
 |  Purpose: Set up Election REST Endpoints
 |
-|  Methods: listAllElections, getElection, newElection, modifyElection,
-|           deleteElection, associateVoter, associateCandidate, 
-|           removeCandidate, viewCandidates
-|
-|  Version: Sprint 2
+|  Version: Sprint 3
 |  
 *-------------------------------------------------------------------*/
 package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Controller;
@@ -42,7 +38,6 @@ import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.Polic
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ElectionHelperDao;
 import java.util.ArrayList;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.ElectionConnectionDao;
-//import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao.String;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.ElectionService;
 import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Service.UserService;
 

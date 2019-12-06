@@ -5,7 +5,7 @@
 |  
 |  Methods: listAllUsers, getUser, newUser, modifyUser, deleteUser
 |
-|  Version: Sprint 2
+|  Version: Sprint 3
 |  
 *-------------------------------------------------------------------*/
 
@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
-
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,7 +53,7 @@ public class UserController {
 
 	/**
    	* listAllUsers() - Calls findAllUsers() method in userService class to return a list of all current users in the system.
-   	* @return
+   	* @return ResponseEntity<List<User>>
    	*/
 	@GetMapping("/user/")
 	public ResponseEntity<List<User>> listAllUsers() {
@@ -68,7 +67,7 @@ public class UserController {
 	/**
 	 * getUser() - Receives a userID parameter. Calls the findByID() method of user service, if found returns a user by specified ID.
 	 * @param id
-	 * @return
+	 * @return ResponseEntity<User>
 	 */
 	@GetMapping("/user/{id}")
 	public ResponseEntity<User> getUser(@PathVariable("id") String id) {
@@ -83,7 +82,7 @@ public class UserController {
 	 * newUser() - Receives a User object and type as parameters. Calls the addUser method of userService. Returns a user.
 	 * @param user
 	 * @param type
-	 * @return 
+	 * @return ResponseEntity<User>
 	 */
 	@PostMapping("/user/addProfile/{type}")
 	public ResponseEntity<User> newUser(@RequestBody User user, @PathVariable String type) {
@@ -100,7 +99,7 @@ public class UserController {
 	 * information.
 	 * @param user
 	 * @param id
-	 * @return
+	 * @return ResponseEntity<User>
 	 */
 	@PutMapping("/user/modifyProfile/{id}")
 	public ResponseEntity<User> modifyUser(@RequestBody User user, @PathVariable String id) {
@@ -138,7 +137,7 @@ public class UserController {
 	 * in the user database table.
 	 * @param id
 	 * @param type
-	 * @return
+	 * @return ResponseEntity<User>
 	 */
 	@PutMapping("/user/addAdmin/{id}/{type}")
 	public ResponseEntity<User> modifyUserType(@PathVariable String id, @PathVariable String type) {
@@ -157,7 +156,7 @@ public class UserController {
 	/**
 	 * deleteUser() - Takes a userID as a parameter, deletes user from user database table if userID exists in system.
 	 * @param id
-	 * @return
+	 * @return ResponseEntity<User>
 	 */
 	@DeleteMapping("/user/removeProfile/{id}")
 	public ResponseEntity<User> deleteUser(@PathVariable("id") String id) {
@@ -173,7 +172,7 @@ public class UserController {
 	/**
 	 * askQuestion() - Receives a Question object as parameter. Calls the askQuestion method of userService.
 	 * @param question
-	 * @return 
+	 * @return ResponseEntity<Question>
 	 */
 	@PostMapping("/user/askQuestion")
 	public ResponseEntity<Question> askQuestion(@RequestBody Question question) {

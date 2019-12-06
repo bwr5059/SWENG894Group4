@@ -1,3 +1,12 @@
+/*---------------------------------------------------------------------
+|  Class CandidateConnectionDao
+|
+|  Purpose: Election Database Queries
+|
+|  Version: Sprint 3
+|  
+*-------------------------------------------------------------------*/
+
 package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Dao;
 
 import java.sql.Connection;
@@ -120,6 +129,10 @@ public class CandidateConnectionDao {
 		return candidate;
 	}
 	
+	/**
+	 * insertCandidate() - Performs insert statement to add single candidate to candidate table.
+	 * @param Candidate
+	 */
 	public void insertCandidate(Candidate candidate){
 		try {
 			Connection conn = connectionDao.RetrieveConnection();

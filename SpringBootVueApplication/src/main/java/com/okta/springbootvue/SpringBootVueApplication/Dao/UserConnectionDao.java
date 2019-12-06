@@ -3,7 +3,7 @@
 |
 |  Purpose: User Database Queries
 |
-|  Version: Sprint 2
+|  Version: Sprint 3
 |  
 *-------------------------------------------------------------------*/
 
@@ -235,10 +235,9 @@ public class UserConnectionDao {
 	
 	/**
 	 * deleteUser() - Takes parameters userID and uses MySQL statement to delete user by userID.
-	 * @param conn
 	 * @param Id
 	 * @param userList
-	 * @return
+	 * @return List<User>
 	*/
 	public List<User> deleteUser(String Id, List<User> userList){
 		try {
@@ -260,8 +259,9 @@ public class UserConnectionDao {
 	
 	/**
 	 * insertVote() - cast new vote
-	 * @param 
-	 * @return 
+	 * @param type
+	 * @param ballot
+	 * @return Ballot
 	*/
 	public Ballot insertVote(String type, Ballot ballot){
 		int newID = getMaxID() + 1;
@@ -297,10 +297,8 @@ public class UserConnectionDao {
 	
 	/**
 	 * updateVote() - change existing vote
-	 * @param 
-	 * @param 
-	 * @param 
-	 * @return 
+	 * @param ballot
+	 * @return Ballot
 	*/
 	public Ballot updateVote(Ballot ballot){
 		try {

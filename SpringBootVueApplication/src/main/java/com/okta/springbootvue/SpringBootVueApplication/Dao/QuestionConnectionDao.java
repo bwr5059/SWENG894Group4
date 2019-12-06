@@ -3,9 +3,7 @@
 |
 |  Purpose: Question Database Queries
 |
-|  Methods: getQuestionsByCandidate, insertQuestion
-|
-|  Version: Sprint 2
+|  Version: Sprint 3
 |  
 *-------------------------------------------------------------------*/
 
@@ -78,35 +76,6 @@ public class QuestionConnectionDao {
 			}
 		return question;
 	}
-	
-/**
-	public List<Question> getQuestionsByCandidate(String canID){
-		List<Question> questionList = new ArrayList<>();
-		
-		try {
-			Connection conn = connectionDao.RetrieveConnection();
-			String sql = "SELECT * FROM question WHERE canID=?"; 
-			PreparedStatement stmt=conn.prepareStatement(sql); 
-			stmt.setString(1,canID);
-			 
-			ResultSet rs=stmt.executeQuery();
-			while(rs.next())  {
-				Question question = new Question();
-				question.setQID(rs.getInt(1));
-				question.setCanID(rs.getString(2));
-				question.setUserID(rs.getString(3));
-				question.setQuestion(rs.getString(4));
-				question.setAnswer(rs.getString(5));
-				questionList.add(question);
-			}
-			
-			connectionDao.ReleaseConnection(conn);
-			}catch(Exception e) {
-				e.printStackTrace();
-			}
-		return questionList;
-	}
- **/
 
 	/**
 	 * getQuestionsByCandidate() - Performs select MySQL statement to retrieve questions from candidateQuestion table.

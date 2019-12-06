@@ -3,7 +3,7 @@
 |
 |  Purpose: Establishes and Closes Database Connections
 |
-|  Version: Sprint 1
+|  Version: Sprint 3
 |  
 *-------------------------------------------------------------------*/
 
@@ -23,7 +23,6 @@ import src.main.java.com.okta.springbootvue.SpringBootVueApplication.Model.User;
  * ConnectionDao Class - Connects to MySQL database vision-database
  */
 public class ConnectionDao {
-	//Connection con = null;
 	
 	/**
 	 * RetrieveConnection() - Establishes and returns a connection to the MYSQL database.
@@ -43,7 +42,7 @@ public class ConnectionDao {
 	
 	/**
 	 * ReleaseConnection() - Closes connection to the MYSQL database.
-	 * @return con
+	 * @Parameter con
 	 */
 	public void ReleaseConnection(Connection con) {
 		try {

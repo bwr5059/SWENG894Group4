@@ -3,9 +3,7 @@
 |
 |  Purpose: Set up Question REST Endpoints
 |
-|  Methods: listQuestionsByCandidate
-|
-|  Version: Sprint 2
+|  Version: Sprint 3
 |  
 *-------------------------------------------------------------------*/
 package src.main.java.com.okta.springbootvue.SpringBootVueApplication.Controller;

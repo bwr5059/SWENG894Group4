@@ -3,7 +3,7 @@
 |
 |  Purpose: Set up attributes for Ballot Objects 
 |
-|  Version: Sprint 1
+|  Version: Sprint 3
 |  
 *-------------------------------------------------------------------*/
 
